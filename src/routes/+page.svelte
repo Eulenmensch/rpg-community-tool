@@ -7,7 +7,7 @@
 	<img alt="The project logo" src={logo} />
 	<div class="innerContainer">
 		<div class="inputContainer">
-			<label for="">Email</label>
+			<label class="" for="">Email</label>
 			<input name="email" type="email" />
 		</div>
 		<div class="inputContainer">
