@@ -32,6 +32,9 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"firebase": "^9.20.0"
+		"@fortawesome/free-brands-svg-icons": "^6.4.0",
+		"@fortawesome/free-solid-svg-icons": "^6.4.0",
+		"firebase": "^9.20.0",
+		"svelte-fa": "^3.0.3"
 	}
 }
