@@ -1,15 +1,13 @@
 <script>
-	import { authHandlers } from '$lib/store/authStore';
+	import Campaign from '$lib/components/Register/Campaign.svelte';
+	import Details from '$lib/components/Register/Details.svelte';
+	import Password from '$lib/components/Register/Password.svelte';
+	import RegisterHighlighter from '$lib/components/Register/RegisterHighlighter.svelte';
+	import Role from '$lib/components/Register/Role.svelte';
 
 	let email = '';
-	let password = '';
-	let confirmPassword = '';
-
-	//TODO: Error Handling, Duplicate users, Loading state
-	//TODO: Add Username
-	async function handleRegister() {
-		authHandlers.register(email, password);
-	}
+	let username = '';
+	let currentStep = 1;
 </script>
 
 <a
@@ -17,35 +15,38 @@
 	class="absolute px-6 py-2 rounded-sm bg-primary hover:bg-primary-400 text-white right-8 top-8"
 	>Sign In
 </a>
-<div class="w-screen h-screen items-center flex justify-center flex-col">
-	<h1 class="text-lg font-semibold">Placeholder Register Page</h1>
-	<form on:submit|preventDefault={handleRegister} class="flex flex-col">
-		<label for="username">Username</label>
-		<input placeholder="Username" class="border border-gray" name="username" type="text" />
-		<label for="email">Email</label>
-		<input
-			placeholder="Email"
-			bind:value={email}
-			class="border border-gray"
-			name="email"
-			type="email"
-		/>
-		<label for="password">Password</label>
-		<input
-			placeholder="Password"
-			bind:value={password}
-			class="border border-gray"
-			name="password"
-			type="password"
-		/>
-		<label for="confirmPassword">Confirm Password</label>
-		<input
-			placeholder="Confirm Password"
-			bind:value={confirmPassword}
-			class="border border-gray"
-			name="confirmPassword"
-			type="password"
-		/>
-		<button type="submit">Create Account</button>
-	</form>
+
+<div class="flex">
+	<div class="w-1/4">
+		<RegisterHighlighter {currentStep} />
+	</div>
+	<div class="w-3/4 h-screen items-center flex justify-center flex-col">
+		{#if currentStep === 1}
+			<Details bind:username bind:email bind:currentStep />
+		{/if}
+		{#if currentStep === 2}
+			<Password {username} {email} bind:currentStep />
+		{/if}
+		{#if currentStep === 3}
+			<Role />
+		{/if}
+		{#if currentStep === 4}
+			<Campaign />
+		{/if}
+	</div>
 </div>
+
+<button
+	on:click={() => {
+		currentStep += 1;
+	}}
+>
+	next
+</button>
+<button
+	on:click={() => {
+		currentStep -= 1;
+	}}
+>
+	prev
+</button>
