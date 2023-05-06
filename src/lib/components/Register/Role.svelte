@@ -1,28 +1,28 @@
 <script lang="ts">
 </script>
 
-<h1 class="text-xl font-bold">Rick your role</h1>
+<h1 class="text-xl font-bold mb-4">Pick your role</h1>
 <div class="flex gap-4 my-8">
-	<div class="bg-gray-100 p-4 rounded-lg w-72 justify-center flex flex-col">
-		<button class="bg-primary text-white rounded-full mx-auto px-4 py-2 hover:bg-primary-400"
+	<div class="bg-gray-200 p-6 rounded-2xl w-72 flex flex-col">
+		<button class="bg-primary text-white rounded-full mx-auto hover:bg-primary-400 py-3 px-8"
 			>I am a Player</button
 		>
-		<ul class="py-4 flex flex-col gap-1">
+		<ul class="py-4 flex flex-col gap-3 my-auto">
 			<li class="">join a campaign</li>
-			<li class="">create & customize your ingame character</li>
+			<li class="">create and customize your character</li>
 		</ul>
 	</div>
-	<div class="bg-gray-100 p-4 rounded-lg w-72 justify-center flex flex-col">
-		<button class="bg-primary text-white rounded-full mx-auto px-4 py-2 hover:bg-primary-400"
-			>I am a Gamemaster</button
+	<div class="bg-gray-200 p-6 rounded-2xl w-72 flex flex-col h-72">
+		<button class="bg-primary text-white rounded-full mx-auto hover:bg-primary-400 py-3 px-8"
+			>I am a GM</button
 		>
-		<div class="py-4 flex flex-col gap-1">
+		<div class="py-4 flex flex-col gap-3 my-auto">
 			<ul class="">
 				<li class="">join a campaign</li>
 			</ul>
 			<p class="text-primary font-bold">or</p>
 			<ul class="">
-				<li class="">join a campaign</li>
+				<li class="">create and customize your own campaign</li>
 			</ul>
 		</div>
 	</div>

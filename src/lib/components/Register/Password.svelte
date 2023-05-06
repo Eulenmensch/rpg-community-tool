@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { authHandlers } from '$lib/store/authStore';
+	import Input from './Input.svelte';
 
 	export let username: string;
 	export let email: string;
@@ -29,31 +30,15 @@
 	}
 </script>
 
-<div class="pb-8">
-	<h1 class="font-bold text-xl">Choose a Password</h1>
-	<p class="opacity-60">Must be at least 8 Characters</p>
+<div class="pb-14 text-center">
+	<h1 class="font-bold text-xl mb-2">Choose a Password</h1>
+	<p class="opacity-60 text-sm">Must be at least 8 Characters</p>
 </div>
-<form on:submit|preventDefault={handleRegister} class="flex flex-col">
-	<label for="password">Password</label>
-	<input
-		bind:value={password}
-		placeholder="Password"
-		class="border border-gray"
-		name="password"
-		type="password"
-		required
-	/>
-	<label for="confirmPassword">Confirm Password</label>
-	<input
-		placeholder="Password"
-		bind:value={confirmPassword}
-		class="border border-gray"
-		name="confirmPassword"
-		type="password"
-		required
-	/>
+<form on:submit|preventDefault={handleRegister} class="flex flex-col gap-4">
+	<Input label="Password" name="password" type="password" bind:value={password} />
+	<Input label="Confirm Password" name="confirmPassword" type="password" bind:value={confirmPassword} />
 	{#if passwordsDontMatchError}
 		<p class="text-red-500">The passwords you entered do not match</p>
 	{/if}
-	<button type="submit" class="bg-primary py-0.5 text-white rounded-sm mt-2">Create Account</button>
+	<button type="submit" class="bg-primary py-0.5 text-white rounded-sm mt-2 mx-auto px-3 mt-8 py-2">Create Account</button>
 </form>

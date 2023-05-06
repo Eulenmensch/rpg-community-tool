@@ -45,8 +45,10 @@ export const authHandlers = {
 				},
 				{ merge: true },
 			);
+			
+			authStore.set({user: res.user, loading: false, data: {}})
 			return res;
-
+			
 			//TODO: Set Store aswell
 		}
 	},
