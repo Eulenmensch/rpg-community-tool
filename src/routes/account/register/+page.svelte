@@ -1,32 +1,14 @@
 <script>
-	import { beforeNavigate } from '$app/navigation';
 	import Campaign from '$lib/components/Register/Campaign.svelte';
 	import Details from '$lib/components/Register/Details.svelte';
 	import Password from '$lib/components/Register/Password.svelte';
 	import RegisterHighlighter from '$lib/components/Register/RegisterHighlighter.svelte';
 	import Role from '$lib/components/Register/Role.svelte';
-	import { onMount, onDestroy } from 'svelte';
-	
-	/* export let data;
-	$: pathname = data.pathname */
-
 
 	let email = '';
 	let username = '';
 	let currentStep = 1;
-	$: mounted = true
-
-	/* onMount(async () => {
-		console.log(mounted)
-		console.log("Mounting")
-		mounted = true
-	}); 
-
-	onDestroy(async () => {
-		console.log("DESTROYING")
-		mounted = false
-	})
- */
+	
 </script>
 
 <a
@@ -35,7 +17,7 @@
 	>Sign In
 </a>
 <div class="flex font-inknut">
-	<div class={`transition-all ease-in-out duration-[2000ms] ${mounted ? "w-1/4" : "w-[100px]"}`}>
+	<div class={`transition-all ease-in-out duration-[2000ms] w-1/4`}>
 		<RegisterHighlighter {currentStep} />
 	</div>
 	
@@ -47,11 +29,10 @@
 			<Password {username} {email} bind:currentStep />
 		{/if}
 		{#if currentStep === 3}
-			<Role />
+			<Role bind:currentStep/>
 		{/if}
 		{#if currentStep === 4}
 			<Campaign />
 		{/if}
 	</div>
 </div>
-

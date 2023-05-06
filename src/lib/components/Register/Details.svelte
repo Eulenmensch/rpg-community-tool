@@ -22,7 +22,7 @@
 </script>
 
 
-<form on:submit|preventDefault={checkifUserExists} class="flex flex-col gap-4">
+<form on:submit|preventDefault={checkifUserExists} class="flex flex-col gap-4 items-center">
 	<Input label="Username" name="username" type="text" bind:value={username}/>
 	<Input label="Email" name="email" type="email" bind:value={email}/>
 	{#if error}

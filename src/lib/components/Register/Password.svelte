@@ -34,7 +34,7 @@
 	<h1 class="font-bold text-xl mb-2">Choose a Password</h1>
 	<p class="opacity-60 text-sm">Must be at least 8 Characters</p>
 </div>
-<form on:submit|preventDefault={handleRegister} class="flex flex-col gap-4">
+<form on:submit|preventDefault={handleRegister} class="flex flex-col gap-4 items-center">
 	<Input label="Password" name="password" type="password" bind:value={password} />
 	<Input label="Confirm Password" name="confirmPassword" type="password" bind:value={confirmPassword} />
 	{#if passwordsDontMatchError}
