@@ -17,6 +17,9 @@ export default {
 					800: '#174048',
 					900: '#13343b'
 				}
+			},
+			fontFamily: {
+				inknut : ["Inknut_Antiqua"],
 			}
 		}
 	},

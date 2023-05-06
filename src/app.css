@@ -1,3 +1,111 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+    @font-face {
+		font-family: 'Inknut_Antiqua';
+		src: 
+            local('Inknut Antiqua'), 
+            local('Inknut_Antiqua'), 
+            local('Inknut-Antiqua'), 
+            local('InknutAntiqua'), 
+            local('inknut antiqua'),
+            local('inknut_antiqua'),
+            local('inknut-antiqua'),
+            local('inknutantiqua'),
+			url('/fonts/Inknut_Antiqua/InknutAntiqua-Black.ttf');
+		font-weight: 900;
+		font-display: swap;
+	}
+    @font-face {
+		font-family: 'Inknut_Antiqua';
+		src: 
+            local('Inknut Antiqua'), 
+            local('Inknut_Antiqua'), 
+            local('Inknut-Antiqua'), 
+            local('InknutAntiqua'), 
+            local('inknut antiqua'),
+            local('inknut_antiqua'),
+            local('inknut-antiqua'),
+            local('inknutantiqua'),
+			url('/fonts/Inknut_Antiqua/InknutAntiqua-ExtraBold.ttf');
+		font-weight: 800;
+		font-display: swap;
+	}
+    @font-face {
+		font-family: 'Inknut_Antiqua';
+		src: 
+            local('Inknut Antiqua'), 
+            local('Inknut_Antiqua'), 
+            local('Inknut-Antiqua'), 
+            local('InknutAntiqua'), 
+            local('inknut antiqua'),
+            local('inknut_antiqua'),
+            local('inknut-antiqua'),
+            local('inknutantiqua'),
+			url('/fonts/Inknut_Antiqua/InknutAntiqua-Bold.ttf');
+		font-weight: 700;
+		font-display: swap;
+	}
+    @font-face {
+		font-family: 'Inknut_Antiqua';
+		src: 
+            local('Inknut Antiqua'), 
+            local('Inknut_Antiqua'), 
+            local('Inknut-Antiqua'), 
+            local('InknutAntiqua'), 
+            local('inknut antiqua'),
+            local('inknut_antiqua'),
+            local('inknut-antiqua'),
+            local('inknutantiqua'),
+			url('/fonts/Inknut_Antiqua/InknutAntiqua-SemiBold.ttf');
+		font-weight: 600;
+		font-display: swap;
+	}
+    @font-face {
+		font-family: 'Inknut_Antiqua';
+		src: 
+            local('Inknut Antiqua'), 
+            local('Inknut_Antiqua'), 
+            local('Inknut-Antiqua'), 
+            local('InknutAntiqua'), 
+            local('inknut antiqua'),
+            local('inknut_antiqua'),
+            local('inknut-antiqua'),
+            local('inknutantiqua'),
+			url('/fonts/Inknut_Antiqua/InknutAntiqua-Medium.ttf');
+		font-weight: 500;
+		font-display: swap;
+	}
+    @font-face {
+		font-family: 'Inknut_Antiqua';
+		src: 
+            local('Inknut Antiqua'), 
+            local('Inknut_Antiqua'), 
+            local('Inknut-Antiqua'), 
+            local('InknutAntiqua'), 
+            local('inknut antiqua'),
+            local('inknut_antiqua'),
+            local('inknut-antiqua'),
+            local('inknutantiqua'),
+			url('/fonts/Inknut_Antiqua/InknutAntiqua-Regular.ttf');
+		font-weight: 400;
+		font-display: swap;
+	}
+    @font-face {
+		font-family: 'Inknut_Antiqua';
+		src: 
+            local('Inknut Antiqua'), 
+            local('Inknut_Antiqua'), 
+            local('Inknut-Antiqua'), 
+            local('InknutAntiqua'), 
+            local('inknut antiqua'),
+            local('inknut_antiqua'),
+            local('inknut-antiqua'),
+            local('inknutantiqua'),
+			url('/fonts/Inknut_Antiqua/InknutAntiqua-Light.ttf');
+		font-weight: 300;
+		font-display: swap;
+	}
+}
