@@ -12,7 +12,6 @@
 
 	//TODO: Error Handling, Duplicate users, Loading state
 	async function handleRegister() {
-		console.log(email, password, confirmPassword, username);
 		if (!email || !password || !username || !confirmPassword) {
 			return;
 		}
@@ -25,6 +24,7 @@
 		const res = await authHandlers.register(email, password, username);
 		if (!res) generalError = true;
 		if (res) {
+			console.log("further")
 			currentStep += 1;
 		}
 	}

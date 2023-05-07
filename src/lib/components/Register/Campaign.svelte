@@ -10,15 +10,16 @@
 	let campaignName = '';
 	let substep = 2;
 
-	$: authData = $authStore;
 
 	async function createCampaignForUser(name : string) {
 
-		if(authData.user){
-			console.log(authData.user)
-			await campaignHandlers.createCampaign(authData.user.uid , name)
+		authStore.subscribe(async user => {
+			if(!user) return
+			await campaignHandlers.createCampaign(user.data.uid , name)
 			goto('/');
-		}
+		})
+
+			
 	}
 </script>
 

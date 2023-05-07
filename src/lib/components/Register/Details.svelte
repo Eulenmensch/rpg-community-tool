@@ -13,7 +13,6 @@
 			error = true
 			return
 		}
-
 		error = await authHandlers.doesUserExist(email, username);
 		if (!error) {
 			currentStep += 1;

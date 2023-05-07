@@ -7,17 +7,19 @@ import {
 } from 'firebase/auth';
 import { writable, type Writable } from 'svelte/store';
 import { auth, db } from '$lib/firebase/firebase.client';
-import { collection, doc, getDoc, getDocs, or, query, setDoc, where } from 'firebase/firestore';
+import { collection, doc, getDocs, or, query, setDoc, where } from 'firebase/firestore';
 
 interface IAuthData {
 	user: User | null;
 	loading: boolean;
-	data: any; //TODO: Add type once we have data
+	isLoggedIn: boolean;
+	data: any
 }
 
 export const authStore: Writable<IAuthData> = writable({
 	user: null,
 	loading: true,
+	isLoggedIn: false,
 	data: {},
 });
 
@@ -27,6 +29,7 @@ export const authHandlers = {
 		const q = query(userRef, or(where('username', '==', username), where('email', '==', email)));
 		const snapshot = await getDocs(q);
 
+	
 		if (snapshot.empty) {
 			return false;
 		}
@@ -45,11 +48,7 @@ export const authHandlers = {
 				},
 				{ merge: true },
 			);
-			
-			authStore.set({user: res.user, loading: false, data: {}})
 			return res;
-			
-			//TODO: Set Store aswell
 		}
 	},
 	login: async (email: string, password: string) => {
