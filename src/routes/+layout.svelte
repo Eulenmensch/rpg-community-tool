@@ -20,7 +20,6 @@
 
 			// Redirect logged in users to dashboard when visiting login
 			if (user && currPath === "/account/login") {
-				console.log("NOW")
 				goto("/")
         		return;
 	      	}

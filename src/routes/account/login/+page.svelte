@@ -1,23 +1,35 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import Input from '$lib/components/Register/Input.svelte';
+	import { auth } from '$lib/firebase/firebase.client';
 	import logo from '$lib/images/logo.svg';
 	import { authHandlers } from '$lib/store/authStore';
+	import { onAuthStateChanged } from 'firebase/auth';
 	
 	let email : string;
 	let password : string;
 	let error = false
 
-	//TODO: More Error handling
 	async function login(){
 		if(!email || !password){
 			error = true
 			return
 		}
 		const res = await authHandlers.login(email, password)
-		goto("/")
-		
+		if(res){
+			goto("/")
+		}
+		else {
+			error=true
+		}
 	}
+
+	onAuthStateChanged(auth, (user) => {
+		if(user){
+			goto("/")
+		}
+	})
+	
 </script>
 
 <a
@@ -33,6 +45,9 @@
 		<form on:submit|preventDefault={login} class="py-2 mb-2 mt-10 gap-2 flex flex-col">
 			<Input type="email" label="Email" name="Email" bind:value={email}/>
 			<Input type="password" label="Password" name="password" bind:value={password}/>
+			{#if error}
+				<span class="text-red-500 text-center">Wrong password or username</span>
+			{/if}
 			<button class="px-6 rounded-sm mx-auto mt-4 bg-primary hover:bg-opacity-80 text-white py-2">Sign In</button>
 		</form>
 	</div>

@@ -4,6 +4,7 @@
     export let label: string
     export let value: any
     export let placeholder: string = label
+    export let minlength: number = 0
 
     // We need to set the node type explicitly to make use of two way binding
     function typeAction(node : any) {
@@ -22,5 +23,6 @@
         {placeholder}
         class="outline-primary border-gray border-2 rounded-sm px-3 py-2 w-72"
         required
+        {minlength}
     />
 </div>

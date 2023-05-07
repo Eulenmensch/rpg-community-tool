@@ -24,7 +24,6 @@
 		const res = await authHandlers.register(email, password, username);
 		if (!res) generalError = true;
 		if (res) {
-			console.log("further")
 			currentStep += 1;
 		}
 	}
@@ -35,8 +34,8 @@
 	<p class="opacity-60 text-sm">Must be at least 8 Characters</p>
 </div>
 <form on:submit|preventDefault={handleRegister} class="flex flex-col gap-4 items-center">
-	<Input label="Password" name="password" type="password" bind:value={password} />
-	<Input label="Confirm Password" name="confirmPassword" type="password" bind:value={confirmPassword} />
+	<Input label="Password" name="password" type="password" bind:value={password} minlength={8}/>
+	<Input label="Confirm Password" name="confirmPassword" type="password" bind:value={confirmPassword} minlength={8}/>
 	{#if passwordsDontMatchError}
 		<p class="text-red-500">The passwords you entered do not match</p>
 	{/if}

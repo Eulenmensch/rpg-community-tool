@@ -52,7 +52,12 @@ export const authHandlers = {
 		}
 	},
 	login: async (email: string, password: string) => {
-		await signInWithEmailAndPassword(auth, email, password);
+		try{
+			return await signInWithEmailAndPassword(auth, email, password)
+		}
+		catch(error){
+			console.log(error)
+		}
 	},
 	logout: async () => {
 		await signOut(auth);
