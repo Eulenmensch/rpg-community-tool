@@ -14,6 +14,7 @@
 
 			// Redirect all private pages to login
 			if (!user && !nonAuthRoutes.includes(currPath)) {
+			
 				goto("/account/login")
 				return;
 			}
