@@ -34,10 +34,18 @@
 	<p class="opacity-60 text-sm">Must be at least 8 Characters</p>
 </div>
 <form on:submit|preventDefault={handleRegister} class="flex flex-col gap-4 items-center">
-	<Input label="Password" name="password" type="password" bind:value={password} minlength={8}/>
-	<Input label="Confirm Password" name="confirmPassword" type="password" bind:value={confirmPassword} minlength={8}/>
+	<Input label="Password" name="password" type="password" bind:value={password} minlength={8} />
+	<Input
+		label="Confirm Password"
+		name="confirmPassword"
+		type="password"
+		bind:value={confirmPassword}
+		minlength={8}
+	/>
 	{#if passwordsDontMatchError}
 		<p class="text-red-500">The passwords you entered do not match</p>
 	{/if}
-	<button type="submit" class="bg-primary py-0.5 text-white rounded-sm mt-2 mx-auto px-3 mt-8 py-2">Create Account</button>
+	<button type="submit" class="bg-primary text-white rounded-sm mx-auto px-3 mt-8 py-2"
+		>Create Account</button
+	>
 </form>

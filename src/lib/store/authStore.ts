@@ -13,7 +13,7 @@ interface IAuthData {
 	user: User | null;
 	loading: boolean;
 	isLoggedIn: boolean;
-	data: any
+	data: any;
 }
 
 export const authStore: Writable<IAuthData> = writable({
@@ -29,7 +29,6 @@ export const authHandlers = {
 		const q = query(userRef, or(where('username', '==', username), where('email', '==', email)));
 		const snapshot = await getDocs(q);
 
-	
 		if (snapshot.empty) {
 			return false;
 		}
@@ -52,11 +51,10 @@ export const authHandlers = {
 		}
 	},
 	login: async (email: string, password: string) => {
-		try{
-			return await signInWithEmailAndPassword(auth, email, password)
-		}
-		catch(error){
-			console.log(error)
+		try {
+			return await signInWithEmailAndPassword(auth, email, password);
+		} catch (error) {
+			console.log(error);
 		}
 	},
 	logout: async () => {

@@ -8,7 +8,6 @@
 	let email = '';
 	let username = '';
 	let currentStep = 1;
-	
 </script>
 
 <a
@@ -20,7 +19,7 @@
 	<div class={`transition-all ease-in-out duration-[2000ms] w-1/4`}>
 		<RegisterHighlighter {currentStep} />
 	</div>
-	
+
 	<div class="w-3/4 h-screen items-center flex justify-center flex-col">
 		{#if currentStep === 1}
 			<Details bind:username bind:email bind:currentStep />
@@ -29,7 +28,7 @@
 			<Password {username} {email} bind:currentStep />
 		{/if}
 		{#if currentStep === 3}
-			<Role bind:currentStep/>
+			<Role bind:currentStep />
 		{/if}
 		{#if currentStep === 4}
 			<Campaign />
