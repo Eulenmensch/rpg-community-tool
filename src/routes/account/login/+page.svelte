@@ -1,10 +1,8 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import Input from '$lib/components/Register/Input.svelte';
-	import { auth } from '$lib/firebase/firebase.client';
 	import logo from '$lib/images/logo.svg';
 	import { authHandlers } from '$lib/store/authStore';
-	import { onAuthStateChanged } from 'firebase/auth';
 
 	let email: string;
 	let password: string;
@@ -22,12 +20,6 @@
 			error = true;
 		}
 	}
-
-	onAuthStateChanged(auth, (user) => {
-		if (user) {
-			goto('/');
-		}
-	});
 </script>
 
 <a
