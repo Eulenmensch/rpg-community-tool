@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { authHandlers } from '$lib/store/authStore';
+	import { onMount } from 'svelte';
 	import Input from './Input.svelte';
 
 	export let username: string;
@@ -7,7 +8,6 @@
 	export let currentStep: number;
 	let error = false;
 
-	//TODO: Error Handling, Duplicate users, Loading state
 	async function checkifUserExists() {
 		if (!email || !username) {
 			error = true;
@@ -18,10 +18,17 @@
 			currentStep += 1;
 		}
 	}
+
+	let ref: any;
+	onMount(() => {
+		if (ref) {
+			ref.focus();
+		}
+	});
 </script>
 
 <form on:submit|preventDefault={checkifUserExists} class="flex flex-col gap-4 items-center">
-	<Input label="Username" name="username" type="text" bind:value={username} />
+	<Input label="Username" name="username" type="text" bind:value={username} bind:ref />
 	<Input label="Email" name="email" type="email" bind:value={email} />
 	{#if error}
 		<span class="text-red-500 text-sm text-center">

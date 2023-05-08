@@ -5,6 +5,7 @@
 	export let value: any;
 	export let placeholder: string = label;
 	export let minlength: number = 0;
+	export let ref = null;
 
 	// We need to set the node type explicitly to make use of two way binding
 	function typeAction(node: any) {
@@ -15,6 +16,7 @@
 <div class="flex flex-col gap-1">
 	<label for={name} class="font-medium">{label}</label>
 	<input
+		bind:this={ref}
 		use:typeAction
 		bind:value
 		{name}

@@ -3,6 +3,7 @@
 	import Input from '$lib/components/Register/Input.svelte';
 	import logo from '$lib/images/logo.svg';
 	import { authHandlers } from '$lib/store/authStore';
+	import { onMount } from 'svelte';
 
 	let email: string;
 	let password: string;
@@ -20,6 +21,13 @@
 			error = true;
 		}
 	}
+
+	let ref: any;
+	onMount(() => {
+		if (ref) {
+			ref.focus();
+		}
+	});
 </script>
 
 <a
@@ -33,7 +41,7 @@
 	<div class="w-[calc(100%-2rem)] h-screen flex items-center justify-center flex-col pb-20">
 		<img alt="The project logo" src={logo} />
 		<form on:submit|preventDefault={login} class="py-2 mb-2 mt-10 gap-2 flex flex-col">
-			<Input type="email" label="Email" name="Email" bind:value={email} />
+			<Input type="email" label="Email" name="Email" bind:value={email} bind:ref />
 			<Input type="password" label="Password" name="password" bind:value={password} />
 			{#if error}
 				<span class="text-red-500 text-center">Wrong password or username</span>

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { authHandlers } from '$lib/store/authStore';
+	import { onMount } from 'svelte';
 	import Input from './Input.svelte';
 
 	export let username: string;
@@ -27,6 +28,13 @@
 			currentStep += 1;
 		}
 	}
+
+	let ref: any;
+	onMount(() => {
+		if (ref) {
+			ref.focus();
+		}
+	});
 </script>
 
 <div class="pb-14 text-center">
@@ -34,7 +42,14 @@
 	<p class="opacity-60 text-sm">Must be at least 8 Characters</p>
 </div>
 <form on:submit|preventDefault={handleRegister} class="flex flex-col gap-4 items-center">
-	<Input label="Password" name="password" type="password" bind:value={password} minlength={8} />
+	<Input
+		label="Password"
+		name="password"
+		type="password"
+		bind:value={password}
+		minlength={8}
+		bind:ref
+	/>
 	<Input
 		label="Confirm Password"
 		name="confirmPassword"
