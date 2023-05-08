@@ -10,16 +10,12 @@
 	let campaignName = '';
 	let substep = 2;
 
-
-	async function createCampaignForUser(name : string) {
-
-		authStore.subscribe(async user => {
-			if(!user) return
-			await campaignHandlers.createCampaign(user.data.uid , name)
+	async function createCampaignForUser(name: string) {
+		authStore.subscribe(async (user) => {
+			if (!user) return;
+			await campaignHandlers.createCampaign(user.data.uid, name);
 			goto('/');
-		})
-
-			
+		});
 	}
 </script>
 
@@ -65,7 +61,7 @@
 		<div class="flex flex-col text-center mt-8 mb-20 items-center">
 			<h1 class="text-2xl font-bold mb-2">Name your Campaign</h1>
 			<input class="border border-gray-300 py-2 mt-2" bind:value={campaignName} />
-						<button
+			<button
 				on:click={() => (substep = 2)}
 				class="bg-primary rounded-sm text-white mt-2 w-max px-4 py-2">Continue</button
 			>
@@ -111,7 +107,9 @@
 				<p class="text-base py-2 px-0.5">
 					A sprawling continent for adventurers that want to impact a civilized world.
 				</p>
-				<button on:click={() => createCampaignForUser("Une")} class="bg-primary text-white py-2 px-4 mx-auto mt-4 hover:bg-primary-400"
+				<button
+					on:click={() => createCampaignForUser('Une')}
+					class="bg-primary text-white py-2 px-4 mx-auto mt-4 hover:bg-primary-400"
 					>Get Started</button
 				>
 			</div>
@@ -128,7 +126,7 @@
 					A sprawling continent for adventurers that want to impact a civilized world.
 				</p>
 				<button
-					on:click={() => createCampaignForUser("The unknown")}
+					on:click={() => createCampaignForUser('The unknown')}
 					class="bg-primary text-white py-2 px-4 mx-auto mt-4 hover:bg-primary-400"
 				>
 					Get Started
