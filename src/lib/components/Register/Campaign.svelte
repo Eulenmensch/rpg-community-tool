@@ -5,7 +5,7 @@
 	import { campaignHandlers } from '$lib/controller/campaignController';
 	import { authStore } from '$lib/store/authStore';
 
-	let join = false;
+	let join = true;
 	let usePreset = true;
 	let campaignName = '';
 	let substep = 2;

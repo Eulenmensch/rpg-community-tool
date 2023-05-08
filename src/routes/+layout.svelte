@@ -8,6 +8,9 @@
 	import { page } from '$app/stores';
 	import Fa from 'svelte-fa';
 	import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+	import Navigation from '$lib/components/Navigation/Navigation.svelte';
+	import { campaignHandlers } from '$lib/controller/campaignController';
+	import { campaignStore } from '$lib/store/campaignStore';
 
 	const nonAuthRoutes = ['/account/login', '/account/register'];
 
@@ -43,6 +46,10 @@
 					data: userData,
 					user: user,
 				}));
+
+				const campaigns = await campaignHandlers.getAllCampaignsForUser(user.uid);
+				if (!campaigns) return;
+				campaignStore.update((curr) => ({ ...curr, campaigns: campaigns }));
 			}
 		});
 		return unsubscribe;
@@ -52,6 +59,7 @@
 {#if nonAuthRoutes.includes($page.url.pathname)}
 	<slot />
 {:else if $authStore.user}
+	<Navigation />
 	<slot />
 {:else}
 	<div class="w-screen h-screen items-center flex text-center justify-center">
