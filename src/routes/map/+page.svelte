@@ -1,1 +1,5 @@
-<h1>This is a map</h1>
+<script>
+	import Map from '$lib/components/Map/Map.svelte';
+</script>
+
+<Map />

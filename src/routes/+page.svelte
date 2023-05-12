@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { authHandlers, authStore } from '$lib/store/authStore';
+	import { authStore } from '$lib/store/authStore';
 
 	let username: string;
 	authStore.subscribe((user) => {

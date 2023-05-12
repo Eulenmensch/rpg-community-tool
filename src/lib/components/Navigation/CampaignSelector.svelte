@@ -33,7 +33,7 @@
 		<Fa icon={faChevronDown} />
 	</button>
 	<div
-		class={`border bg-white shadow text-black absolute w-full mt-1 ${
+		class={`border bg-white shadow text-black z-30 absolute w-full mt-1 ${
 			open ? 'visible' : 'invisible'
 		}`}
 	>

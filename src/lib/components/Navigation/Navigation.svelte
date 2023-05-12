@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { authHandlers, authStore } from '$lib/store/authStore';
 	import CampaignSelector from './CampaignSelector.svelte';
+	import { navHeight } from '$lib/helpers';
 
 	let username: string;
 	authStore.subscribe((user) => {
@@ -8,7 +9,11 @@
 	});
 </script>
 
-<div class="bg-black py-3 text-white px-8 flex justify-between font-inknut">
+<div
+	id="nav"
+	style={`height: ${navHeight}`}
+	class="bg-black py-3 text-white px-8 flex justify-between font-inknut items-center"
+>
 	<ol class="flex gap-4">
 		<li><a href="/">Dashboard</a></li>
 		<li><a href="/map">Map</a></li>
