@@ -9,8 +9,9 @@
 	import Fa from 'svelte-fa';
 	import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 	import Navigation from '$lib/components/Navigation/Navigation.svelte';
-	import { campaignHandlers } from '$lib/controller/campaignController';
+	import { campaignHandlers } from '$lib/store/campaignStore';
 	import { campaignStore } from '$lib/store/campaignStore';
+	import type { IUserData } from '../Interfaces';
 
 	const nonAuthRoutes = ['/account/login', '/account/register'];
 
@@ -39,7 +40,9 @@
 			const userFromDb = await getDoc(docRef);
 
 			if (userFromDb.exists()) {
-				const userData = userFromDb.data();
+				const userData = userFromDb.data() as IUserData;
+				const campaigns = await campaignHandlers.getAllCampaignsForUser(user.uid);
+
 				authStore.update((curr) => ({
 					...curr,
 					loading: false,
@@ -47,7 +50,6 @@
 					user: user,
 				}));
 
-				const campaigns = await campaignHandlers.getAllCampaignsForUser(user.uid);
 				if (!campaigns) return;
 				campaignStore.update((curr) => ({ ...curr, campaigns: campaigns }));
 			}

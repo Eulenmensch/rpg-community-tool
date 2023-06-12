@@ -8,19 +8,25 @@ import {
 import { writable, type Writable } from 'svelte/store';
 import { auth, db } from '$lib/firebase/firebase.client';
 import { collection, doc, getDocs, or, query, setDoc, where } from 'firebase/firestore';
+import type { IUserData } from '../../Interfaces';
 
 interface IAuthData {
 	user: User | null;
 	loading: boolean;
 	isLoggedIn: boolean;
-	data: any;
+	data: IUserData;
 }
 
 export const authStore: Writable<IAuthData> = writable({
 	user: null,
 	loading: true,
 	isLoggedIn: false,
-	data: {},
+	data: {
+		uid: '',
+		active_campaign: '',
+		email: '',
+		username: '',
+	},
 });
 
 export const authHandlers = {
@@ -59,5 +65,16 @@ export const authHandlers = {
 	},
 	logout: async () => {
 		await signOut(auth);
+	},
+	update: async (userId: string, campaignId: string) => {
+		//TODO: Make this a more general version once we update other parameters aswell
+		const docRef = doc(db, `user/${userId}`);
+		setDoc(
+			docRef,
+			{
+				active_campaign: campaignId,
+			},
+			{ merge: true },
+		);
 	},
 };

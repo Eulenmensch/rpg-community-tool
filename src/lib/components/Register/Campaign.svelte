@@ -2,7 +2,7 @@
 	import firstCampaignImage from '$lib/images/campaign_une.png';
 	import secondCampaignImage from '$lib/images/campaign_theUnknown.png';
 	import { goto } from '$app/navigation';
-	import { campaignHandlers } from '$lib/controller/campaignController';
+	import { campaignHandlers } from '$lib/store/campaignStore';
 	import { authStore } from '$lib/store/authStore';
 
 	let join = true;
