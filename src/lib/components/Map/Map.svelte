@@ -1,9 +1,17 @@
-<script>
+<script lang="ts">
 	import L from 'leaflet';
-	import { onMount } from 'svelte';
+	import { afterUpdate, onMount } from 'svelte';
 	import { navHeight } from '$lib/helpers';
+	import { iconStore } from '$lib/store/iconStore';
+	import Popup from './Popup.svelte';
+	import { campaignStore } from '$lib/store/campaignStore';
+	import { authStore } from '$lib/store/authStore';
 
-	let map;
+	$: _campaignStore = $campaignStore;
+	$: _authstore = $authStore;
+
+	let map: L.Map;
+	let markerLayer = L.layerGroup();
 	onMount(async () => {
 		const bounds = L.latLngBounds(L.latLng(-285, -101), L.latLng(31, 355));
 		map = L.map('map', {
@@ -20,7 +28,50 @@
 			noWrap: true,
 			bounds: bounds,
 		}).addTo(map);
+		addMarkers();
 	});
+
+	afterUpdate(() => {
+		addMarkers();
+	});
+
+	function addMarkers() {
+		markerLayer.clearLayers();
+		let divIcon = L.divIcon({
+			className: 'div-icon',
+			html: $iconStore['default'],
+			iconSize: [50, 50],
+			iconAnchor: [27, 50],
+			popupAnchor: [0, -55],
+		});
+
+		_campaignStore.campaigns
+			.find((c) => c.id == _authstore.data.active_campaign)
+			?.playables.map((playable) => {
+				let leafletMarker = L.marker([playable.coordinates.lat, playable.coordinates.long], {
+					title: playable.name,
+					alt: playable.name,
+					icon: divIcon,
+					draggable: false,
+				}).addTo(markerLayer);
+
+				let popupContainer = L.DomUtil.create('div');
+				new Popup({
+					target: popupContainer,
+					props: {
+						marker: playable,
+					},
+				});
+				leafletMarker.bindPopup(popupContainer, {
+					className: 'leaflet-popup',
+					offset: L.point(-2, 10),
+					maxWidth: 250,
+					maxHeight: 181,
+					closeButton: false,
+				});
+			});
+		markerLayer.addTo(map);
+	}
 </script>
 
 <div>
