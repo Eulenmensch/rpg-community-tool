@@ -4,6 +4,7 @@ import { db } from '$lib/firebase/firebase.client';
 import { addDoc, collection, query, where, getDocs } from 'firebase/firestore';
 import { theUnknownPlayables, unePlayables } from '../../utils';
 import { authHandlers } from './authStore';
+import { v4 as uuidv4 } from 'uuid';
 
 export const campaignStore: Writable<{
 	campaigns: ICampaign[];
@@ -15,17 +16,16 @@ export const campaignStore: Writable<{
 
 export const campaignHandlers = {
 	createCampaign: async (userId: string, type: string, name: string): Promise<ICampaign> => {
-		const res = await addDoc(collection(db, `campaign`), {
+		const campaignCode = uuidv4();
+		const campaignToCreate = {
 			user_id: userId,
 			name: name,
 			playables: type == 'Une' ? unePlayables : theUnknownPlayables,
-		});
-		await authHandlers.update(userId, res.id);
-		return {
-			id: res.id,
-			name: name,
-			playables: type == 'Une' ? unePlayables : theUnknownPlayables,
+			code: campaignCode,
 		};
+		const res = await addDoc(collection(db, `campaign`), campaignToCreate);
+		await authHandlers.update(userId, res.id);
+		return { ...campaignToCreate, id: res.id };
 	},
 	getAllCampaignsForUser: async (userId: string): Promise<ICampaign[] | null> => {
 		const campaignRef = collection(db, 'campaign');

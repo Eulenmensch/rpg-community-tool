@@ -1,13 +1,15 @@
 export interface ICampaign {
-	id: string;
+	id: string | null;
+	user_id: string;
 	name: string;
+	code: string;
 	playables: IPlayable[];
 }
 
 export interface IUserData {
 	uid: string;
 	email: string;
-	active_campaign: string;
+	active_campaign: string | null;
 	username: string;
 }
 
