@@ -2,7 +2,7 @@
 	import firstCampaignImage from '$lib/images/campaign_une.png';
 	import secondCampaignImage from '$lib/images/campaign_theUnknown.png';
 	import { goto } from '$app/navigation';
-	import { campaignHandlers } from '$lib/store/campaignStore';
+	import { campaignHandlers, campaignStore } from '$lib/store/campaignStore';
 	import { authStore } from '$lib/store/authStore';
 
 	let join = true;
@@ -11,11 +11,16 @@
 	let substep = 2;
 
 	async function createCampaignForUser(name: string) {
-		authStore.subscribe(async (user) => {
+		const unsubscribe = authStore.subscribe(async (user) => {
 			if (!user) return;
-			await campaignHandlers.createCampaign(user.data.uid, name);
+			const newCampaign = await campaignHandlers.createCampaign(user.data.uid, name);
+			campaignStore.update((curr) => ({
+				campaigns: [...curr.campaigns, newCampaign],
+				selectedCamapaign: newCampaign.id,
+			}));
 			goto('/');
 		});
+		unsubscribe();
 	}
 </script>
 

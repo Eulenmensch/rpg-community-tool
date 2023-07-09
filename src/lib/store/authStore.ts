@@ -50,6 +50,7 @@ export const authHandlers = {
 					uid: res.user.uid,
 					username: username,
 					email: email,
+					active_campaign: null,
 				},
 				{ merge: true },
 			);

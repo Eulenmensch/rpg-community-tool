@@ -2,6 +2,8 @@ import { type Writable, writable } from 'svelte/store';
 import type { ICampaign } from '../../Interfaces';
 import { db } from '$lib/firebase/firebase.client';
 import { addDoc, collection, query, where, getDocs } from 'firebase/firestore';
+import { theUnknownPlayables, unePlayables } from '../../utils';
+import { authHandlers } from './authStore';
 
 export const campaignStore: Writable<{
 	campaigns: ICampaign[];
@@ -12,11 +14,18 @@ export const campaignStore: Writable<{
 });
 
 export const campaignHandlers = {
-	createCampaign: async (userId: string, name: string) => {
-		await addDoc(collection(db, `campaign`), {
+	createCampaign: async (userId: string, name: string): Promise<ICampaign> => {
+		const res = await addDoc(collection(db, `campaign`), {
 			user_id: userId,
 			name: name,
+			playables: name == 'Une' ? unePlayables : theUnknownPlayables,
 		});
+		await authHandlers.update(userId, res.id);
+		return {
+			id: res.id,
+			name: name,
+			playables: name == 'Une' ? unePlayables : theUnknownPlayables,
+		};
 	},
 	getAllCampaignsForUser: async (userId: string): Promise<ICampaign[] | null> => {
 		const campaignRef = collection(db, 'campaign');
@@ -36,7 +45,7 @@ export const campaignHandlers = {
 				resolve(myArray);
 			}
 			if (snapshot.empty) {
-				reject('query returned no results');
+				resolve([]);
 			}
 		});
 	},
