@@ -14,17 +14,17 @@ export const campaignStore: Writable<{
 });
 
 export const campaignHandlers = {
-	createCampaign: async (userId: string, name: string): Promise<ICampaign> => {
+	createCampaign: async (userId: string, type: string, name: string): Promise<ICampaign> => {
 		const res = await addDoc(collection(db, `campaign`), {
 			user_id: userId,
 			name: name,
-			playables: name == 'Une' ? unePlayables : theUnknownPlayables,
+			playables: type == 'Une' ? unePlayables : theUnknownPlayables,
 		});
 		await authHandlers.update(userId, res.id);
 		return {
 			id: res.id,
 			name: name,
-			playables: name == 'Une' ? unePlayables : theUnknownPlayables,
+			playables: type == 'Une' ? unePlayables : theUnknownPlayables,
 		};
 	},
 	getAllCampaignsForUser: async (userId: string): Promise<ICampaign[] | null> => {

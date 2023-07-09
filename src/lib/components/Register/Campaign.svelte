@@ -8,12 +8,12 @@
 	let join = true;
 	let usePreset = true;
 	let campaignName = '';
-	let substep = 2;
+	let substep = 1;
 
-	async function createCampaignForUser(name: string) {
+	async function createCampaignForUser(type: string) {
 		const unsubscribe = authStore.subscribe(async (user) => {
 			if (!user) return;
-			const newCampaign = await campaignHandlers.createCampaign(user.data.uid, name);
+			const newCampaign = await campaignHandlers.createCampaign(user.data.uid, type, campaignName);
 			campaignStore.update((curr) => ({
 				campaigns: [...curr.campaigns, newCampaign],
 				selectedCamapaign: newCampaign.id,
