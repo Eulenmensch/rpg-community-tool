@@ -18,6 +18,13 @@
 				campaigns: [...curr.campaigns, newCampaign],
 				selectedCamapaign: newCampaign.id,
 			}));
+			authStore.update((curr) => ({
+				...curr,
+				data: {
+					...curr.data,
+					active_campaign: newCampaign.id,
+				},
+			}));
 			goto('/');
 		});
 		unsubscribe();
