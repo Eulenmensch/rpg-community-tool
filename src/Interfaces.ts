@@ -1,9 +1,10 @@
 export interface ICampaign {
-	id: string | null;
+	id?: string | null;
 	user_id: string;
 	name: string;
 	code: string;
 	playables: IPlayable[];
+	users: string[];
 }
 
 export interface IUserData {
