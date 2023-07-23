@@ -10,6 +10,7 @@ import {
 	doc,
 	updateDoc,
 	getDoc,
+	or,
 } from 'firebase/firestore';
 import { theUnknownPlayables, unePlayables } from '../../utils';
 import { authHandlers } from './authStore';
@@ -38,15 +39,23 @@ export const campaignHandlers = {
 		await authHandlers.update(userId, res.id);
 		return { ...campaignToCreate, id: res.id };
 	},
-	joinCampaign: async (campaignCode: string, userId: string): Promise<any> => {
+	joinCampaign: async (campaignCode: string, userId: string): Promise<ICampaign | null> => {
 		const docRef = doc(db, `campaign/${campaignCode}`);
 		const docData = await getDoc(docRef);
 		updateDoc(docRef, { users: arrayUnion(userId) });
-		return docData.exists();
+		const docDataDoesExist = docData.exists();
+		if (docDataDoesExist) {
+			await authHandlers.update(userId, docData.id);
+			return { id: docData.id, ...docData.data() } as ICampaign;
+		}
+		return null;
 	},
 	getAllCampaignsForUser: async (userId: string): Promise<ICampaign[] | null> => {
 		const campaignRef = collection(db, 'campaign');
-		const q = query(campaignRef, where('user_id', '==', userId));
+		const q = query(
+			campaignRef,
+			or(where('user_id', '==', userId), where('users', 'array-contains', userId)),
+		);
 		const snapshot = await getDocs(q);
 
 		return new Promise((resolve, reject) => {
