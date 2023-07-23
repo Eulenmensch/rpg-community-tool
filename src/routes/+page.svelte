@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Alert from '$lib/components/Alert.svelte';
 	import { authStore } from '$lib/store/authStore';
 	import { campaignHandlers, campaignStore } from '$lib/store/campaignStore';
 
@@ -41,16 +42,8 @@
 			>
 		</div>
 		<div>
-			<span
-				class={`absolute right-10  bg-red-500 px-4 py-1 transition-all duration-500 rounded-full ease-in-out text-white ${
-					showErrorMessage ? 'top-20 opacity-100' : 'top-0 opacity-0'
-				}`}>YOU GOT THE WRONG CODE MATE</span
-			>
-			<span
-				class={`absolute right-10  bg-green-500 px-4 py-1 transition-all duration-500 rounded-full ease-in-out text-white ${
-					showSuccessMessage ? 'top-20 opacity-100' : 'top-0 opacity-0'
-				}`}>Successfully joined</span
-			>
+			<Alert showAlert={showErrorMessage} text="You got the wrong code mate" color="bg-red-500" />
+			<Alert showAlert={showSuccessMessage} text="Sucesfully joined" color="bg-green-500" />
 		</div>
 	</div>
 </div>

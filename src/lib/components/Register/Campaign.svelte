@@ -1,14 +1,32 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import firstCampaignImage from '$lib/images/campaign_une.png';
 	import secondCampaignImage from '$lib/images/campaign_theUnknown.png';
-	import { goto } from '$app/navigation';
 	import { campaignHandlers, campaignStore } from '$lib/store/campaignStore';
 	import { authStore } from '$lib/store/authStore';
+	import Alert from '$lib/components/Alert.svelte';
 
 	let join = true;
 	let usePreset = true;
 	let campaignName = '';
 	let substep = 1;
+	let joinCode = '';
+	let showErrorMessage = false;
+	let showSuccessMessage = false;
+
+	async function handleJoinCampaign() {
+		let userData = $authStore.data;
+		const docSuccessfullyUpdated = await campaignHandlers.joinCampaign(joinCode, userData.uid);
+
+		if (docSuccessfullyUpdated) {
+			showSuccessMessage = true;
+			setTimeout(() => (showSuccessMessage = false), 2000);
+			goto('/');
+		} else {
+			showErrorMessage = true;
+			setTimeout(() => (showErrorMessage = false), 2000);
+		}
+	}
 
 	async function createCampaignForUser(type: string) {
 		const unsubscribe = authStore.subscribe(async (user) => {
@@ -16,13 +34,13 @@
 			const newCampaign = await campaignHandlers.createCampaign(user.data.uid, type, campaignName);
 			campaignStore.update((curr) => ({
 				campaigns: [...curr.campaigns, newCampaign],
-				selectedCamapaign: newCampaign.id,
+				selectedCamapaign: newCampaign.id ? newCampaign.id : null,
 			}));
 			authStore.update((curr) => ({
 				...curr,
 				data: {
 					...curr.data,
-					active_campaign: newCampaign.id,
+					active_campaign: newCampaign.id ? newCampaign.id : null,
 				},
 			}));
 			goto('/');
@@ -65,8 +83,11 @@
 		</div>
 
 		<div class="">
-			<input type="number" class="border-gray-300 py-2 border" />
-			<button class="bg-primary text-white px-6 rounded-sm h-full ml-1">Join</button>
+			<input bind:value={joinCode} class="border-gray-300 py-2 border" />
+			<button
+				on:click={handleJoinCampaign}
+				class="bg-primary text-white px-6 rounded-sm h-full ml-1">Join</button
+			>
 		</div>
 	{/if}
 	{#if !join}
@@ -147,3 +168,8 @@
 		</div>
 	{/if}
 {/if}
+
+<div>
+	<Alert showAlert={showErrorMessage} text="You got the wrong code mate" color="bg-red-500" />
+	<Alert showAlert={showSuccessMessage} text="Sucesfully joined" color="bg-green-500" />
+</div>
