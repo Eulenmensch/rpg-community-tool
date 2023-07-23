@@ -1,5 +1,5 @@
 <script lang="ts">
-	import L from 'leaflet';
+	import L, { type MarkerOptions } from 'leaflet';
 	import { afterUpdate, onMount } from 'svelte';
 	import { navHeight } from '$lib/helpers';
 	import { iconStore } from '$lib/store/iconStore';
@@ -44,9 +44,18 @@
 	});
 
 	function createMarker(e: any) {
+		// This function only creates the default Marker. The Customization is done in <MarkerEditor/>
 		if (addingNewMarkerOpen) {
-			marker = L.marker(e.latlng).addTo(map); //TODO: Use markerlayer which does whyever not work
-
+			const markerOptions: MarkerOptions = {
+				icon: L.divIcon({
+					className: 'div-icon',
+					html: $iconStore['default'],
+					iconSize: [50, 50],
+					iconAnchor: [27, 50],
+					popupAnchor: [0, -55],
+				}),
+			};
+			marker = L.marker(e.latlng, markerOptions).addTo(map); //TODO: Use markerlayer which does whyever not work
 			addingNewMarkerOpen = false;
 			editPanelOpen = true;
 		}

@@ -1,20 +1,23 @@
 <script lang="ts">
 	import { authStore } from '$lib/store/authStore';
-	import { campaignHandlers, campaignStore } from '$lib/store/campaignStore';
-	import type { IPlayable } from '../../../Interfaces';
+	import { campaignHandlers } from '$lib/store/campaignStore';
+	import type { IPlayable, PlayableType } from '../../../Interfaces';
 
 	export let addingNewMarkerOpen: boolean;
 	export let editPanelOpen: boolean;
 	export let marker: L.Marker;
+	let playableName = '';
+	let playableDescription = '';
+	let playableType: PlayableType = 'mission';
 
 	$: _authstore = $authStore;
 
 	function handleConfirm() {
 		const coordinates = marker.getLatLng();
 		const newPlayable: IPlayable = {
-			name: 'My test name',
-			description: 'My test description',
-			type: 'rumor',
+			name: playableName,
+			description: playableDescription,
+			type: playableType,
 			coordinates: {
 				lat: coordinates.lat,
 				long: coordinates.lng,
@@ -46,10 +49,33 @@
 	</div>
 {/if}
 {#if editPanelOpen}
-	<div class="fixed right-0 top-0 bottom-0 bg-red-200 w-72 z-[100000] text-center">
-		<div class="flex flex-col">
-			<input name="name" placeholder="Name" />
-			<input name="description" placeholder="Description" />
+	<div class="fixed right-0 top-0 bottom-0 border-l bg-white shadow w-72 z-[100000] text-center">
+		<div class="flex flex-col w-full p-2 py-4 gap-3">
+			<div class="flex w-full flex-col">
+				<input bind:value={playableName} name="name" placeholder="Playbale name" />
+				<input
+					bind:value={playableDescription}
+					name="description"
+					placeholder="Playable description"
+				/>
+			</div>
+			<div class="flex w-full flex-col gap-0.5">
+				<p class="text-left text-sm font-semibold">Type of playable</p>
+				<div class="flex w-full">
+					<button
+						on:click={() => (playableType = 'mission')}
+						class={`w-full rounded-l border py-1 ${
+							playableType == 'mission' ? 'bg-primary-500/25 text-primary-600 border-primary' : ''
+						}`}>Mission</button
+					>
+					<button
+						on:click={() => (playableType = 'rumor')}
+						class={`w-full rounded-r border py-1 ${
+							playableType == 'rumor' ? 'bg-primary-500/25 text-primary-600 border-primary' : ''
+						}`}>Rumor</button
+					>
+				</div>
+			</div>
 			<div class="flex gap-1">
 				<button on:click={handleCancel} class="bg-red-500 p-2">Cancel</button>
 				<button on:click={handleConfirm} class="bg-green-500 p-2">Confirm</button>
