@@ -16,11 +16,22 @@
 
 	async function handleJoinCampaign() {
 		let userData = $authStore.data;
-		const docSuccessfullyUpdated = await campaignHandlers.joinCampaign(joinCode, userData.uid);
+		const campaignData = await campaignHandlers.joinCampaign(joinCode, userData.uid);
 
-		if (docSuccessfullyUpdated) {
+		if (campaignData) {
 			showSuccessMessage = true;
 			setTimeout(() => (showSuccessMessage = false), 2000);
+			campaignStore.update((curr) => ({
+				campaigns: [...curr.campaigns, campaignData],
+				selectedCamapaign: campaignData.id ? campaignData.id : null,
+			}));
+			authStore.update((curr) => ({
+				...curr,
+				data: {
+					...curr.data,
+					active_campaign: campaignData.id ? campaignData.id : null,
+				},
+			}));
 			goto('/');
 		} else {
 			showErrorMessage = true;
