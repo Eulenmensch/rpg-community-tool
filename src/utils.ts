@@ -8,7 +8,7 @@ export const unePlayables: IPlayable[] = [
 			lat: -50,
 			long: 30,
 		},
-		type: 'location',
+		type: 'mission',
 	},
 	{
 		name: 'The tavern',
@@ -17,7 +17,7 @@ export const unePlayables: IPlayable[] = [
 			lat: -5,
 			long: -10,
 		},
-		type: 'location',
+		type: 'mission',
 	},
 	{
 		name: 'Pirates entering the bay',

@@ -6,12 +6,18 @@
 	import Popup from './Popup.svelte';
 	import { campaignStore } from '$lib/store/campaignStore';
 	import { authStore } from '$lib/store/authStore';
+	import MarkerEditor from '$lib/components/Map/MarkerEditor.svelte';
+
+	let addingNewMarkerOpen: boolean;
+	let editPanelOpen: boolean;
 
 	$: _campaignStore = $campaignStore;
 	$: _authstore = $authStore;
 
 	let map: L.Map;
 	let markerLayer = L.layerGroup();
+	let marker: L.Marker;
+
 	onMount(async () => {
 		const bounds = L.latLngBounds(L.latLng(-285, -101), L.latLng(31, 355));
 		map = L.map('map', {
@@ -21,6 +27,8 @@
 			crs: L.CRS.Simple,
 			maxBounds: bounds,
 		});
+
+		map.on('click', createMarker);
 
 		L.tileLayer('src/lib/images/map/theUnknown/{z}/{x}/{y}.png', {
 			minZoom: 1,
@@ -34,6 +42,15 @@
 	afterUpdate(() => {
 		addMarkers();
 	});
+
+	function createMarker(e: any) {
+		if (addingNewMarkerOpen) {
+			marker = L.marker(e.latlng).addTo(map); //TODO: Use markerlayer which does whyever not work
+
+			addingNewMarkerOpen = false;
+			editPanelOpen = true;
+		}
+	}
 
 	function addMarkers() {
 		markerLayer.clearLayers();
@@ -76,6 +93,7 @@
 
 <div>
 	<div style={`height: calc(100vh - ${navHeight})`} class="bg-white w-full grow" id="map" />
+	<MarkerEditor bind:editPanelOpen bind:addingNewMarkerOpen bind:marker />
 </div>
 
 <style>

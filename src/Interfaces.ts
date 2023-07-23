@@ -14,12 +14,18 @@ export interface IUserData {
 	username: string;
 }
 
-export type PlayableType = 'rumor' | 'location';
-
-export interface IPlayable {
+export interface IPlayable extends Marker {
 	name: string;
 	description: string;
 	type: PlayableType;
+}
+export type PlayableType = 'rumor' | 'mission';
+
+export interface ILocation extends Marker {
+	name: string;
+}
+
+export interface Marker {
 	coordinates: {
 		lat: number;
 		long: number;

@@ -1,5 +1,5 @@
 import { type Writable, writable } from 'svelte/store';
-import type { ICampaign } from '../../Interfaces';
+import type { ICampaign, IPlayable } from '../../Interfaces';
 import { db } from '$lib/firebase/firebase.client';
 import {
 	addDoc,
@@ -38,6 +38,10 @@ export const campaignHandlers = {
 		const res = await addDoc(collection(db, `campaign`), campaignToCreate);
 		await authHandlers.update(userId, res.id);
 		return { ...campaignToCreate, id: res.id };
+	},
+	createPlayable: async (playable: IPlayable, campaignId: string): Promise<any> => {
+		const docRef = doc(db, `campaign/${campaignId}`);
+		updateDoc(docRef, { playables: arrayUnion(playable) });
 	},
 	joinCampaign: async (campaignCode: string, userId: string): Promise<ICampaign | null> => {
 		const docRef = doc(db, `campaign/${campaignCode}`);
