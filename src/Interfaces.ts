@@ -31,3 +31,10 @@ export interface Marker {
 		long: number;
 	};
 }
+
+export interface ISession {
+	name: string;
+	date: string;
+	status: 'scheduled' | 'finished';
+	slots: number;
+}

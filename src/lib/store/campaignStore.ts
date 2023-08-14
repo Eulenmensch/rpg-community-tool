@@ -1,5 +1,5 @@
 import { type Writable, writable } from 'svelte/store';
-import type { ICampaign, IPlayable } from '../../Interfaces';
+import type { ICampaign, IPlayable, ISession } from '../../Interfaces';
 import { db } from '$lib/firebase/firebase.client';
 import {
 	addDoc,
@@ -26,7 +26,11 @@ export const campaignStore: Writable<{
 });
 
 export const campaignHandlers = {
-	createCampaign: async (userId: string, type: string, name: string): Promise<ICampaign> => {
+	createCampaign: async (
+		userId: string,
+		type: 'Une' | 'TheUnknown',
+		name: string,
+	): Promise<ICampaign> => {
 		const campaignCode = uuidv4();
 		const campaignToCreate: ICampaign = {
 			user_id: userId,
@@ -35,9 +39,9 @@ export const campaignHandlers = {
 			code: campaignCode,
 			users: [],
 		};
-		const res = await addDoc(collection(db, `campaign`), campaignToCreate);
-		await authHandlers.update(userId, res.id);
-		return { ...campaignToCreate, id: res.id };
+		const campaignRef = await addDoc(collection(db, `campaign`), campaignToCreate);
+		await authHandlers.update(userId, campaignRef.id);
+		return { ...campaignToCreate, id: campaignRef.id };
 	},
 	createPlayable: async (playable: IPlayable, campaignId: string): Promise<any> => {
 		const docRef = doc(db, `campaign/${campaignId}`);
@@ -54,29 +58,13 @@ export const campaignHandlers = {
 		}
 		return null;
 	},
-	getAllCampaignsForUser: async (userId: string): Promise<ICampaign[] | null> => {
-		const campaignRef = collection(db, 'campaign');
-		const q = query(
-			campaignRef,
+	getAllCampaignsForUser: async (userId: string): Promise<ICampaign[]> => {
+		const campaignCollectionRef = collection(db, 'campaign');
+		const campaignQuery = query(
+			campaignCollectionRef,
 			or(where('user_id', '==', userId), where('users', 'array-contains', userId)),
 		);
-		const snapshot = await getDocs(q);
-
-		return new Promise((resolve, reject) => {
-			if (!snapshot.empty) {
-				const myArray: any[] = [];
-				snapshot.forEach((doc) => {
-					const data: any = doc.data();
-					myArray.push({
-						id: doc.id,
-						...data,
-					});
-				});
-				resolve(myArray);
-			}
-			if (snapshot.empty) {
-				resolve([]);
-			}
-		});
+		const snapshot = await getDocs(campaignQuery);
+		return snapshot.docs.map((doc) => ({ id: doc.id, ...(doc.data() as ICampaign) }));
 	},
 };

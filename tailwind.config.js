@@ -15,13 +15,16 @@ export default {
 					600: '#235f6c',
 					700: '#1d505a',
 					800: '#174048',
-					900: '#13343b'
-				}
+					900: '#13343b',
+				},
+				dark: {
+					DEFAULT: '#181818',
+				},
 			},
 			fontFamily: {
-				inknut : ["Inknut_Antiqua"],
-			}
-		}
+				inknut: ['Inknut_Antiqua'],
+			},
+		},
 	},
-	plugins: []
+	plugins: [],
 };
