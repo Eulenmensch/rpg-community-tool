@@ -1,5 +1,8 @@
 <script lang="ts">
-	import type { ISession } from '../../Interfaces';
+	import type { ISession } from '../../../Interfaces';
+	import EmptySlot from './EmptySlot.svelte';
+	import FilledSlot from './FilledSlot.svelte';
+
 	export let session: ISession;
 	let dialogOpen = false;
 </script>
@@ -11,7 +14,7 @@
 	<p>{session.name}</p>
 	<div class="flex gap-3">
 		<p>{session.date}</p>
-		<p>0/{session.slots}</p>
+		<p>{session.personas.length}/{session.slots}</p>
 	</div>
 </button>
 {#if dialogOpen}
@@ -29,9 +32,15 @@
 				</div>
 				<div class="py-8 px-20 text-dark/90 flex flex-col gap-12">
 					<div class="flex justify-between">
-						<div>
-							<span>0/{session.slots}</span>
-							<button class="bg-primary px-2 py-1">Join</button>
+						<div class="flex items-center">
+							<div class="flex gap-2">
+								{#each session.personas as persona}
+									<FilledSlot />
+								{/each}
+								{#each Array(session.slots - session.personas.length) as _}
+									<EmptySlot {session} />
+								{/each}
+							</div>
 						</div>
 						<span>{session.date}</span>
 					</div>

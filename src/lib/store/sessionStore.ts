@@ -1,11 +1,11 @@
 import { db } from '$lib/firebase/firebase.client';
-import { doc, collection, getDocs, addDoc } from 'firebase/firestore';
-import type { ISession } from '../../Interfaces';
+import { doc, collection, getDocs, addDoc, arrayUnion, updateDoc } from 'firebase/firestore';
+import type { IPersona, ISession } from '../../Interfaces';
 
 export const sessionHandlers = {
-	joinSession: async (sessionId: string, personaId: string) => {
-		//TODO: Join session with active persona
-		console.log(sessionId, personaId);
+	joinSession: async (sessionId: string, persona: IPersona) => {
+		const sessionDocRef = doc(db, `campaign/${persona.campaignId}/sessions/${sessionId}`);
+		updateDoc(sessionDocRef, { personas: arrayUnion(persona.id) });
 	},
 	createSessionForCampaign: async (campaignId: string, session: ISession) => {
 		const campaignRef = doc(db, 'campaign', campaignId);
@@ -16,6 +16,6 @@ export const sessionHandlers = {
 		const campaignRef = doc(db, 'campaign', campaignId);
 		const sessionsCollectionRef = collection(campaignRef, 'sessions');
 		const snapshot = await getDocs(sessionsCollectionRef);
-		return snapshot.docs.map((session) => ({ id: session.id, ...(session.data() as ISession) }));
+		return snapshot.docs.map((session) => ({ ...(session.data() as ISession), id: session.id }));
 	},
 };

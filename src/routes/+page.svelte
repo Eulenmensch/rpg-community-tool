@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Alert from '$lib/components/Alert.svelte';
-	import Session from '$lib/components/Session.svelte';
+	import Session from '$lib/components/Session/Session.svelte';
 	import { authStore } from '$lib/store/authStore';
 	import { campaignHandlers, campaignStore } from '$lib/store/campaignStore';
 	import { onMount } from 'svelte';
@@ -34,6 +34,7 @@
 		if (!activeCampaign) return;
 
 		const newSession: ISession = {
+			id: '',
 			date: '21.12.2022',
 			name: 'My new Session',
 			description: 'My new fancy session',
@@ -41,6 +42,7 @@
 			status: 'scheduled',
 			personas: [],
 		};
+		//TODO: override id once session is created
 		sessionHandlers.createSessionForCampaign(activeCampaign, newSession);
 		sessions = [...sessions, newSession];
 	}
@@ -49,7 +51,6 @@
 		let userData = $authStore.data;
 		if (!userData) return;
 		personas = await personaHandlers.getAllPersonasForUser(userData.uid);
-		console.log(personas);
 	}
 
 	async function getSessions() {

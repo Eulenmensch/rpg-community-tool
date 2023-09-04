@@ -35,6 +35,7 @@ export interface Marker {
 }
 
 export interface ISession {
+	id: string;
 	name: string;
 	date: string;
 	status: 'scheduled' | 'finished';
