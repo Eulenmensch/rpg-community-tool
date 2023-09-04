@@ -14,6 +14,8 @@
   }, 
   "editor.formatOnSave": true,
   "cSpell.words": [
+    "firestore",
+    "playables",
     "uuidv"
   ]
 }
