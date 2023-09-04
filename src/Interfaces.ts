@@ -5,12 +5,14 @@ export interface ICampaign {
 	code: string;
 	playables: IPlayable[];
 	users: string[];
+	sessions?: ISession[];
 }
 
 export interface IUserData {
 	uid: string;
 	email: string;
 	active_campaign: string | null;
+	active_persona: IPersona | null;
 	username: string;
 }
 
@@ -37,4 +39,15 @@ export interface ISession {
 	date: string;
 	status: 'scheduled' | 'finished';
 	slots: number;
+	description: string;
+	personas: IPersona[];
 }
+
+export interface IPersona {
+	id?: string;
+	name: string;
+	type: Persona;
+	campaignId: string;
+}
+
+type Persona = 'master' | 'player';

@@ -26,6 +26,7 @@ export const authStore: Writable<IAuthData> = writable({
 		active_campaign: '',
 		email: '',
 		username: '',
+		active_persona: null,
 	},
 });
 
