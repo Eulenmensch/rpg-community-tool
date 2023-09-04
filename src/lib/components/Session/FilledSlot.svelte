@@ -9,6 +9,8 @@
 	function handleUnsubscribeFromSession(session: ISession, userData: IUserData) {
 		if (!userData?.active_persona || !session?.id) return;
 		sessionHandlers.unsubscribeFromSession(session.id, userData.active_persona);
+
+		//TODO: Update state
 	}
 </script>
 

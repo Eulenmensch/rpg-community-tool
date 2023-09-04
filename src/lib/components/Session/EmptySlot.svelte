@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { authStore } from '$lib/store/authStore';
-	import { sessionHandlers } from '$lib/store/sessionStore';
+	import { sessionHandlers, sessionStore } from '$lib/store/sessionStore';
 	import type { ISession, IUserData } from '../../../Interfaces';
 
 	export let session: ISession;
@@ -12,6 +12,15 @@
 			return;
 		}
 		sessionHandlers.joinSession(session.id, userData.active_persona);
+		//TODO: Fix this, prevent multiple joins
+		sessionStore.update((curr) => {
+			const sessionToAddPersonaTo = { ...curr.find((_session) => _session.id === session.id) };
+			if (!sessionToAddPersonaTo || !userData.active_persona) return curr;
+			if (!sessionToAddPersonaTo.personas) return curr;
+			sessionToAddPersonaTo.personas.push(userData.active_persona);
+			const updatedSessions = curr.map((s) => (s.id === session.id ? sessionToAddPersonaTo : s));
+			return updatedSessions;
+		});
 	}
 
 	//TODO: Only show option to sign up when you are not part of the session already

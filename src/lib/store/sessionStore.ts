@@ -9,6 +9,9 @@ import {
 	arrayRemove,
 } from 'firebase/firestore';
 import type { IPersona, ISession } from '../../Interfaces';
+import { writable, type Writable } from 'svelte/store';
+
+export const sessionStore: Writable<ISession[]> = writable([]);
 
 export const sessionHandlers = {
 	joinSession: async (sessionId: string, persona: IPersona) => {

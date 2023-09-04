@@ -5,14 +5,13 @@
 	import { campaignHandlers, campaignStore } from '$lib/store/campaignStore';
 	import { onMount } from 'svelte';
 	import type { IPersona, ISession } from '../Interfaces';
-	import { sessionHandlers } from '$lib/store/sessionStore';
+	import { sessionHandlers, sessionStore } from '$lib/store/sessionStore';
 	import { personaHandlers } from '$lib/store/personaStore';
 
 	let code = '';
 	let campaign = $campaignStore.campaigns.find((c) => c.id === $authStore.data.active_campaign);
 	let showErrorMessage = false;
 	let showSuccessMessage = false;
-	let sessions: ISession[] = [];
 	let personas: IPersona[] = [];
 	let activeCampaign = $authStore.data.active_campaign;
 
@@ -44,7 +43,7 @@
 		};
 		//TODO: override id once session is created
 		sessionHandlers.createSessionForCampaign(activeCampaign, newSession);
-		sessions = [...sessions, newSession];
+		sessionStore.update((curr) => [...curr, newSession]);
 	}
 
 	async function getPersonas() {
@@ -55,7 +54,8 @@
 
 	async function getSessions() {
 		if (!activeCampaign) return;
-		sessions = await sessionHandlers.getSessionsByCampaign(activeCampaign);
+		const retrievedSessions = await sessionHandlers.getSessionsByCampaign(activeCampaign);
+		sessionStore.set(retrievedSessions);
 	}
 
 	async function handleJoinCampaign() {
@@ -111,7 +111,7 @@
 
 		<div class="flex flex-col gap-2">
 			<h2>Sessions</h2>
-			{#each sessions as session}
+			{#each $sessionStore as session}
 				<Session {session} />
 			{/each}
 		</div>
