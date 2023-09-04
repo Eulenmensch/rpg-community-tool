@@ -2,6 +2,7 @@
 	import { authHandlers, authStore } from '$lib/store/authStore';
 	import CampaignSelector from './CampaignSelector.svelte';
 	import { navHeight } from '$lib/helpers';
+	import PersonaSelector from './PersonaSelector.svelte';
 
 	let username: string;
 	authStore.subscribe((user) => {
@@ -20,6 +21,7 @@
 	</ol>
 	<div class="flex">
 		<CampaignSelector />
+		<PersonaSelector />
 		<span class="mx-4">Logged in as: {username}</span>
 		<button class="bg-primary text-white px-2 rounded-sm" on:click={() => authHandlers.logout()}
 			>Logout</button
