@@ -1,11 +1,23 @@
 import { db } from '$lib/firebase/firebase.client';
-import { doc, collection, getDocs, addDoc, arrayUnion, updateDoc } from 'firebase/firestore';
+import {
+	doc,
+	collection,
+	getDocs,
+	addDoc,
+	arrayUnion,
+	updateDoc,
+	arrayRemove,
+} from 'firebase/firestore';
 import type { IPersona, ISession } from '../../Interfaces';
 
 export const sessionHandlers = {
 	joinSession: async (sessionId: string, persona: IPersona) => {
 		const sessionDocRef = doc(db, `campaign/${persona.campaignId}/sessions/${sessionId}`);
 		updateDoc(sessionDocRef, { personas: arrayUnion(persona.id) });
+	},
+	unsubscribeFromSession: async (sessionId: string, persona: IPersona) => {
+		const sessionDocRef = doc(db, `campaign/${persona.campaignId}/sessions/${sessionId}`);
+		updateDoc(sessionDocRef, { personas: arrayRemove(persona.id) });
 	},
 	createSessionForCampaign: async (campaignId: string, session: ISession) => {
 		const campaignRef = doc(db, 'campaign', campaignId);

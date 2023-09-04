@@ -35,7 +35,7 @@
 						<div class="flex items-center">
 							<div class="flex gap-2">
 								{#each session.personas as persona}
-									<FilledSlot />
+									<FilledSlot {session} />
 								{/each}
 								{#each Array(session.slots - session.personas.length) as _}
 									<EmptySlot {session} />
