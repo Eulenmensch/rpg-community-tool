@@ -20,7 +20,7 @@
 {#if dialogOpen}
 	<!-- svelte-ignore a11y-click-events-have-key-events -->
 	<div
-		class="fixed inset-0 bg-dark/70 flex items-center"
+		class="fixed inset-0 bg-dark/80 flex items-center"
 		on:click={() => (dialogOpen = false)}
 		aria-modal="true"
 		tabindex="-1"

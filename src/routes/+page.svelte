@@ -7,6 +7,7 @@
 	import type { IPersona, ISession } from '../Interfaces';
 	import { sessionHandlers, sessionStore } from '$lib/store/sessionStore';
 	import { personaHandlers } from '$lib/store/personaStore';
+	import CreateSessionDialog from '$lib/components/Session/CreateSessionDialog.svelte';
 
 	let code = '';
 	let campaign = $campaignStore.campaigns.find((c) => c.id === $authStore.data.active_campaign);
@@ -27,23 +28,6 @@
 		let userData = $authStore.data;
 		if (!activeCampaign || !userData) return;
 		personaHandlers.createPersona(activeCampaign, userData?.uid);
-	}
-
-	async function createSession() {
-		if (!activeCampaign) return;
-
-		const newSession: ISession = {
-			id: '',
-			date: '21.12.2022',
-			name: 'My new Session',
-			description: 'My new fancy session',
-			slots: 4,
-			status: 'scheduled',
-			personas: [],
-		};
-		//TODO: override id once session is created
-		sessionHandlers.createSessionForCampaign(activeCampaign, newSession);
-		sessionStore.update((curr) => [...curr, newSession]);
 	}
 
 	async function getPersonas() {
@@ -105,8 +89,8 @@
 		<div>
 			<h2>Test Buttons</h2>
 			<button class="bg-red-500 p-1 mx-1" on:click={createCampaign}>Create Campaign</button>
-			<button class="bg-red-500 p-1 mx-1" on:click={createSession}>Create Session</button>
 			<button class="bg-red-500 p-1 mx-1" on:click={createPersona}>Create Persona</button>
+			<CreateSessionDialog />
 		</div>
 
 		<div class="flex flex-col gap-2">
