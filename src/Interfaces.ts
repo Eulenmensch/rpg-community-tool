@@ -41,7 +41,7 @@ export interface ISession {
 	status: 'scheduled' | 'finished';
 	slots: number;
 	description: string;
-	personas: IPersona[];
+	personas: string[];
 }
 
 export interface IPersona {

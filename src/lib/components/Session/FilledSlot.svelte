@@ -1,22 +1,32 @@
 <script lang="ts">
 	import { authStore } from '$lib/store/authStore';
-	import { sessionHandlers } from '$lib/store/sessionStore';
-	import type { ISession, IUserData } from '../../../Interfaces';
+	import { sessionHandlers, sessionStore } from '$lib/store/sessionStore';
+	import type { IPersona, ISession } from '../../../Interfaces';
 
 	export let session: ISession;
-	let userData = $authStore.data;
+	const { active_persona: activePersona } = $authStore.data;
 
-	function handleUnsubscribeFromSession(session: ISession, userData: IUserData) {
-		if (!userData?.active_persona || !session?.id) return;
-		sessionHandlers.unsubscribeFromSession(session.id, userData.active_persona);
+	function handleUnsubscribeFromSession(session: ISession, activePersona: IPersona | null) {
+		if (!activePersona || !session?.id) return;
+		sessionHandlers.unsubscribeFromSession(session.id, activePersona);
 
-		//TODO: Update state
+		sessionStore.update((curr) =>
+			curr.map((_session) => {
+				if (_session.id === session.id) {
+					return {
+						..._session,
+						personas: _session.personas.filter((personaId) => personaId !== activePersona.id),
+					};
+				}
+				return _session;
+			}),
+		);
 	}
 </script>
 
 <div class="relative inline-block group">
 	<button
-		on:click={() => handleUnsubscribeFromSession(session, userData)}
+		on:click={() => handleUnsubscribeFromSession(session, activePersona)}
 		class="h-10 w-10 rounded-full bg-gradient-to-b from-[#b61414] to-[#edcbf1] border-[5px] border-black"
 	/>
 	<div
