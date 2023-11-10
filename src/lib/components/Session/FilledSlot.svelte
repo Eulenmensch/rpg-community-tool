@@ -4,6 +4,7 @@
 	import type { IPersona, ISession } from '../../../Interfaces';
 
 	export let session: ISession;
+	export let persona: IPersona;
 	const { active_persona: activePersona } = $authStore.data;
 
 	function handleUnsubscribeFromSession(session: ISession, activePersona: IPersona | null) {
@@ -15,7 +16,7 @@
 				if (_session.id === session.id) {
 					return {
 						..._session,
-						personas: _session.personas.filter((personaId) => personaId !== activePersona.id),
+						personas: _session.personas.filter((persona) => persona.id !== activePersona.id),
 					};
 				}
 				return _session;
@@ -26,12 +27,17 @@
 
 <div class="relative inline-block group">
 	<button
+		disabled={activePersona?.id != persona.id}
 		on:click={() => handleUnsubscribeFromSession(session, activePersona)}
-		class="h-10 w-10 rounded-full bg-gradient-to-b from-[#b61414] to-[#edcbf1] border-[5px] border-black"
-	/>
-	<div
-		class="shadow border border-x-gray-400/30 absolute whitespace-nowrap -translate-x-1/2 left-1/2 py-1 px-2 mt-0.5 rounded-sm transition group-hover:opacity-100 opacity-0 duration-300"
+		class="h-10 w-10 rounded-full bg-gradient-to-b from-[#b61414] to-[#edcbf1] border-[5px] border-black font-bold"
+		>{persona.name.slice(0, 1)}</button
 	>
-		Unsubscribe
-	</div>
+
+	{#if activePersona?.id === persona.id}
+		<div
+			class="shadow border border-x-gray-400/30 absolute whitespace-nowrap -translate-x-1/2 left-1/2 py-1 px-2 mt-0.5 rounded-sm transition group-hover:opacity-100 opacity-0 duration-300"
+		>
+			Unsubscribe
+		</div>
+	{/if}
 </div>

@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { disableScrollHandling } from '$app/navigation';
 	import Dialog from '$lib/components/Dialog.svelte';
 	import { authStore } from '$lib/store/authStore';
 	import { sessionHandlers, sessionStore } from '$lib/store/sessionStore';
@@ -7,6 +6,7 @@
 
 	let dialog: HTMLDialogElement;
 	let activeCampaign = $authStore.data.active_campaign;
+	let active_persona = $authStore.data.active_persona;
 
 	async function createSession() {
 		if (!activeCampaign) return;
@@ -21,8 +21,9 @@
 			status: 'scheduled',
 			personas: [],
 		};
-		//TODO: override id once session is created
-		sessionHandlers.createSessionForCampaign(activeCampaign, newSession);
+		if (active_persona) newSession.personas.push(active_persona);
+		const newSessionId = await sessionHandlers.createSessionForCampaign(activeCampaign, newSession);
+		newSession.id = newSessionId;
 		sessionStore.update((curr) => [...curr, newSession]);
 		dialog.close();
 	}

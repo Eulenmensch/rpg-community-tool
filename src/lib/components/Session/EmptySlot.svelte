@@ -11,7 +11,9 @@
 	onMount(() => {
 		sessionStore.subscribe((sessions) => {
 			const foundSession = sessions.find((s) => s.id === session.id);
-			personaIsPartOfSession = foundSession?.personas.includes(activePersona?.id as string);
+			personaIsPartOfSession = foundSession?.personas?.some(
+				(_persona) => _persona.id == activePersona?.id,
+			);
 		});
 	});
 
@@ -31,7 +33,7 @@
 				if (_session.id === session.id) {
 					return {
 						..._session,
-						personas: [..._session.personas, activePersona.id as string],
+						personas: [..._session.personas, activePersona],
 					};
 				}
 				return _session;

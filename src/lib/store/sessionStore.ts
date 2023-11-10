@@ -1,13 +1,5 @@
 import { db } from '$lib/firebase/firebase.client';
-import {
-	doc,
-	collection,
-	getDocs,
-	addDoc,
-	arrayUnion,
-	updateDoc,
-	arrayRemove,
-} from 'firebase/firestore';
+import { doc, collection, getDocs, addDoc, setDoc, deleteDoc } from 'firebase/firestore';
 import type { IPersona, ISession } from '../../Interfaces';
 import { writable, type Writable } from 'svelte/store';
 
@@ -15,22 +7,52 @@ export const sessionStore: Writable<ISession[]> = writable([]);
 
 export const sessionHandlers = {
 	joinSession: async (sessionId: string, persona: IPersona) => {
-		const sessionDocRef = doc(db, `campaign/${persona.campaignId}/sessions/${sessionId}`);
-		updateDoc(sessionDocRef, { personas: arrayUnion(persona.id) });
+		const personasInSessionRef = collection(
+			db,
+			`campaign/${persona.campaignId}/sessions/${sessionId}/personas`,
+		);
+		const personaDocRef = doc(personasInSessionRef, persona.id);
+		const personaData = { ...persona };
+		delete personaData.id;
+		await setDoc(personaDocRef, personaData);
 	},
 	unsubscribeFromSession: async (sessionId: string, persona: IPersona) => {
-		const sessionDocRef = doc(db, `campaign/${persona.campaignId}/sessions/${sessionId}`);
-		updateDoc(sessionDocRef, { personas: arrayRemove(persona.id) });
+		const personasInSessionRef = collection(
+			db,
+			`campaign/${persona.campaignId}/sessions/${sessionId}/personas`,
+		);
+		const personaDocRef = doc(personasInSessionRef, persona.id);
+		await deleteDoc(personaDocRef);
 	},
-	createSessionForCampaign: async (campaignId: string, session: ISession) => {
+	createSessionForCampaign: async (campaignId: string, session: ISession): Promise<string> => {
 		const campaignRef = doc(db, 'campaign', campaignId);
 		const subCollectionRef = collection(campaignRef, 'sessions');
-		await addDoc(subCollectionRef, session);
+		const sessionData: any = { ...session };
+		delete sessionData.personas;
+		const newSessionDoc = await addDoc(subCollectionRef, session);
+		return newSessionDoc.id;
 	},
 	getSessionsByCampaign: async (campaignId: string): Promise<ISession[]> => {
 		const campaignRef = doc(db, 'campaign', campaignId);
 		const sessionsCollectionRef = collection(campaignRef, 'sessions');
 		const snapshot = await getDocs(sessionsCollectionRef);
-		return snapshot.docs.map((session) => ({ ...(session.data() as ISession), id: session.id }));
+
+		const sessions: ISession[] = [];
+		for (const sessionDoc of snapshot.docs) {
+			const sessionData = sessionDoc.data() as ISession;
+			const sessionId = sessionDoc.id;
+
+			const personasCollectionRef = collection(sessionDoc.ref, 'personas');
+			const personasSnapshot = await getDocs(personasCollectionRef);
+			const personas = personasSnapshot.docs.map((personaDoc) => ({
+				...(personaDoc.data() as IPersona),
+				id: personaDoc.id,
+			}));
+
+			sessionData.personas = personas;
+			sessions.push({ ...sessionData, id: sessionId });
+		}
+
+		return sessions;
 	},
 };
