@@ -1,7 +1,10 @@
 <script lang="ts">
+	import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
+	import Fa from 'svelte-fa';
 	import type { ISession } from '../../../Interfaces';
 	import EmptySlot from './EmptySlot.svelte';
 	import FilledSlot from './FilledSlot.svelte';
+	import { sessionStatusToIcon } from '$lib/helpers';
 
 	export let session: ISession;
 	let dialogOpen = false;
@@ -11,7 +14,10 @@
 	on:click={() => (dialogOpen = !dialogOpen)}
 	class="bg-dark text-white py-3 px-5 rounded flex justify-between"
 >
-	<p>{session.name}</p>
+	<div class="flex items-center gap-3">
+		<Fa class="text-lg" icon={sessionStatusToIcon[session.status]} />
+		<p>{session.name}</p>
+	</div>
 	<div class="flex gap-3">
 		<p>{session.date}</p>
 		<p>{session.personas.length}/{session.slots}</p>

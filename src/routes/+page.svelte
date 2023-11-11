@@ -93,7 +93,7 @@
 			<CreateSessionDialog />
 		</div>
 
-		<div class="flex flex-col gap-2">
+		<div class="flex flex-col gap-2 px-[15%]">
 			<h2>Sessions</h2>
 			{#each $sessionStore as session}
 				<Session {session} />

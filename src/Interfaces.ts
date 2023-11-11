@@ -37,8 +37,8 @@ export interface Marker {
 export interface ISession {
 	id: string;
 	name: string;
-	date: string;
-	status: 'scheduled' | 'finished';
+	date: DateFormat;
+	status: 'available' | 'ongoing' | 'closed';
 	slots: number;
 	description: string;
 	personas: IPersona[];
@@ -52,3 +52,4 @@ export interface IPersona {
 }
 
 type Persona = 'master' | 'player';
+export type DateFormat = `${number}-${string}-${string}`;

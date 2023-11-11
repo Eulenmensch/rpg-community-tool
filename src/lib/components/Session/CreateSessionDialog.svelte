@@ -2,23 +2,29 @@
 	import Dialog from '$lib/components/Dialog.svelte';
 	import { authStore } from '$lib/store/authStore';
 	import { sessionHandlers, sessionStore } from '$lib/store/sessionStore';
-	import type { ISession } from '../../../Interfaces';
+	import type { DateFormat, ISession } from '../../../Interfaces';
 
 	let dialog: HTMLDialogElement;
 	let activeCampaign = $authStore.data.active_campaign;
 	let active_persona = $authStore.data.active_persona;
 
+	let sessionName: string;
+	let numberOfPlayers: number;
+
+	const today = new Date();
+	let todayAsString = today.toISOString().split('T')[0] as DateFormat;
+	let sessionDate: DateFormat = todayAsString;
+	let description: string;
+
 	async function createSession() {
 		if (!activeCampaign) return;
-
 		const newSession: ISession = {
 			id: '',
-			date: '21.12.2022',
-			name: 'My new Session',
-			description: `After the last hunting party going after the Weaverbeast did not manage to finish the job, a new opportunity has presented itself. The Weaverbeast and what is suspected to be its mate have been spotted by the party that helped evacuate Acumrash in the Forest to the East. 
-            Of course, two beasts are more than one so bring your A-Game! Stock up on potions, upgrade your armor and maybe talk strategy before heading out. `,
-			slots: 4,
-			status: 'scheduled',
+			date: sessionDate,
+			name: sessionName,
+			description: description ? description : '',
+			slots: numberOfPlayers,
+			status: 'available',
 			personas: [],
 		};
 		if (active_persona) newSession.personas.push(active_persona);
@@ -26,17 +32,21 @@
 		newSession.id = newSessionId;
 		sessionStore.update((curr) => [...curr, newSession]);
 		dialog.close();
+
+		const form = document.getElementById('create_session_form') as HTMLFormElement;
+		if (!form) return;
+		form.reset();
 	}
 </script>
 
 <button on:click={() => dialog.showModal()}>Create Session</button>
 <Dialog bind:dialog>
-	<div class="p-4 bg-white">
-		<div>Placeholder for session name</div>
-		<div>Placeholder for session description</div>
-		<div>Placeholder for session slots etc. ...</div>
-		<button class="bg-primary text-white px-2 py-1 rounded-sm" on:click={createSession}
-			>Create Test Session</button
-		>
-	</div>
+	<form id="create_session_form" on:submit={createSession} class="p-4 bg-white flex flex-col gap-2">
+		<p>Create a new session</p>
+		<input placeholder="name" bind:value={sessionName} type="text" required />
+		<input placeholder="Number of players" bind:value={numberOfPlayers} type="number" required />
+		<input placeholder="date" bind:value={sessionDate} type="date" required />
+		<textarea placeholder="Describe your campaign" bind:value={description} />
+		<button type="submit" class="bg-primary text-white px-2 py-1 rounded-sm">Create session</button>
+	</form>
 </Dialog>
