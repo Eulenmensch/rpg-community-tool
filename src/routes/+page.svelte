@@ -7,7 +7,7 @@
 	import type { IPersona, ISession } from '../Interfaces';
 	import { sessionHandlers, sessionStore } from '$lib/store/sessionStore';
 	import { personaHandlers } from '$lib/store/personaStore';
-	import CreateSessionDialog from '$lib/components/Session/CreateSessionDialog.svelte';
+	import CreateSessionDialog from '$lib/components/Session/CreateOrEditSessionDialog.svelte';
 
 	let code = '';
 	let campaign = $campaignStore.campaigns.find((c) => c.id === $authStore.data.active_campaign);
@@ -65,9 +65,12 @@
 			setTimeout(() => (showErrorMessage = false), 2000);
 		}
 	}
+
+	let dialog: HTMLDialogElement;
 </script>
 
 <div class="p-4 font-inknut">
+	<button on:click={() => dialog.showModal()}>Open Child Dialog</button>
 	<div class="flex py-2 flex-col gap-4">
 		<h1 class="text-lg font-semibold mb-6">Protected Landing - Dashboard page</h1>
 		<div class="flex flex-col p-2 rounded bg-slate-100 w-72">
@@ -90,7 +93,9 @@
 			<h2>Test Buttons</h2>
 			<button class="bg-red-500 p-1 mx-1" on:click={createCampaign}>Create Campaign</button>
 			<button class="bg-red-500 p-1 mx-1" on:click={createPersona}>Create Persona</button>
-			<CreateSessionDialog />
+			<button class="bg-red-500 p-1 mx-1" on:click={() => dialog.showModal()}>Create Session</button
+			>
+			<CreateSessionDialog bind:dialog type="create" />
 		</div>
 
 		<div class="flex flex-col gap-2 px-[15%]">

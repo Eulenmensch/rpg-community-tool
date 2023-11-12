@@ -1,5 +1,5 @@
 import { db } from '$lib/firebase/firebase.client';
-import { doc, collection, getDocs, addDoc, setDoc, deleteDoc } from 'firebase/firestore';
+import { doc, collection, getDocs, addDoc, setDoc, deleteDoc, updateDoc } from 'firebase/firestore';
 import type { IPersona, ISession } from '../../Interfaces';
 import { writable, type Writable } from 'svelte/store';
 
@@ -31,6 +31,15 @@ export const sessionHandlers = {
 		delete sessionData.personas;
 		const newSessionDoc = await addDoc(subCollectionRef, session);
 		return newSessionDoc.id;
+	},
+	editSession: async (campaignId: string, session: ISession) => {
+		const docRef = doc(db, `campaign/${campaignId}/sessions/${session.id}`);
+		await updateDoc(docRef, {
+			name: session.name,
+			date: session.date,
+			description: session.description,
+			slots: session.slots,
+		});
 	},
 	getSessionsByCampaign: async (campaignId: string): Promise<ISession[]> => {
 		const campaignRef = doc(db, 'campaign', campaignId);

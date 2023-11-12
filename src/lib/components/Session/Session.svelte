@@ -1,58 +1,44 @@
 <script lang="ts">
-	import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
 	import type { ISession } from '../../../Interfaces';
-	import EmptySlot from './EmptySlot.svelte';
-	import FilledSlot from './FilledSlot.svelte';
 	import { sessionStatusToIcon } from '$lib/helpers';
+	import { authStore } from '$lib/store/authStore';
+	import { faEdit } from '@fortawesome/free-solid-svg-icons';
+	import CreateOrEditSessionDialog from './CreateOrEditSessionDialog.svelte';
+	import SessionViewDialog from './SessionViewDialog.svelte';
 
 	export let session: ISession;
-	let dialogOpen = false;
+
+	let active_persona = $authStore.data.active_persona;
+	let viewDialog: HTMLDialogElement;
+	let editDialog: HTMLDialogElement;
 </script>
 
+<!-- svelte-ignore a11y-click-events-have-key-events -->
 <button
-	on:click={() => (dialogOpen = !dialogOpen)}
-	class="bg-dark text-white py-3 px-5 rounded flex justify-between"
+	on:click={() => viewDialog.showModal()}
+	class={`text-white py-3 px-5 rounded flex justify-between ${
+		active_persona?.id == session.owner ? 'bg-red-200' : 'bg-black'
+	}`}
 >
 	<div class="flex items-center gap-3">
 		<Fa class="text-lg" icon={sessionStatusToIcon[session.status]} />
 		<p>{session.name}</p>
 	</div>
-	<div class="flex gap-3">
+
+	<div class="flex gap-3 items-center">
 		<p>{session.date}</p>
 		<p>{session.personas.length}/{session.slots}</p>
+		{#if active_persona?.id == session.owner}
+			<div
+				on:mousedown|stopPropagation
+				on:click|stopPropagation={() => editDialog.showModal()}
+				class="hover:bg-gray-100 hover:text-primary w-6 h-6 flex justify-center items-center rounded"
+			>
+				<Fa icon={faEdit} />
+			</div>
+		{/if}
 	</div>
 </button>
-{#if dialogOpen}
-	<!-- svelte-ignore a11y-click-events-have-key-events -->
-	<div
-		class="fixed inset-0 bg-dark/80 flex items-center"
-		on:click={() => (dialogOpen = false)}
-		aria-modal="true"
-		tabindex="-1"
-	>
-		<div class="bg-white w-2/3 mx-auto min-h-[20rem] rounded" on:click|stopPropagation>
-			<div class="flex flex-col">
-				<div class="text-lg bg-black py-4 text-white rounded-t px-4">
-					{session?.name ? session?.name : 'No name'}
-				</div>
-				<div class="py-8 px-20 text-dark/90 flex flex-col gap-12">
-					<div class="flex justify-between">
-						<div class="flex items-center">
-							<div class="flex gap-2">
-								{#each session.personas as persona}
-									<FilledSlot {session} {persona} />
-								{/each}
-								{#each Array(session.slots - session.personas.length) as _}
-									<EmptySlot {session} />
-								{/each}
-							</div>
-						</div>
-						<span>{session.date}</span>
-					</div>
-					<span>{session?.description ? session?.description : 'No description'}</span>
-				</div>
-			</div>
-		</div>
-	</div>
-{/if}
+<SessionViewDialog bind:dialog={viewDialog} {session} />
+<CreateOrEditSessionDialog {session} bind:dialog={editDialog} type="edit" />

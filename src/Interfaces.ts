@@ -35,13 +35,14 @@ export interface Marker {
 }
 
 export interface ISession {
-	id: string;
+	id?: string;
 	name: string;
 	date: DateFormat;
 	status: 'available' | 'ongoing' | 'closed';
 	slots: number;
 	description: string;
 	personas: IPersona[];
+	owner: string;
 }
 
 export interface IPersona {
