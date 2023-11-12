@@ -41,6 +41,11 @@ export const sessionHandlers = {
 			slots: session.slots,
 		});
 	},
+	deleteSession: async (campaignId: string, sessionId: string) => {
+		//TODO: Security check
+		const docRef = doc(db, `campaign/${campaignId}/sessions/${sessionId}`);
+		await deleteDoc(docRef);
+	},
 	getSessionsByCampaign: async (campaignId: string): Promise<ISession[]> => {
 		const campaignRef = doc(db, 'campaign', campaignId);
 		const sessionsCollectionRef = collection(campaignRef, 'sessions');
