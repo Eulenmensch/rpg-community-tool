@@ -17,8 +17,8 @@
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <button
 	on:click={() => viewDialog.showModal()}
-	class={`text-white py-3 px-5 rounded flex justify-between ${
-		active_persona?.id == session.owner ? 'bg-red-200' : 'bg-black'
+	class={`text-white py-4 px-5 rounded flex justify-between ${
+		active_persona?.id == session.owner ? 'bg-black' : 'bg-black'
 	}`}
 >
 	<div class="flex items-center gap-3">

@@ -2,7 +2,10 @@
 	import Dialog from '$lib/components/Dialog.svelte';
 	import { authStore } from '$lib/store/authStore';
 	import { sessionHandlers, sessionStore } from '$lib/store/sessionStore';
+	import Fa from 'svelte-fa';
 	import type { DateFormat, ISession } from '../../../Interfaces';
+	import Button from '../Button.svelte';
+	import { faFileEdit, faMinus, faPlus, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 
 	const today = new Date();
 	let deleteConfirmationDialog: HTMLDialogElement;
@@ -28,7 +31,7 @@
 		if (!activeCampaign) return;
 		if (!(active_persona && active_persona?.id)) return;
 
-		if (active_persona) session.personas.push(active_persona);
+		session.personas.push(active_persona);
 		const newSessionId = await sessionHandlers.createSessionForCampaign(activeCampaign, session);
 		session.id = newSessionId;
 		sessionStore.update((curr) => [...curr, session]);
@@ -73,6 +76,11 @@
 		sessionStore.update((curr) => curr.filter((_session) => session.id != _session.id));
 		resetForm();
 	}
+	/* function handleInput(e) {
+		console.log(e.target.value);
+		// e.target.value = e.target.value.replace(/[^0-9]/g, '');
+		session.slots = e.target.value;
+	} */
 </script>
 
 <Dialog bind:dialog on:close={resetForm}>
@@ -81,19 +89,102 @@
 		on:submit={() => {
 			type === 'edit' ? editSession() : createSession();
 		}}
-		class="p-4 bg-white flex flex-col gap-2 mx-auto w-2/3"
+		class="bg-white flex flex-col mx-auto w-2/3 rounded-2xl font-inknut overflow-hidden"
 	>
-		<p>{type === 'edit' ? `Edit session: ${session?.name}` : 'Create a new session'}</p>
-		<input placeholder="name" bind:value={session.name} type="text" required />
-		<input placeholder="Number of players" bind:value={session.slots} type="number" required />
-		<input placeholder="date" bind:value={session.date} type="date" required />
-		<textarea placeholder="Describe your campaign" bind:value={session.description} />
-		<button class="bg-red-500" type="button" on:click={() => deleteConfirmationDialog.showModal()}
-			>Delete Session</button
-		>
-		<button type="submit" class="bg-primary text-white px-2 py-1 rounded-sm">
-			{type === 'edit' ? 'Edit' : 'Create'} session</button
-		>
+		<div class="bg-black text-white py-5 px-10 text-xl flex items-center justify-between">
+			<div class="flex items-center gap-2">
+				{#if type === 'edit'}
+					<Fa class="text-2xl" icon={faFileEdit} />
+				{/if}
+				{#if type === 'create'}
+					<Fa class="text-2xl" icon={faPlusCircle} />
+				{/if}
+				<p class="">
+					{type === 'edit'
+						? `Edit: ${session?.name}`
+						: `Create: ${session?.name ? session?.name : 'New Session'}`}
+				</p>
+			</div>
+
+			<div class="">
+				{#if type === 'edit'}
+					<Button
+						handleClick={() => deleteConfirmationDialog.showModal()}
+						className="bg-red-500 hover:bg-red-600">Delete</Button
+					>
+				{/if}
+			</div>
+		</div>
+		<div class="px-16 flex flex-col gap-8 py-10">
+			<div class="flex items-center justify-between gap-20">
+				<div class="flex flex-col gap-2 w-2/3">
+					<label for="title" class="text-lg font-semibold">Title</label>
+					<input
+						class="border border-gray rounded-sm py-0.5 px-1"
+						name="title"
+						placeholder="Title..."
+						bind:value={session.name}
+						type="text"
+						required
+					/>
+				</div>
+				<div class="flex gap-2 flex-col w-1/3">
+					<label class="text-lg font-semibold" for="date">Date</label>
+					<input
+						name="date"
+						class="py-1 border border-gray px-3"
+						placeholder="date"
+						bind:value={session.date}
+						type="date"
+						required
+					/>
+				</div>
+			</div>
+			<div class=" flex gap-4 items-center">
+				<label for="slots" class="text-lg font-semibold"> Player Limit</label>
+				<div class="flex items-center">
+					<button
+						on:click={() => session.slots--}
+						type="button"
+						class="bg-gray-400 w-10 h-10 hover:bg-gray-500 flex items-center justify-center text-white"
+						><Fa icon={faMinus} />
+					</button>
+					<input
+						class="border border-gray h-10 w-20 flex items text-center justify-center"
+						name="slots"
+						value={session.slots}
+						type="text"
+						required
+						pattern="[0-9]{10}"
+					/>
+					<button
+						on:click={() => session.slots++}
+						type="button"
+						class="bg-gray-400 hover:bg-gray-500 w-10 h-10 flex items-center justify-center text-white"
+					>
+						<Fa icon={faPlus} />
+					</button>
+				</div>
+			</div>
+			<div class="flex flex-col gap-2">
+				<label class="text-lg font-semibold" for="description">Info</label>
+				<textarea
+					name="description"
+					class="min-h-[150px] border border-gray-400 rounded-sm p-4"
+					placeholder="Describe your campaign"
+					bind:value={session.description}
+				/>
+			</div>
+			<div class="flex items-center gap-3 justify-end mt-10">
+				<Button handleClick={() => resetForm()} className="bg-gray-400 hover:bg-gray-500"
+					>Cancel</Button
+				>
+				<Button type="submit" className="bg-primary text-white">
+					{type === 'edit' ? 'Edit' : 'Create'}
+					session
+				</Button>
+			</div>
+		</div>
 	</form>
 </Dialog>
 
@@ -110,3 +201,18 @@
 		</div>
 	</div>
 </Dialog>
+
+<style>
+	/* Chrome, Safari, Edge, Opera */
+	input::-webkit-outer-spin-button,
+	input::-webkit-inner-spin-button {
+		-webkit-appearance: none;
+		margin: 0;
+	}
+
+	/* Firefox */
+	input[type='number'] {
+		-moz-appearance: textfield;
+		appearance: textfield;
+	}
+</style>
