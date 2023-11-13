@@ -42,7 +42,7 @@ export interface ISession {
 	slots: number;
 	description: string;
 	personas: IPersona[];
-	owner: string;
+	owner: IPersona;
 }
 
 export interface IPersona {

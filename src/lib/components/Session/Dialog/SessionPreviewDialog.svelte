@@ -32,7 +32,7 @@
 				</p>
 			</div>
 			<div class="flex items-center gap-8">
-				{#if active_persona?.id == session.owner}
+				{#if active_persona?.id == session.owner.id}
 					<StartButton {session} />
 					<button
 						on:click={() => {
@@ -53,8 +53,9 @@
 		</div>
 		<div class="py-16 px-[10%] text-dark/90 flex flex-col gap-14">
 			<div class="flex justify-between">
-				<div class="flex items-center">
-					<div class="flex gap-2">
+				<div class="flex items-center gap-10">
+					<FilledSlot disableUnsubscribe {session} persona={session.owner} />
+					<div class="flex gap-2.5 items-center">
 						{#each session.personas as persona}
 							<FilledSlot {session} {persona} />
 						{/each}
@@ -68,12 +69,6 @@
 			<p class="leading-relaxed">
 				{session?.description ? session?.description : 'No description'}
 			</p>
-			<!-- <div>
-				<p class="text-lg font-bold">Related Items</p>
-			</div>
-			<div>
-				<p class="text-lg font-bold">Comments</p>
-			</div> -->
 		</div>
 	</div>
 </Dialog>

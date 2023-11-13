@@ -6,6 +6,7 @@
 	import { faEdit } from '@fortawesome/free-solid-svg-icons';
 	import CreateOrEditSessionDialog from './Dialog/CreateOrEditSessionDialog.svelte';
 	import SessionViewDialog from './Dialog/SessionPreviewDialog.svelte';
+	import FilledSlot from './FilledSlot.svelte';
 
 	export let session: ISession;
 
@@ -18,18 +19,19 @@
 <button
 	on:click={() => viewDialog.showModal()}
 	class={`text-white py-4 px-5 rounded flex justify-between ${
-		active_persona?.id == session.owner ? 'bg-black' : 'bg-black'
+		active_persona?.id == session.owner.id ? 'bg-black' : 'bg-black'
 	}`}
 >
-	<div class="flex items-center gap-3">
+	<div class="flex items-center gap-7">
 		<Fa class="text-lg" icon={sessionStatusToIcon[session.status]} />
-		<p>{session.name}</p>
+		<FilledSlot persona={session.owner} {session} disableUnsubscribe={true} />
+		<p class="ml-6">{session.name}</p>
 	</div>
 
 	<div class="flex gap-3 items-center">
 		<p>{session.date}</p>
 		<p>{session.personas.length}/{session.slots}</p>
-		{#if active_persona?.id == session.owner}
+		{#if active_persona?.id == session.owner.id}
 			<div
 				on:mousedown|stopPropagation
 				on:click|stopPropagation={() => editDialog.showModal()}

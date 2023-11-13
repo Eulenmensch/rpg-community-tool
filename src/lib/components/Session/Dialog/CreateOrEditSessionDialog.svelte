@@ -16,7 +16,12 @@
 		date: todayAsString,
 		description: '',
 		name: '',
-		owner: active_persona?.id ? active_persona?.id : '',
+		owner: {
+			name: active_persona?.name ? active_persona?.name : '',
+			type: 'master',
+			id: active_persona?.id,
+			campaignId: activeCampaign ? activeCampaign : '',
+		},
 		personas: [],
 		slots: 4,
 		status: 'available',
@@ -107,7 +112,7 @@
 				{#if type === 'edit'}
 					<Button
 						handleClick={() => deleteConfirmationDialog.showModal()}
-						className="bg-red-500 hover:bg-red-600">Delete</Button
+						className="bg-red-500 hover:bg-red-600 py-1.5">Delete</Button
 					>
 				{/if}
 			</div>
