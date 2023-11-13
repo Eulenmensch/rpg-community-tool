@@ -27,8 +27,6 @@ export const sessionHandlers = {
 	createSessionForCampaign: async (campaignId: string, session: ISession): Promise<string> => {
 		const campaignRef = doc(db, 'campaign', campaignId);
 		const subCollectionRef = collection(campaignRef, 'sessions');
-		const sessionData: any = { ...session };
-		delete sessionData.personas;
 		const newSessionDoc = await addDoc(subCollectionRef, session);
 		return newSessionDoc.id;
 	},
@@ -39,6 +37,7 @@ export const sessionHandlers = {
 			date: session.date,
 			description: session.description,
 			slots: session.slots,
+			status: session.status,
 		});
 	},
 	deleteSession: async (campaignId: string, sessionId: string) => {

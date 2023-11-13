@@ -3,8 +3,8 @@
 	import { authStore } from '$lib/store/authStore';
 	import { sessionHandlers, sessionStore } from '$lib/store/sessionStore';
 	import Fa from 'svelte-fa';
-	import type { DateFormat, ISession } from '../../../Interfaces';
-	import Button from '../Button.svelte';
+	import type { DateFormat, ISession } from '../../../../Interfaces';
+	import Button from '../../Button.svelte';
 	import { faFileEdit, faMinus, faPlus, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 
 	const today = new Date();
@@ -21,6 +21,8 @@
 		slots: 4,
 		status: 'available',
 	};
+	const MAX_SESSION_SLOTS = 10;
+	const MIN_SESSION_SLOTS = 1;
 
 	// --- Props ---
 	export let session: ISession = { ...defaultSession };
@@ -37,6 +39,7 @@
 		sessionStore.update((curr) => [...curr, session]);
 		dialog.close();
 		resetForm();
+		session = { ...defaultSession };
 	}
 
 	async function editSession() {
@@ -62,7 +65,6 @@
 		const form = document.getElementById('create_session_form') as HTMLFormElement;
 		if (!form) return;
 		form.reset();
-		session = { ...defaultSession };
 		dialog.close();
 		deleteConfirmationDialog.close();
 	}
@@ -76,17 +78,12 @@
 		sessionStore.update((curr) => curr.filter((_session) => session.id != _session.id));
 		resetForm();
 	}
-	/* function handleInput(e) {
-		console.log(e.target.value);
-		// e.target.value = e.target.value.replace(/[^0-9]/g, '');
-		session.slots = e.target.value;
-	} */
 </script>
 
 <Dialog bind:dialog on:close={resetForm}>
 	<form
 		id="create_session_form"
-		on:submit={() => {
+		on:submit|preventDefault={() => {
 			type === 'edit' ? editSession() : createSession();
 		}}
 		class="bg-white flex flex-col mx-auto w-2/3 rounded-2xl font-inknut overflow-hidden"
@@ -153,9 +150,10 @@
 						class="border border-gray h-10 w-20 flex items text-center justify-center"
 						name="slots"
 						value={session.slots}
-						type="text"
+						type="number"
+						min="1"
+						max="10"
 						required
-						pattern="[0-9]{10}"
 					/>
 					<button
 						on:click={() => session.slots++}
@@ -165,6 +163,12 @@
 						<Fa icon={faPlus} />
 					</button>
 				</div>
+				{#if session.slots < MIN_SESSION_SLOTS}
+					<p>Minimum number of players is 1</p>
+				{/if}
+				{#if session.slots > MAX_SESSION_SLOTS}
+					<p>Maximum number of players is 10</p>
+				{/if}
 			</div>
 			<div class="flex flex-col gap-2">
 				<label class="text-lg font-semibold" for="description">Info</label>
@@ -180,8 +184,7 @@
 					>Cancel</Button
 				>
 				<Button type="submit" className="bg-primary text-white">
-					{type === 'edit' ? 'Edit' : 'Create'}
-					session
+					{type === 'edit' ? 'Save' : 'Create session'}
 				</Button>
 			</div>
 		</div>
@@ -195,9 +198,7 @@
 			<button type="button" on:click={() => deleteConfirmationDialog.close()} class="p-2"
 				>Do not delete
 			</button>
-			<button type="button" on:click={deleteSession} class="bg-red-500 p-2">
-				Delete forever
-			</button>
+			<button type="button" on:click={deleteSession} class="bg-red-500"> Delete forever </button>
 		</div>
 	</div>
 </Dialog>

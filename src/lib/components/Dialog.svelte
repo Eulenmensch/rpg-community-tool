@@ -17,7 +17,7 @@
 <style>
 	dialog::backdrop {
 		transition: backdrop-filter 0.5s ease;
-		background-color: rgba(0, 0, 0, 0.8);
+		background-color: rgba(0, 0, 0, 0.6);
 		backdrop-filter: blur(3px);
 	}
 </style>

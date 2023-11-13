@@ -38,7 +38,7 @@ export interface ISession {
 	id?: string;
 	name: string;
 	date: DateFormat;
-	status: 'available' | 'ongoing' | 'closed';
+	status: SessionStatus;
 	slots: number;
 	description: string;
 	personas: IPersona[];
@@ -52,5 +52,6 @@ export interface IPersona {
 	campaignId: string;
 }
 
+export type SessionStatus = 'available' | 'ongoing' | 'closed';
 type Persona = 'master' | 'player';
 export type DateFormat = `${number}-${string}-${string}`;

@@ -4,8 +4,8 @@
 	import { sessionStatusToIcon } from '$lib/helpers';
 	import { authStore } from '$lib/store/authStore';
 	import { faEdit } from '@fortawesome/free-solid-svg-icons';
-	import CreateOrEditSessionDialog from './CreateOrEditSessionDialog.svelte';
-	import SessionViewDialog from './SessionViewDialog.svelte';
+	import CreateOrEditSessionDialog from './Dialog/CreateOrEditSessionDialog.svelte';
+	import SessionViewDialog from './Dialog/SessionPreviewDialog.svelte';
 
 	export let session: ISession;
 

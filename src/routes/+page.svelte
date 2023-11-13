@@ -7,7 +7,7 @@
 	import type { IPersona, ISession } from '../Interfaces';
 	import { sessionHandlers, sessionStore } from '$lib/store/sessionStore';
 	import { personaHandlers } from '$lib/store/personaStore';
-	import CreateSessionDialog from '$lib/components/Session/CreateOrEditSessionDialog.svelte';
+	import CreateSessionDialog from '$lib/components/Session/Dialog/CreateOrEditSessionDialog.svelte';
 	import Button from '$lib/components/Button.svelte';
 
 	let code = '';
