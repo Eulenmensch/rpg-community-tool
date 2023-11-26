@@ -17,7 +17,7 @@
 </a>
 <div class="flex font-inknut">
 	<div class={`transition-all ease-in-out duration-[2000ms] w-1/4`}>
-		<RegisterHighlighter {currentStep} />
+		<RegisterHighlighter bind:currentStep />
 	</div>
 
 	<div class="w-3/4 h-screen items-center flex justify-center flex-col">
