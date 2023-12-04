@@ -9,7 +9,6 @@
 	<ol class="flex gap-5 flex-col text-base my-auto">
 		<RegisterItem label="Your Details" step={1} bind:currentStep />
 		<RegisterItem label="Your Password" step={2} bind:currentStep />
-		<RegisterItem label="Your Role" step={3} bind:currentStep />
 		<RegisterItem label="Your Campaign" step={4} bind:currentStep />
 	</ol>
 </div>

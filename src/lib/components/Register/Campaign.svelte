@@ -16,14 +16,17 @@
 
 	async function handleJoinCampaign() {
 		let userData = $authStore.data;
-		const campaignData = await campaignHandlers.joinCampaign(joinCode, userData.uid);
+
+		if (!joinCode || !userData.uid) return;
+		const campaignData = await campaignHandlers.joinCampaignWithoutPersona(joinCode, userData.uid);
+		console.log('DATA', campaignData);
 
 		if (campaignData) {
 			showSuccessMessage = true;
 			setTimeout(() => (showSuccessMessage = false), 2000);
 			campaignStore.update((curr) => ({
 				campaigns: [...curr.campaigns, campaignData],
-				selectedCamapaign: campaignData.id ? campaignData.id : null,
+				selectedCampaign: campaignData.id ? campaignData.id : null,
 			}));
 			authStore.update((curr) => ({
 				...curr,
@@ -39,13 +42,13 @@
 		}
 	}
 
-	async function createCampaignForUser(type: string) {
+	async function createCampaignForUser(type: 'Une' | 'TheUnknown') {
 		const unsubscribe = authStore.subscribe(async (user) => {
 			if (!user) return;
 			const newCampaign = await campaignHandlers.createCampaign(user.data.uid, type, campaignName);
 			campaignStore.update((curr) => ({
 				campaigns: [...curr.campaigns, newCampaign],
-				selectedCamapaign: newCampaign.id ? newCampaign.id : null,
+				selectedCampaign: newCampaign.id ? newCampaign.id : null,
 			}));
 			authStore.update((curr) => ({
 				...curr,
@@ -170,7 +173,7 @@
 					A sprawling continent for adventurers that want to impact a civilized world.
 				</p>
 				<button
-					on:click={() => createCampaignForUser('The unknown')}
+					on:click={() => createCampaignForUser('TheUnknown')}
 					class="bg-primary text-white py-2 px-4 mx-auto mt-4 hover:bg-primary-400"
 				>
 					Get Started

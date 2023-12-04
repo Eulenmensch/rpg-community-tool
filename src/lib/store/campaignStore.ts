@@ -13,16 +13,15 @@ import {
 	or,
 } from 'firebase/firestore';
 import { theUnknownPlayables, unePlayables } from '../../utils';
-import { authHandlers } from './authStore';
-import { v4 as uuidv4 } from 'uuid';
+import { authHandlers, authStore } from './authStore';
 import { arrayUnion } from 'firebase/firestore';
 
 export const campaignStore: Writable<{
 	campaigns: ICampaign[];
-	selectedCamapaign: string | null;
+	selectedCampaign: string | null;
 }> = writable({
 	campaigns: [],
-	selectedCamapaign: null,
+	selectedCampaign: null,
 });
 
 export const campaignHandlers = {
@@ -31,12 +30,10 @@ export const campaignHandlers = {
 		type: 'Une' | 'TheUnknown',
 		name: string,
 	): Promise<ICampaign> => {
-		const campaignCode = uuidv4();
 		const campaignToCreate: ICampaign = {
 			user_id: userId,
 			name: name,
 			playables: type == 'Une' ? unePlayables : theUnknownPlayables,
-			code: campaignCode,
 			users: [],
 		};
 		const campaignRef = await addDoc(collection(db, `campaign`), campaignToCreate);
@@ -47,22 +44,24 @@ export const campaignHandlers = {
 		const docRef = doc(db, `campaign/${campaignId}`);
 		updateDoc(docRef, { playables: arrayUnion(playable) });
 	},
-	joinCampaign: async (campaignCode: string, userId: string): Promise<ICampaign | null> => {
-		const docRef = doc(db, `campaign/${campaignCode}`);
-		const docData = await getDoc(docRef);
-		updateDoc(docRef, { users: arrayUnion(userId) });
-		const docDataDoesExist = docData.exists();
+	joinCampaignWithoutPersona: async (campaignId: string, userId: string) => {
+		const campaignDocRef = doc(db, `campaign/${campaignId}`);
+		const campaignDocData = await getDoc(campaignDocRef);
+		updateDoc(campaignDocRef, { users: arrayUnion(userId) });
+		authHandlers.update(userId, campaignId, true);
+		const docDataDoesExist = campaignDocData.exists();
 		if (docDataDoesExist) {
-			await authHandlers.update(userId, docData.id);
-			return { id: docData.id, ...docData.data() } as ICampaign;
+			await authHandlers.update(userId, campaignId);
+			return { id: campaignId, ...campaignDocData.data() } as ICampaign;
 		}
+
 		return null;
 	},
 	getAllCampaignsForUser: async (userId: string): Promise<ICampaign[]> => {
 		const campaignCollectionRef = collection(db, 'campaign');
 		const campaignQuery = query(
 			campaignCollectionRef,
-			or(where('user_id', '==', userId), where('users', 'array-contains', userId)),
+			or(where('user_id', '==', userId), where('users', 'array-contains', userId)), // change this to subcollection
 		);
 		const snapshot = await getDocs(campaignQuery);
 		return snapshot.docs.map((doc) => ({ id: doc.id, ...(doc.data() as ICampaign) }));

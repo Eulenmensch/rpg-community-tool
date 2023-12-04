@@ -11,10 +11,9 @@ export const sessionHandlers = {
 			db,
 			`campaign/${persona.campaignId}/sessions/${sessionId}/personas`,
 		);
-		const personaDocRef = doc(personasInSessionRef, persona.id);
-		const personaData = { ...persona };
-		delete personaData.id;
-		await setDoc(personaDocRef, personaData);
+
+		delete persona.id;
+		await addDoc(personasInSessionRef, persona);
 	},
 	unsubscribeFromSession: async (sessionId: string, persona: IPersona) => {
 		const personasInSessionRef = collection(
@@ -25,6 +24,7 @@ export const sessionHandlers = {
 		await deleteDoc(personaDocRef);
 	},
 	createSessionForCampaign: async (campaignId: string, session: ISession): Promise<string> => {
+		console.log('SES', session);
 		const campaignRef = doc(db, 'campaign', campaignId);
 		const subCollectionRef = collection(campaignRef, 'sessions');
 		const newSessionDoc = await addDoc(subCollectionRef, session);

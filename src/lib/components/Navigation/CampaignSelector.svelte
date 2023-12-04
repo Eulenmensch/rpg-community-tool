@@ -24,7 +24,7 @@
 		}));
 		campaignStore.update((curr) => ({
 			...curr,
-			selectedCamapaign: campaignId,
+			selectedCampaign: campaignId,
 		}));
 	}
 </script>

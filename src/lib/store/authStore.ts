@@ -36,6 +36,8 @@ export const authHandlers = {
 		const q = query(userRef, or(where('username', '==', username), where('email', '==', email)));
 		const snapshot = await getDocs(q);
 
+		console.log(snapshot);
+
 		if (snapshot.empty) {
 			return false;
 		}
@@ -68,9 +70,24 @@ export const authHandlers = {
 	logout: async () => {
 		await signOut(auth);
 	},
-	update: async (userId: string, campaignId: string) => {
-		//TODO: Make this a more general version once we update other parameters aswell
+	update: async (userId: string, campaignId: string, reset_persona?: boolean) => {
+		//TODO: Make this a more general version once we update other parameters as well
 		const docRef = doc(db, `user/${userId}`);
+
+		console.log('CAMPAIGN', campaignId);
+		console.log('USER', userId);
+		console.log('REST', reset_persona);
+
+		if (reset_persona) {
+			setDoc(
+				docRef,
+				{
+					active_campaign: campaignId,
+					active_persona: null,
+				},
+				{ merge: true },
+			);
+		}
 		setDoc(
 			docRef,
 			{

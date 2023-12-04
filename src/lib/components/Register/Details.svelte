@@ -8,7 +8,7 @@
 	export let currentStep: number;
 	let error = false;
 
-	async function checkifUserExists() {
+	async function checkIfUserExists() {
 		if (!email || !username) {
 			error = true;
 			return;
@@ -27,7 +27,7 @@
 	});
 </script>
 
-<form on:submit|preventDefault={checkifUserExists} class="flex flex-col gap-4 items-center">
+<form on:submit|preventDefault={checkIfUserExists} class="flex flex-col gap-4 items-center">
 	<Input label="Username" name="username" type="text" bind:value={username} bind:ref />
 	<Input label="Email" name="email" type="email" bind:value={email} />
 	{#if error}

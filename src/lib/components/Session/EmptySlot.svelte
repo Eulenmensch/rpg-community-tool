@@ -33,7 +33,7 @@
 				if (_session.id === session.id) {
 					return {
 						..._session,
-						personas: [..._session.personas, activePersona],
+						personas: [..._session?.personas, activePersona],
 					};
 				}
 				return _session;
@@ -43,15 +43,20 @@
 </script>
 
 <div class="relative inline-block group">
-	<button disabled={personaIsPartOfSession} on:click={() => joinSession(session, activePersona)}>
+	<button
+		disabled={personaIsPartOfSession || activePersona?.id == session?.owner?.id}
+		on:click={() => joinSession(session, activePersona)}
+	>
 		<img
-			class={`${personaIsPartOfSession ? 'cursor-default' : 'cursor-pointer'} w-10`}
+			class="{personaIsPartOfSession || activePersona?.id == session?.owner?.id
+				? 'cursor-default'
+				: 'cursor-pointer'} w-10"
 			alt="An empty slots where players can sign up for session"
 			src="/images/session_empty_slot.png"
 		/>
 	</button>
 
-	{#if !personaIsPartOfSession}
+	{#if !personaIsPartOfSession && !(activePersona?.id == session?.owner?.id)}
 		<div
 			class="shadow border border-x-gray-400/30 absolute whitespace-nowrap -translate-x-1/2 left-1/2 py-1 px-2 mt-0.5 rounded-sm transition group-hover:opacity-100 opacity-0 duration-300"
 		>

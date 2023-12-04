@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Fa from 'svelte-fa';
 	import type { ISession } from '../../../Interfaces';
-	import { sessionStatusToIcon } from '$lib/helpers';
+	import { formatDateAsDisplayVersion, sessionStatusToIcon } from '$lib/helpers';
 	import { authStore } from '$lib/store/authStore';
 	import { faEdit } from '@fortawesome/free-solid-svg-icons';
 	import CreateOrEditSessionDialog from './Dialog/CreateOrEditSessionDialog.svelte';
@@ -18,19 +18,20 @@
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <button
 	on:click={() => viewDialog.showModal()}
-	class={`text-white py-4 px-5 rounded flex justify-between ${
+	class={`text-white py-4 px-5 pr-14 rounded flex items-center justify-between ${
 		active_persona?.id == session.owner.id ? 'bg-black' : 'bg-black'
 	}`}
 >
 	<div class="flex items-center gap-7">
-		<Fa class="text-lg" icon={sessionStatusToIcon[session.status]} />
+		<Fa class="fa-fw text-lg w-10" icon={sessionStatusToIcon[session.status]} />
 		<FilledSlot persona={session.owner} {session} disableUnsubscribe={true} />
-		<p class="ml-6">{session.name}</p>
+		<p class="ml-4">{session.name}</p>
 	</div>
 
-	<div class="flex gap-3 items-center">
-		<p>{session.date}</p>
-		<p>{session.personas.length}/{session.slots}</p>
+	<div class="flex gap-12 items-center">
+		<p>{formatDateAsDisplayVersion(session.date)}</p>
+		<p class="ml-4">PLAYERS</p>
+		<p>{session?.personas?.length}/{session.slots}</p>
 		{#if active_persona?.id == session.owner.id}
 			<div
 				on:mousedown|stopPropagation

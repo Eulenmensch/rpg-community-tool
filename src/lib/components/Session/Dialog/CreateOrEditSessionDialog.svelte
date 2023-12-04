@@ -6,6 +6,7 @@
 	import type { DateFormat, ISession } from '../../../../Interfaces';
 	import Button from '../../Button.svelte';
 	import { faFileEdit, faMinus, faPlus, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
+	import NumberInput from '$lib/components/NumberInput.svelte';
 
 	const today = new Date();
 	let deleteConfirmationDialog: HTMLDialogElement;
@@ -22,9 +23,9 @@
 			id: active_persona?.id,
 			campaignId: activeCampaign ? activeCampaign : '',
 		},
-		personas: [],
 		slots: 4,
 		status: 'available',
+		personas: [],
 	};
 	const MAX_SESSION_SLOTS = 10;
 	const MIN_SESSION_SLOTS = 1;
@@ -38,8 +39,10 @@
 		if (!activeCampaign) return;
 		if (!(active_persona && active_persona?.id)) return;
 
-		session.personas.push(active_persona);
+		console.log('AC', activeCampaign);
 		const newSessionId = await sessionHandlers.createSessionForCampaign(activeCampaign, session);
+
+		console.log('ID', newSessionId);
 		session.id = newSessionId;
 		sessionStore.update((curr) => [...curr, session]);
 		dialog.close();
@@ -144,9 +147,13 @@
 			</div>
 			<div class=" flex gap-4 items-center">
 				<label for="slots" class="text-lg font-semibold"> Player Limit</label>
-				<div class="flex items-center">
+
+				<NumberInput max={MAX_SESSION_SLOTS} min={MIN_SESSION_SLOTS} bind:value={session.slots} />
+				<!-- <div class="flex items-center">
 					<button
-						on:click={() => session.slots--}
+						on:click={() => {
+							session.slots = Math.max(MIN_SESSION_SLOTS, session.slots - 1);
+						}}
 						type="button"
 						class="bg-gray-400 w-10 h-10 hover:bg-gray-500 flex items-center justify-center text-white"
 						><Fa icon={faMinus} />
@@ -161,17 +168,19 @@
 						required
 					/>
 					<button
-						on:click={() => session.slots++}
+						on:click={() => {
+							session.slots = Math.min(MAX_SESSION_SLOTS, session.slots + 1);
+						}}
 						type="button"
 						class="bg-gray-400 hover:bg-gray-500 w-10 h-10 flex items-center justify-center text-white"
 					>
 						<Fa icon={faPlus} />
 					</button>
-				</div>
-				{#if session.slots < MIN_SESSION_SLOTS}
+				</div> -->
+				{#if session.slots <= MIN_SESSION_SLOTS}
 					<p>Minimum number of players is 1</p>
 				{/if}
-				{#if session.slots > MAX_SESSION_SLOTS}
+				{#if session.slots >= MAX_SESSION_SLOTS}
 					<p>Maximum number of players is 10</p>
 				{/if}
 			</div>
@@ -207,18 +216,3 @@
 		</div>
 	</div>
 </Dialog>
-
-<style>
-	/* Chrome, Safari, Edge, Opera */
-	input::-webkit-outer-spin-button,
-	input::-webkit-inner-spin-button {
-		-webkit-appearance: none;
-		margin: 0;
-	}
-
-	/* Firefox */
-	input[type='number'] {
-		-moz-appearance: textfield;
-		appearance: textfield;
-	}
-</style>

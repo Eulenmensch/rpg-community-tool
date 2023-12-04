@@ -2,7 +2,6 @@ export interface ICampaign {
 	id?: string | null;
 	user_id: string;
 	name: string;
-	code: string;
 	playables: IPlayable[];
 	users: string[];
 	sessions?: ISession[];
@@ -11,7 +10,7 @@ export interface ICampaign {
 export interface IUserData {
 	uid: string;
 	email: string;
-	active_campaign: string | null;
+	active_campaign: string | null | undefined;
 	active_persona: IPersona | null;
 	username: string;
 }
@@ -49,6 +48,8 @@ export interface IPersona {
 	id?: string;
 	name: string;
 	type: Persona;
+	level?: number;
+	characterClass?: string;
 	campaignId: string;
 }
 

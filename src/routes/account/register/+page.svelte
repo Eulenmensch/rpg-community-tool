@@ -3,7 +3,6 @@
 	import Details from '$lib/components/Register/Details.svelte';
 	import Password from '$lib/components/Register/Password.svelte';
 	import RegisterHighlighter from '$lib/components/Register/RegisterHighlighter.svelte';
-	import Role from '$lib/components/Register/Role.svelte';
 
 	let email = '';
 	let username = '';
@@ -28,9 +27,6 @@
 			<Password {username} {email} bind:currentStep />
 		{/if}
 		{#if currentStep === 3}
-			<Role bind:currentStep />
-		{/if}
-		{#if currentStep === 4}
 			<Campaign />
 		{/if}
 	</div>

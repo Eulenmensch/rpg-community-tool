@@ -1,31 +1,40 @@
 import { db } from '$lib/firebase/firebase.client';
-import { addDoc, collection, doc, getDoc, getDocs, query, updateDoc } from 'firebase/firestore';
+import {
+	addDoc,
+	collection,
+	doc,
+	getDoc,
+	getDocs,
+	query,
+	updateDoc,
+	where,
+} from 'firebase/firestore';
 import type { IPersona } from '../../Interfaces';
 
 export const personaHandlers = {
-	createPersona: async (campaignId: string, userId: string) => {
+	createPersona: async (userId: string, persona: IPersona) => {
 		// Add persona to sub-collection
 		const userRef = doc(db, 'user', userId);
 		const personasCollectionRef = collection(userRef, 'personas');
-		//TODO: Get info from frontend
-		const newPersona: IPersona = {
-			name: 'My fancy sorcerer',
-			type: 'player',
-			campaignId: campaignId,
-		};
-		const newPersonaRef = await addDoc(personasCollectionRef, newPersona);
+		const newPersonaRef = await addDoc(personasCollectionRef, persona);
 
 		// Update active persona in user
 		updateDoc(userRef, {
 			'active_persona.id': newPersonaRef.id,
-			'active_persona.name': newPersona.name,
-			'active_persona.type': newPersona.type,
-			'active_persona.campaignId': newPersona.campaignId,
+			'active_persona.name': persona.name,
+			'active_persona.type': persona.type,
+			'active_persona.campaignId': persona.campaignId,
 		});
 	},
 	getAllPersonasForUser: async (userId: string) => {
 		const personaCollectionRef = collection(db, `user/${userId}/personas`);
 		const personaQuery = query(personaCollectionRef);
+		const snapshot = await getDocs(personaQuery);
+		return snapshot.docs.map((doc) => ({ id: doc.id, ...(doc.data() as IPersona) }));
+	},
+	getAllPersonasOfUserInActiveCampaign: async (userId: string, active_campaign: string) => {
+		const personaCollectionRef = collection(db, `user/${userId}/personas`);
+		const personaQuery = query(personaCollectionRef, where('campaignId', '==', active_campaign));
 		const snapshot = await getDocs(personaQuery);
 		return snapshot.docs.map((doc) => ({ id: doc.id, ...(doc.data() as IPersona) }));
 	},
