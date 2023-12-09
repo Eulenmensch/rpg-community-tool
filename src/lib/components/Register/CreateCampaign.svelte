@@ -39,6 +39,7 @@
 			showErrorMessage = true;
 			setTimeout(() => (showErrorMessage = false), 2000);
 		}
+		$authStore.data.active_persona = null;
 	}
 
 	async function createCampaignForUser(type: 'Une' | 'TheUnknown') {
@@ -59,6 +60,7 @@
 			goto('/');
 		});
 		unsubscribe();
+		$authStore.data.active_persona = null;
 	}
 </script>
 
@@ -95,23 +97,22 @@
 			</p>
 		</div>
 
-		<div class="">
+		<form on:submit={handleJoinCampaign} class="">
 			<input bind:value={joinCode} class="border-gray-300 py-2 border" />
-			<button
-				on:click={handleJoinCampaign}
-				class="bg-primary text-white px-6 rounded-sm h-full ml-1">Join</button
-			>
-		</div>
+			<button type="submit" class="bg-primary text-white px-6 rounded-sm h-full ml-1">Join</button>
+		</form>
 	{/if}
 	{#if !join}
-		<div class="flex flex-col text-center mt-8 mb-20 items-center">
+		<form
+			on:submit|preventDefault={() => (subStep = 2)}
+			class="flex flex-col text-center mt-8 mb-20 items-center"
+		>
 			<h1 class="text-2xl font-bold mb-2">Name your Campaign</h1>
 			<input class="border border-gray-300 py-2 mt-2" bind:value={campaignName} />
-			<button
-				on:click={() => (subStep = 2)}
-				class="bg-primary rounded-sm text-white mt-2 w-max px-4 py-2">Continue</button
+			<button type="submit" class="bg-primary rounded-sm text-white mt-2 w-max px-4 py-2"
+				>Continue</button
 			>
-		</div>
+		</form>
 	{/if}
 {/if}
 
@@ -184,5 +185,5 @@
 
 <div>
 	<Alert showAlert={showErrorMessage} text="You got the wrong code mate" color="bg-red-500" />
-	<Alert showAlert={showSuccessMessage} text="Sucesfully joined" color="bg-green-500" />
+	<Alert showAlert={showSuccessMessage} text="Successfully joined" color="bg-green-500" />
 </div>

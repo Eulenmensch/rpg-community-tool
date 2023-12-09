@@ -6,36 +6,46 @@
 	import { personaHandlers } from '$lib/store/personaStore';
 	import { goto } from '$app/navigation';
 	import { campaignHandlers } from '$lib/store/campaignStore';
-	import { onMount } from 'svelte';
+	import { getContext, onMount } from 'svelte';
+	import { page } from '$app/stores';
 	import type { ICampaign, IPersona } from '../../../Interfaces';
 
 	let activeCampaignId = $authStore.data.active_campaign;
 
 	let campaigns: ICampaign[] = [];
-	let selectedCampaign: ICampaign;
+	let selectedCampaign: string;
 	let name = '';
 	const type = 'player';
 	let level = 1;
 	let characterClass = '';
 	let about = '';
 
-	onMount(getCampaigns);
+	onMount(() => {
+		getCampaigns();
+	});
 
 	async function getCampaigns() {
 		campaigns = await campaignHandlers.getAllCampaignsForUser($authStore.data.uid);
-		selectedCampaign = campaigns[0];
+
+		const preselectedCampaignId = $page.url.searchParams.get('campaignId');
+		if (preselectedCampaignId) {
+			selectedCampaign = preselectedCampaignId;
+		} else {
+			if (!campaigns[0]?.id) return;
+			selectedCampaign = campaigns[0]?.id;
+		}
 	}
 
 	async function createPersona() {
 		let userData = $authStore.data;
-		if (!activeCampaignId || !userData || !selectedCampaign?.id) return;
+		if (!activeCampaignId || !userData || !selectedCampaign) return;
 
 		const persona: IPersona = {
 			name: name,
 			type: type,
 			level: level,
 			characterClass: characterClass,
-			campaignId: selectedCampaign.id,
+			campaignId: selectedCampaign,
 		};
 
 		personaHandlers.createPersona(userData?.uid, persona);
@@ -44,7 +54,7 @@
 			...curr,
 			data: {
 				...curr.data,
-				active_campaign: selectedCampaign?.id,
+				active_campaign: selectedCampaign,
 				active_persona: persona,
 			},
 		}));
@@ -86,7 +96,7 @@
 				class="border px-3 py-1 rounded outline-primary"
 			>
 				{#each campaigns as campaign}
-					<option value={campaign}>{campaign.name}</option>
+					<option value={campaign.id}>{campaign.name}</option>
 				{/each}
 			</select>
 		</div>

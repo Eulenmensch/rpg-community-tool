@@ -45,9 +45,7 @@
 	async function handleJoinCampaign() {
 		let personaData = $authStore.data;
 
-		//TOD: This should be okay!
 		if (!personaData.active_persona || !personaData.active_persona.id) return;
-
 		const campaignData = await campaignHandlers.joinCampaignWithoutPersona(code, personaData.uid);
 		if (campaignData) {
 			showSuccessMessage = true;
@@ -88,14 +86,12 @@
 					</div>
 					<span>Players:</span>
 				</div>
-				<div class="bg-red-200">
+				<form on:submit={handleJoinCampaign} class="bg-red-200">
 					<h2>Campaign-Joiner-Tester</h2>
 					<p>Enter a campaign code of a different campaign to join another one</p>
 					<input type="text" bind:value={code} class="bg-slate-100 py-1" />
-					<button on:click={handleJoinCampaign} class="bg-primary text-white px-4 py-1 rounded"
-						>Join</button
-					>
-				</div>
+					<button type="submit" class="bg-primary text-white px-4 py-1 rounded"> Join </button>
+				</form>
 				<div>
 					<h2>Test Buttons</h2>
 					<button class="bg-red-500 p-1 mx-1" on:click={createCampaign}>Create Campaign</button>

@@ -25,9 +25,9 @@
 		</p>
 	</div>
 	<div class="flex gap-8 text-2xl">
-		<Button handleClick={() => goto('/character/create')}>Create</Button>
-		<button class="py-3 px-6 bg-gray-400 text-lg text-white rounded hover:bg-gray-500"
-			>Skip for now</button
-		>
+		<Button handleClick={() => goto(`/character/create?campaignId=${campaign?.id}`)}>Create</Button>
+		<button class="py-3 px-6 bg-gray-400 text-lg text-white rounded hover:bg-gray-500">
+			Skip for now
+		</button>
 	</div>
 </div>

@@ -5,7 +5,7 @@
 	import Fa from 'svelte-fa';
 	import type { DateFormat, ISession } from '../../../../Interfaces';
 	import Button from '../../Button.svelte';
-	import { faFileEdit, faMinus, faPlus, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
+	import { faFileEdit, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 	import NumberInput from '$lib/components/NumberInput.svelte';
 
 	const today = new Date();

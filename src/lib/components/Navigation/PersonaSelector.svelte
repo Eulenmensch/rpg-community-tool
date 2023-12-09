@@ -6,6 +6,7 @@
 	import Fa from 'svelte-fa';
 	import { faCheck, faPlus, faRightFromBracket, faUser } from '@fortawesome/free-solid-svg-icons';
 	import { goto } from '$app/navigation';
+	import { Menu, MenuButton, MenuItems, MenuItem } from '@rgossiaux/svelte-headlessui';
 
 	let open = false;
 	let personas: IPersona[] = [];
@@ -25,56 +26,50 @@
 	}
 </script>
 
-<div class="relative rounded-sm">
-	<button
+<Menu>
+	<MenuButton
 		class="bg-primary hover:bg-primary/80 w-9 h-9 rounded-full flex items-center justify-center"
 		on:click={() => (open = !open)}
 	>
 		<Fa class="" icon={faUser} />
-	</button>
-
-	{#if open}
-		<div class="fixed bg-black py-2 px-4 right-0 mt-2 rounded-bl-lg z-40">
-			<div class="flex flex-col divide-y">
-				<ol class="py-2 gap-0.5 flex flex-col">
-					{#each personas as persona}
-						<li class="p-1 hover:bg-primary/50 text-left flex rounded">
-							<button
-								class="text-left flex items-center w-full"
-								on:click={() => switchActivePersona(persona)}
-							>
-								<span>{persona.name}</span>
-								{#if $authStore.data.active_persona?.id == persona?.id}
-									<Fa class="ml-auto" icon={faCheck} />
-								{/if}
-							</button>
-						</li>
-					{/each}
-					<li>
-						<button
-							on:click={() => goto('/character/create')}
-							class="flex gap-4 px-2 py-1 items-center hover:bg-primary/50 w-full rounded opacity-70"
-						>
-							<Fa icon={faPlus} />
-							<span>New</span>
-						</button>
-					</li>
-				</ol>
-				<div class="py-2">
-					<button on:click={() => goto('/campaign')} class="py-1 px-2 hover:bg-primary/50 rounded">
-						Change Campaign
-					</button>
-				</div>
-				<div class="py-2 flex w-full">
-					<button
-						class=" text-white px-2 rounded-sm w-full flex items-center gap-4 py-1 hover:bg-primary/50"
-						on:click={() => authHandlers.logout()}
+	</MenuButton>
+	<MenuItems class="fixed bg-black py-2 px-4 right-0 mt-2 rounded-bl-lg z-40">
+		<div class="flex flex-col divide-y">
+			<div>
+				{#each personas as persona}
+					<MenuItem
+						on:click={() => switchActivePersona(persona)}
+						let:active
+						class="p-1 hover:bg-primary/50 text-left flex rounded cursor-pointer"
 					>
-						<Fa icon={faRightFromBracket} />
-						<span>Logout</span>
-					</button>
-				</div>
+						<div class="text-left flex items-center w-full {active && 'bg-primary/50'}">
+							<span>{persona.name}</span>
+							{#if $authStore.data.active_persona?.id == persona?.id}
+								<Fa class="ml-auto" icon={faCheck} />
+							{/if}
+						</div>
+					</MenuItem>
+				{/each}
+				<MenuItem on:click={() => goto('/character/create')}>
+					<div
+						class="flex gap-4 px-2 py-1 items-center hover:bg-primary/50 w-full rounded opacity-70 cursor-pointer mb-2"
+					>
+						<Fa icon={faPlus} />
+						<span>New</span>
+					</div>
+				</MenuItem>
 			</div>
+			<MenuItem on:click={() => goto('/campaign')} class="py-2 cursor-pointer">
+				<div class="py-1 px-2 hover:bg-primary/50 rounded">Change Campaign</div>
+			</MenuItem>
+			<MenuItem on:click={() => authHandlers.logout()} class="py-2 flex w-full cursor-pointer">
+				<div
+					class=" text-white px-2 rounded-sm w-full flex items-center gap-4 py-1 hover:bg-primary/50"
+				>
+					<Fa icon={faRightFromBracket} />
+					<span>Logout</span>
+				</div>
+			</MenuItem>
 		</div>
-	{/if}
-</div>
+	</MenuItems>
+</Menu>
