@@ -21,7 +21,6 @@
 		if (!personaId) return;
 		let userData = $authStore.data;
 		personaHandlers.switchActivePersona(userData.uid, personaId);
-
 		//TODO: Update active campaign and active persona
 	}
 </script>
