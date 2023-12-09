@@ -17,11 +17,11 @@
 		personas = await personaHandlers.getAllPersonasForUser(userData.uid);
 	}
 
-	async function switchActivePersona(personaId: string | undefined) {
-		if (!personaId) return;
+	async function switchActivePersona(persona: IPersona) {
+		if (!persona?.id) return;
 		let userData = $authStore.data;
-		personaHandlers.switchActivePersona(userData.uid, personaId);
-		//TODO: Update active campaign and active persona
+		personaHandlers.switchActivePersona(userData.uid, persona?.id);
+		$authStore.data.active_persona = persona;
 	}
 </script>
 
@@ -34,14 +34,14 @@
 	</button>
 
 	{#if open}
-		<div class="fixed bg-black py-2 px-4 right-0 mt-2 rounded-bl-lg">
+		<div class="fixed bg-black py-2 px-4 right-0 mt-2 rounded-bl-lg z-40">
 			<div class="flex flex-col divide-y">
 				<ol class="py-2 gap-0.5 flex flex-col">
 					{#each personas as persona}
 						<li class="p-1 hover:bg-primary/50 text-left flex rounded">
 							<button
 								class="text-left flex items-center w-full"
-								on:click={() => switchActivePersona(persona?.id)}
+								on:click={() => switchActivePersona(persona)}
 							>
 								<span>{persona.name}</span>
 								{#if $authStore.data.active_persona?.id == persona?.id}

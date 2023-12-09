@@ -30,7 +30,7 @@
 
 <section class="font-inknut">
 	<div class="mt-20 flex">
-		<div class="mx-auto w-1/3 flex flex-col gap-4">
+		<div class="lg:mx-auto mx-4 w-full lg:w-1/3 flex flex-col gap-4">
 			<h1 class="text-xl font-semibold mb-2">My campaigns</h1>
 			{#each campaigns as campaign}
 				<CampaignWithPersonas
