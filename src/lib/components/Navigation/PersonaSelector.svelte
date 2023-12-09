@@ -7,6 +7,7 @@
 	import { faCheck, faPlus, faRightFromBracket, faUser } from '@fortawesome/free-solid-svg-icons';
 	import { goto } from '$app/navigation';
 	import { Menu, MenuButton, MenuItems, MenuItem } from '@rgossiaux/svelte-headlessui';
+	import { sessionHandlers, sessionStore } from '$lib/store/sessionStore';
 
 	let open = false;
 	let personas: IPersona[] = [];
@@ -23,6 +24,14 @@
 		let userData = $authStore.data;
 		personaHandlers.switchActivePersona(userData.uid, persona?.id);
 		$authStore.data.active_persona = persona;
+
+		getSessions(persona);
+	}
+
+	async function getSessions(persona: IPersona) {
+		if (!persona?.campaignId) return;
+		const retrievedSessions = await sessionHandlers.getSessionsByCampaign(persona?.campaignId);
+		sessionStore.set(retrievedSessions);
 	}
 </script>
 

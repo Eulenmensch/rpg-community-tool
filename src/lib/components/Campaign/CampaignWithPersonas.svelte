@@ -6,6 +6,7 @@
 	import { authStore } from '$lib/store/authStore';
 	import { goto } from '$app/navigation';
 	import { personaHandlers } from '$lib/store/personaStore';
+	import { sessionHandlers, sessionStore } from '$lib/store/sessionStore';
 
 	export let campaign: ICampaign;
 	export let personasInCampaign: IPersona[];
@@ -16,6 +17,13 @@
 		let userData = $authStore.data;
 		personaHandlers.switchActivePersona(userData.uid, persona?.id);
 		$authStore.data.active_persona = persona;
+		getSessions(persona);
+	}
+
+	async function getSessions(persona: IPersona) {
+		if (!persona?.campaignId) return;
+		const retrievedSessions = await sessionHandlers.getSessionsByCampaign(persona?.campaignId);
+		sessionStore.set(retrievedSessions);
 	}
 </script>
 
