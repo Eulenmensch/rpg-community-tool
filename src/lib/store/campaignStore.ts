@@ -13,7 +13,7 @@ import {
 	or,
 } from 'firebase/firestore';
 import { theUnknownPlayables, unePlayables } from '../../utils';
-import { authHandlers, authStore } from './authStore';
+import { authHandlers } from './authStore';
 import { arrayUnion } from 'firebase/firestore';
 
 export const campaignStore: Writable<{
@@ -61,7 +61,7 @@ export const campaignHandlers = {
 		const campaignCollectionRef = collection(db, 'campaign');
 		const campaignQuery = query(
 			campaignCollectionRef,
-			or(where('user_id', '==', userId), where('users', 'array-contains', userId)), // change this to subcollection
+			or(where('user_id', '==', userId), where('users', 'array-contains', userId)),
 		);
 		const snapshot = await getDocs(campaignQuery);
 		return snapshot.docs.map((doc) => ({ id: doc.id, ...(doc.data() as ICampaign) }));
