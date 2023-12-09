@@ -15,9 +15,5 @@
 	</ol>
 	<div class="flex gap-4">
 		<PersonaSelector />
-		<!-- <span class="mx-4">Logged in as: {$authStore.data.username}</span> -->
-		<button class="bg-primary text-white px-2 rounded-sm" on:click={() => authHandlers.logout()}
-			>Logout</button
-		>
 	</div>
 </div>

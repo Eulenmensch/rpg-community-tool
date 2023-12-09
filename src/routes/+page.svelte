@@ -17,7 +17,7 @@
 	let showSuccessMessage = false;
 	let personas: IPersona[] = [];
 	let activeCampaignId = $authStore.data.active_persona?.campaignId;
-	const debug = true;
+	const debug = false;
 
 	onMount(getSessions);
 	onMount(getPersonas);
@@ -34,7 +34,6 @@
 			userData.uid,
 			activeCampaignId,
 		);
-		console.log(personas);
 	}
 
 	async function getSessions() {
@@ -46,13 +45,10 @@
 	async function handleJoinCampaign() {
 		let personaData = $authStore.data;
 
-		console.log('PERSONADATA', personaData);
 		//TOD: This should be okay!
 		if (!personaData.active_persona || !personaData.active_persona.id) return;
 
-		console.log(1);
 		const campaignData = await campaignHandlers.joinCampaignWithoutPersona(code, personaData.uid);
-
 		if (campaignData) {
 			showSuccessMessage = true;
 			setTimeout(() => (showSuccessMessage = false), 2000);

@@ -1,5 +1,5 @@
 <script>
-	import Campaign from '$lib/components/Register/Campaign.svelte';
+	import CreateCampaign from '$lib/components/Register/CreateCampaign.svelte';
 	import Details from '$lib/components/Register/Details.svelte';
 	import Password from '$lib/components/Register/Password.svelte';
 	import RegisterHighlighter from '$lib/components/Register/RegisterHighlighter.svelte';
@@ -27,7 +27,7 @@
 			<Password {username} {email} bind:currentStep />
 		{/if}
 		{#if currentStep === 3}
-			<Campaign />
+			<CreateCampaign />
 		{/if}
 	</div>
 </div>

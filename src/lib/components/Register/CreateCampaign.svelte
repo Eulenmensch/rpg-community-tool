@@ -9,7 +9,7 @@
 	let join = true;
 	let usePreset = true;
 	let campaignName = '';
-	let substep = 1;
+	let subStep = 1;
 	let joinCode = '';
 	let showErrorMessage = false;
 	let showSuccessMessage = false;
@@ -19,7 +19,6 @@
 
 		if (!joinCode || !userData.uid) return;
 		const campaignData = await campaignHandlers.joinCampaignWithoutPersona(joinCode, userData.uid);
-		console.log('DATA', campaignData);
 
 		if (campaignData) {
 			showSuccessMessage = true;
@@ -63,7 +62,7 @@
 	}
 </script>
 
-{#if substep == 1}
+{#if subStep == 1}
 	<div class="flex bg-gray-200 rounded-full">
 		<button
 			on:click={() => {
@@ -109,14 +108,14 @@
 			<h1 class="text-2xl font-bold mb-2">Name your Campaign</h1>
 			<input class="border border-gray-300 py-2 mt-2" bind:value={campaignName} />
 			<button
-				on:click={() => (substep = 2)}
+				on:click={() => (subStep = 2)}
 				class="bg-primary rounded-sm text-white mt-2 w-max px-4 py-2">Continue</button
 			>
 		</div>
 	{/if}
 {/if}
 
-{#if substep == 2}
+{#if subStep == 2}
 	<div class="flex bg-gray-200 rounded-full">
 		<button
 			on:click={() => {
