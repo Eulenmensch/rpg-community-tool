@@ -42,38 +42,46 @@
 	>
 		<Fa class="" icon={faUser} />
 	</MenuButton>
-	<MenuItems class="fixed bg-black py-2 px-4 right-0 mt-2 rounded-bl-lg z-40">
+	<MenuItems class="fixed bg-black py-2 px-4 right-0 mt-2 rounded-bl-lg z-40 max-w-xs">
 		<div class="flex flex-col divide-y">
 			<div>
 				{#each personas as persona}
 					<MenuItem
 						on:click={() => switchActivePersona(persona)}
 						let:active
-						class="p-1 hover:bg-primary/50 text-left flex rounded cursor-pointer"
+						class="text-left flex cursor-pointer my-1"
 					>
-						<div class="text-left flex items-center w-full {active && 'bg-primary/50'}">
-							<span>{persona.name}</span>
+						<div class="text-left flex items-center w-full p-1 rounded {active && 'bg-primary/50'}">
+							<span class="whitespace-nowrap text-ellipsis overflow-hidden">{persona.name}</span>
 							{#if $authStore.data.active_persona?.id == persona?.id}
-								<Fa class="ml-auto" icon={faCheck} />
+								<Fa class="ml-auto px-2 " icon={faCheck} />
 							{/if}
 						</div>
 					</MenuItem>
 				{/each}
-				<MenuItem on:click={() => goto('/character/create')}>
+				<MenuItem let:active on:click={() => goto('/character/create')}>
 					<div
-						class="flex gap-4 px-2 py-1 items-center hover:bg-primary/50 w-full rounded opacity-70 cursor-pointer mb-2"
+						class="flex gap-4 px-3 py-1 items-center hover:bg-primary/50 w-full rounded opacity-70 cursor-pointer mb-2 {active &&
+							'bg-primary/50'}"
 					>
 						<Fa icon={faPlus} />
 						<span>New</span>
 					</div>
 				</MenuItem>
 			</div>
-			<MenuItem on:click={() => goto('/campaign')} class="py-2 cursor-pointer">
-				<div class="py-1 px-2 hover:bg-primary/50 rounded">Change Campaign</div>
+			<MenuItem let:active on:click={() => goto('/campaign')} class="py-2 cursor-pointer">
+				<div class="py-1 px-2 hover:bg-primary/50 rounded {active && 'bg-primary/50'}">
+					Change Campaign
+				</div>
 			</MenuItem>
-			<MenuItem on:click={() => authHandlers.logout()} class="py-2 flex w-full cursor-pointer">
+			<MenuItem
+				let:active
+				on:click={() => authHandlers.logout()}
+				class="py-2 flex w-full cursor-pointer"
+			>
 				<div
-					class=" text-white px-2 rounded-sm w-full flex items-center gap-4 py-1 hover:bg-primary/50"
+					class=" text-white px-2 rounded-sm w-full flex items-center gap-4 py-1 hover:bg-primary/50 {active &&
+						'bg-primary/50'}"
 				>
 					<Fa icon={faRightFromBracket} />
 					<span>Logout</span>

@@ -58,7 +58,7 @@
 			<p class="opacity-70">You do not have any characters in this campaign yet.</p>
 		{/if}
 		<button
-			on:click={() => goto('/character/create')}
+			on:click={() => goto(`/character/create?campaignId=${campaign?.id}`)}
 			class="flex gap-4 px-2 py-1 items-center hover:bg-primary/80 w-full rounded opacity-70 mt-2"
 		>
 			<Fa icon={faPlus} />
