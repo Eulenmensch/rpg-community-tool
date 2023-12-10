@@ -25,19 +25,24 @@ export const campaignStore: Writable<{
 });
 
 export const campaignHandlers = {
+	getCampaign: async (campaignId: string): Promise<ICampaign> => {
+		const campaignDocRef = doc(db, `campaign/${campaignId}`);
+		const docSnapshot = await getDoc(campaignDocRef);
+		return docSnapshot.data() as ICampaign;
+	},
 	createCampaign: async (
-		userId: string,
+		owner_id: string,
 		type: 'Une' | 'TheUnknown',
 		name: string,
 	): Promise<ICampaign> => {
 		const campaignToCreate: ICampaign = {
-			user_id: userId,
+			owner_id: owner_id,
 			name: name,
 			playables: type == 'Une' ? unePlayables : theUnknownPlayables,
 			users: [],
 		};
 		const campaignRef = await addDoc(collection(db, `campaign`), campaignToCreate);
-		await authHandlers.update(userId, campaignRef.id);
+		await authHandlers.update(owner_id, campaignRef.id);
 		return { ...campaignToCreate, id: campaignRef.id };
 	},
 	createPlayable: async (playable: IPlayable, campaignId: string) => {
@@ -57,11 +62,11 @@ export const campaignHandlers = {
 
 		return null;
 	},
-	getAllCampaignsForUser: async (userId: string): Promise<ICampaign[]> => {
+	getAllCampaignsForUser: async (owner_id: string): Promise<ICampaign[]> => {
 		const campaignCollectionRef = collection(db, 'campaign');
 		const campaignQuery = query(
 			campaignCollectionRef,
-			or(where('user_id', '==', userId), where('users', 'array-contains', userId)),
+			or(where('owner_id', '==', owner_id), where('users', 'array-contains', owner_id)),
 		);
 		const snapshot = await getDocs(campaignQuery);
 		return snapshot.docs.map((doc) => ({ id: doc.id, ...(doc.data() as ICampaign) }));

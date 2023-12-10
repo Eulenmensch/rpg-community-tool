@@ -1,6 +1,6 @@
 export interface ICampaign {
 	id?: string | null;
-	user_id: string;
+	owner_id: string;
 	name: string;
 	playables: IPlayable[];
 	users: string[];

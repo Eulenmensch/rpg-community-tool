@@ -36,8 +36,6 @@ export const authHandlers = {
 		const q = query(userRef, or(where('username', '==', username), where('email', '==', email)));
 		const snapshot = await getDocs(q);
 
-		console.log(snapshot);
-
 		if (snapshot.empty) {
 			return false;
 		}
