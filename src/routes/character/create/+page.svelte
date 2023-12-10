@@ -48,14 +48,18 @@
 			campaignId: selectedCampaign,
 		};
 
-		personaHandlers.createPersona(userData?.uid, persona);
+		const newPersonaId = await personaHandlers.createPersona(userData?.uid, persona);
 
 		authStore.update((curr) => ({
 			...curr,
 			data: {
 				...curr.data,
 				active_campaign: selectedCampaign,
-				active_persona: persona,
+				active_persona: {
+					...persona,
+					id: newPersonaId,
+				},
+				personas: [...curr.data.personas, persona],
 			},
 		}));
 		goto('/');

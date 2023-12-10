@@ -8,15 +8,15 @@
 	import { goto } from '$app/navigation';
 	import { Menu, MenuButton, MenuItems, MenuItem } from '@rgossiaux/svelte-headlessui';
 	import { sessionHandlers, sessionStore } from '$lib/store/sessionStore';
+	import { campaignHandlers, campaignStore } from '$lib/store/campaignStore';
 
 	let open = false;
-	let personas: IPersona[] = [];
 	onMount(getPersonas);
 
 	async function getPersonas() {
 		let userData = $authStore.data;
 		if (!userData) return;
-		personas = await personaHandlers.getAllPersonasForUser(userData.uid);
+		$authStore.data.personas = await personaHandlers.getAllPersonasForUser(userData.uid);
 	}
 
 	async function switchActivePersona(persona: IPersona) {
@@ -25,12 +25,19 @@
 		personaHandlers.switchActivePersona(userData.uid, persona?.id);
 		$authStore.data.active_persona = persona;
 		getSessions(persona);
+		getCampaign(persona.campaignId);
 	}
 
 	async function getSessions(persona: IPersona) {
 		if (!persona?.campaignId) return;
 		const retrievedSessions = await sessionHandlers.getSessionsByCampaign(persona?.campaignId);
 		sessionStore.set(retrievedSessions);
+	}
+
+	async function getCampaign(campaignId: string) {
+		if (!campaignId) return;
+		let campaign = await campaignHandlers.getCampaign(campaignId);
+		$campaignStore.campaign = campaign;
 	}
 </script>
 
@@ -44,7 +51,7 @@
 	<MenuItems class="fixed bg-black py-2 px-4 right-0 mt-2 rounded-bl-lg z-40 max-w-xs">
 		<div class="flex flex-col divide-y">
 			<div>
-				{#each personas as persona}
+				{#each $authStore?.data?.personas as persona}
 					<MenuItem
 						on:click={() => switchActivePersona(persona)}
 						let:active

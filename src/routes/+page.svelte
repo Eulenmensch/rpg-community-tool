@@ -8,11 +8,10 @@
 	import CreateSessionDialog from '$lib/components/Session/Dialog/CreateOrEditSessionDialog.svelte';
 	import Button from '$lib/components/Button.svelte';
 	import WelcomeToCampaignScreen from '$lib/components/Welcome/WelcomeToCampaignScreen.svelte';
-	import { campaignHandlers } from '$lib/store/campaignStore';
+	import { campaignHandlers, campaignStore } from '$lib/store/campaignStore';
 
 	let personas: IPersona[] = [];
 	let activeCampaignId = $authStore.data.active_persona?.campaignId;
-	let campaign: ICampaign;
 	let dialog: HTMLDialogElement;
 
 	onMount(getSessions);
@@ -30,7 +29,7 @@
 
 	async function getCampaign() {
 		if (!activeCampaignId) return;
-		campaign = await campaignHandlers.getCampaign(activeCampaignId);
+		$campaignStore.campaign = await campaignHandlers.getCampaign(activeCampaignId);
 	}
 
 	async function getSessions() {
@@ -47,8 +46,8 @@
 		<div class="flex py-2 flex-col gap-4">
 			<div class="flex flex-col gap-2 px-[5%] my-14">
 				<div class="flex items-center mb-14 gap-8">
-					<h1 class="text-xl font-bold ml-1">{campaign?.name}</h1>
-					{#if campaign?.owner_id === $authStore?.data?.uid}
+					<h1 class="text-2xl font-bold ml-1">{$campaignStore?.campaign?.name}</h1>
+					{#if $campaignStore?.campaign?.owner_id === $authStore?.data?.uid}
 						<Button
 							handleClick={() => {
 								dialog.showModal();
@@ -65,7 +64,7 @@
 						<span class="w-36">Date</span>
 						<span class="w-36 text-right">Players</span>
 						<span class="w-12 text-center">Slots</span>
-						{#if campaign?.owner_id === $authStore?.data?.uid}
+						{#if $campaignStore?.campaign?.owner_id === $authStore?.data?.uid}
 							<span class="w-10 tsext-center">Edit</span>
 						{/if}
 					</div>

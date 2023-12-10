@@ -7,24 +7,27 @@
 	import CreateOrEditSessionDialog from './Dialog/CreateOrEditSessionDialog.svelte';
 	import SessionViewDialog from './Dialog/SessionPreviewDialog.svelte';
 	import FilledSlot from './FilledSlot.svelte';
+	import { campaignStore } from '$lib/store/campaignStore';
 
 	export let session: ISession;
 
 	let active_persona = $authStore.data.active_persona;
 	let viewDialog: HTMLDialogElement;
 	let editDialog: HTMLDialogElement;
+
+	console.log(session);
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <button
 	on:click={() => viewDialog.showModal()}
 	class={`text-white py-4 px-5 rounded flex items-center justify-between ${
-		active_persona?.id == session.owner.id ? 'bg-black' : 'bg-black'
+		active_persona?.id == session.gm_persona.id ? 'bg-black' : 'bg-black'
 	}`}
 >
 	<div class="flex items-center gap-7">
 		<Fa class="fa-fw text-lg w-10" icon={sessionStatusToIcon[session.status]} />
-		<FilledSlot persona={session.owner} {session} disableUnsubscribe={true} />
+		<FilledSlot persona={session.gm_persona} {session} disableUnsubscribe={true} />
 		<p class="ml-4">{session.name}</p>
 	</div>
 
@@ -44,7 +47,7 @@
 			{/each}
 		</div>
 		<p class="w-12 text-center">{session?.personas?.length}/{session.slots}</p>
-		{#if active_persona?.id == session.owner.id}
+		{#if $campaignStore?.campaign?.owner_id === $authStore?.data?.uid}
 			<div class="w-10 flex">
 				<div
 					on:mousedown|stopPropagation

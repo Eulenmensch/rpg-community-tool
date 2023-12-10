@@ -13,6 +13,7 @@ export interface IUserData {
 	active_campaign: string | null | undefined;
 	active_persona: IPersona | null;
 	username: string;
+	personas: IPersona[];
 }
 
 export interface IPlayable extends Marker {
@@ -41,7 +42,7 @@ export interface ISession {
 	slots: number;
 	description: string;
 	personas: IPersona[];
-	owner: IPersona;
+	gm_persona: IPersona;
 }
 
 export interface IPersona {

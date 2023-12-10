@@ -17,7 +17,7 @@
 		date: todayAsString,
 		description: '',
 		name: '',
-		owner: {
+		gm_persona: {
 			name: active_persona?.name ? active_persona?.name : '',
 			type: 'master',
 			id: active_persona?.id,
@@ -36,6 +36,8 @@
 	export let type: 'create' | 'edit';
 
 	async function createSession() {
+		console.log('Campaign', activeCampaign);
+		console.log('active_persona', active_persona);
 		if (!activeCampaign) return;
 		if (!(active_persona && active_persona?.id)) return;
 

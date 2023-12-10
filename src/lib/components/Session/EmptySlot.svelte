@@ -44,11 +44,11 @@
 
 <div class="relative inline-block group">
 	<button
-		disabled={personaIsPartOfSession || activePersona?.id == session?.owner?.id}
+		disabled={personaIsPartOfSession || activePersona?.id == session?.gm_persona?.id}
 		on:click={() => joinSession(session, activePersona)}
 	>
 		<img
-			class="{personaIsPartOfSession || activePersona?.id == session?.owner?.id
+			class="{personaIsPartOfSession || activePersona?.id == session?.gm_persona?.id
 				? 'cursor-default'
 				: 'cursor-pointer'} w-10"
 			alt="An empty slots where players can sign up for session"
@@ -56,7 +56,7 @@
 		/>
 	</button>
 
-	{#if !personaIsPartOfSession && !(activePersona?.id == session?.owner?.id)}
+	{#if !personaIsPartOfSession && !(activePersona?.id == session?.gm_persona?.id)}
 		<div
 			class="shadow border border-x-gray-400/30 absolute whitespace-nowrap -translate-x-1/2 left-1/2 py-1 px-2 mt-0.5 rounded-sm transition group-hover:opacity-100 opacity-0 duration-300"
 		>

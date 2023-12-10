@@ -19,9 +19,11 @@ import { arrayUnion } from 'firebase/firestore';
 export const campaignStore: Writable<{
 	campaigns: ICampaign[];
 	selectedCampaign: string | null;
+	campaign: ICampaign | null;
 }> = writable({
 	campaigns: [],
 	selectedCampaign: null,
+	campaign: null,
 });
 
 export const campaignHandlers = {

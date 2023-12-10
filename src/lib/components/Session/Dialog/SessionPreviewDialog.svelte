@@ -32,7 +32,7 @@
 				</p>
 			</div>
 			<div class="flex items-center gap-8">
-				{#if active_persona?.id == session.owner.id}
+				{#if active_persona?.id == session.gm_persona.id}
 					<StartButton {session} />
 					<button
 						on:click={() => {
@@ -54,7 +54,7 @@
 		<div class="py-16 px-[10%] text-dark/90 flex flex-col gap-14">
 			<div class="flex justify-between">
 				<div class="flex items-center gap-10">
-					<FilledSlot disableUnsubscribe {session} persona={session.owner} />
+					<FilledSlot disableUnsubscribe {session} persona={session.gm_persona} />
 					<div class="flex gap-2.5 items-center">
 						{#each session.personas as persona}
 							<FilledSlot {session} {persona} />

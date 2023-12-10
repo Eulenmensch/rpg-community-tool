@@ -2,7 +2,13 @@
 	import Fa from 'svelte-fa';
 	import type { ICampaign, IPersona } from '../../../Interfaces';
 	import { Disclosure, DisclosureButton, DisclosurePanel } from '@rgossiaux/svelte-headlessui';
-	import { faCheck, faCircle, faCircleCheck, faPlus } from '@fortawesome/free-solid-svg-icons';
+	import {
+		faCheck,
+		faCircle,
+		faCircleCheck,
+		faCopy,
+		faPlus,
+	} from '@fortawesome/free-solid-svg-icons';
 	import { authStore } from '$lib/store/authStore';
 	import { goto } from '$app/navigation';
 	import { personaHandlers } from '$lib/store/personaStore';
@@ -25,17 +31,36 @@
 		const retrievedSessions = await sessionHandlers.getSessionsByCampaign(persona?.campaignId);
 		sessionStore.set(retrievedSessions);
 	}
+
+	function copyToClipboard(textToCopy: string | null | undefined) {
+		if (!textToCopy) return;
+		navigator?.clipboard?.writeText(textToCopy);
+	}
 </script>
 
 <Disclosure class="flex flex-col">
-	<DisclosureButton class="flex py-4 px-7 bg-black text-white rounded-xl z-20 items-center gap-7">
+	<DisclosureButton
+		class="flex py-4 px-3 md:px-7 bg-black text-white rounded-xl z-20 items-center gap-7"
+	>
 		{#if personasInCampaign?.some((pIC) => pIC.id == $authStore.data.active_persona?.id)}
 			<Fa icon={faCircleCheck} class="text-xl text-green-300" />
 		{:else}
 			<Fa icon={faCircle} class="text-xl text-primary" />
 		{/if}
 
-		<span>{campaign.name}</span>
+		<div class="flex flex-col text-left gap-1">
+			<span class="font-semibold text-lg">{campaign.name}</span>
+
+			<div class="flex items-center gap-2.5">
+				<span class="text-xs opacity-80">ID: {campaign.id}</span>
+				<button
+					on:click|stopPropagation={() => copyToClipboard(campaign?.id)}
+					class="w-6 h-6 items-center justify-center flex rounded-sm hover:bg-slate-200 hover:text-primary opacity-80 hover:opacity-100"
+				>
+					<Fa icon={faCopy} />
+				</button>
+			</div>
+		</div>
 		<div class="ml-auto">{personasInCampaign?.length}</div>
 	</DisclosureButton>
 	<DisclosurePanel class="bg-gray-200 px-5 -mt-2 z-10 pt-6 pb-4 rounded-b-xl">

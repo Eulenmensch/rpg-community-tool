@@ -12,7 +12,7 @@ import {
 import type { IPersona } from '../../Interfaces';
 
 export const personaHandlers = {
-	createPersona: async (userId: string, persona: IPersona) => {
+	createPersona: async (userId: string, persona: IPersona): Promise<string> => {
 		// Add persona to sub-collection
 		const userRef = doc(db, 'user', userId);
 		const personasCollectionRef = collection(userRef, 'personas');
@@ -25,6 +25,7 @@ export const personaHandlers = {
 			'active_persona.type': persona.type,
 			'active_persona.campaignId': persona.campaignId,
 		});
+		return newPersonaRef.id;
 	},
 	getAllPersonasForUser: async (userId: string) => {
 		const personaCollectionRef = collection(db, `user/${userId}/personas`);
