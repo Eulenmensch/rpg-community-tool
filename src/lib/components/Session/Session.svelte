@@ -18,7 +18,7 @@
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <button
 	on:click={() => viewDialog.showModal()}
-	class={`text-white py-4 px-5 pr-14 rounded flex items-center justify-between ${
+	class={`text-white py-4 px-5 rounded flex items-center justify-between ${
 		active_persona?.id == session.owner.id ? 'bg-black' : 'bg-black'
 	}`}
 >
@@ -28,17 +28,33 @@
 		<p class="ml-4">{session.name}</p>
 	</div>
 
-	<div class="flex gap-12 items-center">
-		<p>{formatDateAsDisplayVersion(session.date)}</p>
-		<p class="ml-4">PLAYERS</p>
-		<p>{session?.personas?.length}/{session.slots}</p>
+	<div class="flex items-center gap-8">
+		<p class="w-36 text-left">{formatDateAsDisplayVersion(session.date)}</p>
+		<div class="flex w-36 px-2 items-center justify-end">
+			{#if session.personas.length > 4}
+				<p class="pr-2 mr-0.5 mt-2">...</p>
+			{/if}
+			{#if session.personas.length == 0}
+				<p class="mt-2 text-xs text-right opacity-70">No signups yet</p>
+			{/if}
+			{#each session?.personas as persona}
+				<div class="-mx-2">
+					<FilledSlot {persona} {session} />
+				</div>
+			{/each}
+		</div>
+		<p class="w-12 text-center">{session?.personas?.length}/{session.slots}</p>
 		{#if active_persona?.id == session.owner.id}
-			<div
-				on:mousedown|stopPropagation
-				on:click|stopPropagation={() => editDialog.showModal()}
-				class="hover:bg-gray-100 hover:text-primary w-6 h-6 flex justify-center items-center rounded"
-			>
-				<Fa icon={faEdit} />
+			<div class="w-10 flex">
+				<div
+					on:mousedown|stopPropagation
+					on:click|stopPropagation={() => editDialog.showModal()}
+					class="
+				hover:bg-gray-100 hover:text-primary mx-auto
+				w-6 h-6 flex justify-center items-center rounded"
+				>
+					<Fa icon={faEdit} />
+				</div>
 			</div>
 		{/if}
 	</div>

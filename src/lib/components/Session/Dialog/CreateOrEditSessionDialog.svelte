@@ -39,10 +39,7 @@
 		if (!activeCampaign) return;
 		if (!(active_persona && active_persona?.id)) return;
 
-		console.log('AC', activeCampaign);
 		const newSessionId = await sessionHandlers.createSessionForCampaign(activeCampaign, session);
-
-		console.log('ID', newSessionId);
 		session.id = newSessionId;
 		sessionStore.update((curr) => [...curr, session]);
 		dialog.close();
@@ -121,11 +118,11 @@
 			</div>
 		</div>
 		<div class="px-16 flex flex-col gap-8 py-10">
-			<div class="flex items-center justify-between gap-20">
-				<div class="flex flex-col gap-2 w-2/3">
+			<div class="flex lg:items-center justify-between lg:gap-20 gap-4 flex-col lg:flex-row">
+				<div class="flex flex-col gap-2 w-full lg:w-2/3">
 					<label for="title" class="text-lg font-semibold">Title</label>
 					<input
-						class="border border-gray rounded-sm py-0.5 px-1"
+						class="border border-gray rounded-sm py-0.5 px-1 w-full"
 						name="title"
 						placeholder="Title..."
 						bind:value={session.name}
@@ -133,7 +130,7 @@
 						required
 					/>
 				</div>
-				<div class="flex gap-2 flex-col w-1/3">
+				<div class="flex gap-2 flex-col w-full lg:w-1/3">
 					<label class="text-lg font-semibold" for="date">Date</label>
 					<input
 						name="date"
@@ -149,34 +146,6 @@
 				<label for="slots" class="text-lg font-semibold"> Player Limit</label>
 
 				<NumberInput max={MAX_SESSION_SLOTS} min={MIN_SESSION_SLOTS} bind:value={session.slots} />
-				<!-- <div class="flex items-center">
-					<button
-						on:click={() => {
-							session.slots = Math.max(MIN_SESSION_SLOTS, session.slots - 1);
-						}}
-						type="button"
-						class="bg-gray-400 w-10 h-10 hover:bg-gray-500 flex items-center justify-center text-white"
-						><Fa icon={faMinus} />
-					</button>
-					<input
-						class="border border-gray h-10 w-20 flex items text-center justify-center"
-						name="slots"
-						value={session.slots}
-						type="number"
-						min="1"
-						max="10"
-						required
-					/>
-					<button
-						on:click={() => {
-							session.slots = Math.min(MAX_SESSION_SLOTS, session.slots + 1);
-						}}
-						type="button"
-						class="bg-gray-400 hover:bg-gray-500 w-10 h-10 flex items-center justify-center text-white"
-					>
-						<Fa icon={faPlus} />
-					</button>
-				</div> -->
 				{#if session.slots <= MIN_SESSION_SLOTS}
 					<p>Minimum number of players is 1</p>
 				{/if}

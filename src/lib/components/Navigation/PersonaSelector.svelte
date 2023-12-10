@@ -24,7 +24,6 @@
 		let userData = $authStore.data;
 		personaHandlers.switchActivePersona(userData.uid, persona?.id);
 		$authStore.data.active_persona = persona;
-
 		getSessions(persona);
 	}
 
