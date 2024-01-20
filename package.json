@@ -36,6 +36,7 @@
 	"dependencies": {
 		"@fortawesome/free-brands-svg-icons": "^6.4.0",
 		"@fortawesome/free-solid-svg-icons": "^6.4.0",
+		"@rive-app/canvas": "^2.9.3",
 		"@types/leaflet": "^1.9.3",
 		"firebase": "^9.20.0",
 		"firebase-admin": "^11.10.1",
