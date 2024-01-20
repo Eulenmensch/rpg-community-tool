@@ -23,6 +23,7 @@ export default {
 			},
 			fontFamily: {
 				inknut: ['Inknut_Antiqua'],
+				schmaltzy: ['Schmaltzy'],
 			},
 		},
 	},
