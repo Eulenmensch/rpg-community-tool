@@ -160,7 +160,7 @@
 				<textarea
 					name="description"
 					class="min-h-[150px] border border-gray-400 rounded-sm p-4"
-					placeholder="Describe your campaign"
+					placeholder="Describe your session"
 					bind:value={session.description}
 				/>
 			</div>

@@ -8,14 +8,14 @@
 	import SessionViewDialog from './Dialog/SessionPreviewDialog.svelte';
 	import FilledSlot from './FilledSlot.svelte';
 	import { campaignStore } from '$lib/store/campaignStore';
+	import Debug from '$lib/components/Debug/Debug.svelte';
 
 	export let session: ISession;
+	let DEBUG = false;
 
 	let active_persona = $authStore.data.active_persona;
 	let viewDialog: HTMLDialogElement;
 	let editDialog: HTMLDialogElement;
-
-	console.log(session);
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -61,6 +61,9 @@
 			</div>
 		{/if}
 	</div>
+	{#if DEBUG}
+		<Debug {campaignStore} {authStore} />
+	{/if}
 </button>
 <SessionViewDialog bind:dialog={viewDialog} {session} />
 <CreateOrEditSessionDialog {session} bind:dialog={editDialog} type="edit" />

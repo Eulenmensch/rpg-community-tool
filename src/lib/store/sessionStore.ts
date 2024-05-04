@@ -7,13 +7,12 @@ export const sessionStore: Writable<ISession[]> = writable([]);
 
 export const sessionHandlers = {
 	joinSession: async (sessionId: string, persona: IPersona) => {
-		const personasInSessionRef = collection(
+		const personasInSessionRef = doc(
 			db,
-			`campaign/${persona.campaignId}/sessions/${sessionId}/personas`,
+			`campaign/${persona.campaignId}/sessions/${sessionId}/personas/${persona?.id}`,
 		);
 
-		delete persona.id;
-		await addDoc(personasInSessionRef, persona);
+		await setDoc(personasInSessionRef, persona);
 	},
 	unsubscribeFromSession: async (sessionId: string, persona: IPersona) => {
 		const personasInSessionRef = collection(

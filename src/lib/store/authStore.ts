@@ -10,7 +10,7 @@ import { auth, db } from '$lib/firebase/firebase.client';
 import { collection, doc, getDocs, or, query, setDoc, where } from 'firebase/firestore';
 import type { IUserData } from '../../Interfaces';
 
-interface IAuthData {
+export interface IAuthData {
 	user: User | null;
 	loading: boolean;
 	isLoggedIn: boolean;

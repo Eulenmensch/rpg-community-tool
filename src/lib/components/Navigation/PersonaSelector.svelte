@@ -43,7 +43,7 @@
 
 <Menu>
 	<MenuButton
-		class="bg-primary hover:bg-primary/80 w-9 h-9 rounded-full flex items-center justify-center"
+		class="bg-primary hover:bg-primary/80 w-10 h-10 rounded-full flex items-center justify-center"
 		on:click={() => (open = !open)}
 	>
 		<Fa class="" icon={faUser} />
