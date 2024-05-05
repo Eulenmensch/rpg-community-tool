@@ -1,7 +1,6 @@
 <script lang="ts">
 	import Fa from 'svelte-fa';
 	import type { ICampaign, IPersona } from '../../../Interfaces';
-	import { Disclosure, DisclosureButton, DisclosurePanel } from '@rgossiaux/svelte-headlessui';
 	import {
 		faCheck,
 		faCircle,
@@ -38,10 +37,8 @@
 	}
 </script>
 
-<Disclosure class="flex flex-col">
-	<DisclosureButton
-		class="flex py-4 px-3 md:px-7 bg-black text-white rounded-xl z-20 items-center gap-7"
-	>
+<div class="flex flex-col">
+	<button class="flex py-4 px-3 md:px-7 bg-black text-white rounded-xl z-20 items-center gap-7">
 		{#if personasInCampaign?.some((pIC) => pIC.id == $authStore.data.active_persona?.id)}
 			<Fa icon={faCircleCheck} class="text-xl text-green-300" />
 		{:else}
@@ -62,8 +59,8 @@
 			</div>
 		</div>
 		<div class="ml-auto">{personasInCampaign?.length}</div>
-	</DisclosureButton>
-	<DisclosurePanel class="bg-gray-200 px-5 -mt-2 z-10 pt-6 pb-4 rounded-b-xl">
+	</button>
+	<div class="bg-gray-200 px-5 -mt-2 z-10 pt-6 pb-4 rounded-b-xl">
 		<ol class="flex flex-col">
 			{#each personasInCampaign as persona}
 				<li class="py-2 hover:bg-primary/80 rounded px-2">
@@ -89,5 +86,5 @@
 			<Fa icon={faPlus} />
 			<span>New</span>
 		</button>
-	</DisclosurePanel>
-</Disclosure>
+	</div>
+</div>

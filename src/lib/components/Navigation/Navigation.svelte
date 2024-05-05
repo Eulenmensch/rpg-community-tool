@@ -3,8 +3,6 @@
 	import PersonaSelector from './PersonaSelector.svelte';
 	import logo from '$lib/images/Logo Stacked.png';
 	import { page } from '$app/stores';
-
-	console.log($page.route.id);
 </script>
 
 <div
@@ -21,7 +19,7 @@
 		</li>
 		<li><a href="/map" class={$page.route.id == '/map' ? `` : ''}>Map</a></li>
 	</ol>
-	<div class="flex gap-4">
+	<div class="flex">
 		<PersonaSelector />
 	</div>
 </div>
