@@ -14,7 +14,7 @@
 	import { sessionHandlers, sessionStore } from '$lib/store/sessionStore';
 
 	export let campaign: ICampaign;
-	export let personasInCampaign: IPersona[];
+	export let personasInCampaign: IPersona[] = [];
 
 	//TODO: Unify with PersonaSelector
 	async function switchActivePersona(persona: IPersona) {

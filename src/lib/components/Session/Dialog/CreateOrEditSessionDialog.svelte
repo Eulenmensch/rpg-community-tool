@@ -7,7 +7,9 @@
 	import Button from '../../Button.svelte';
 	import { faFileEdit, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 	import NumberInput from '$lib/components/NumberInput.svelte';
+	import { campaignStore } from '$lib/store/campaignStore';
 
+	console.log($campaignStore);
 	const today = new Date();
 	let deleteConfirmationDialog: HTMLDialogElement;
 	let todayAsString = today.toISOString().split('T')[0] as DateFormat;
@@ -163,6 +165,18 @@
 					placeholder="Describe your session"
 					bind:value={session.description}
 				/>
+			</div>
+			<div>
+				<p class="text-lg font-semibold">Related Items</p>
+				{#if $campaignStore?.campaign?.playables}
+					<div class="flex flex-col gap-2 p-8 bg-gray-100 mt-4 max-h-60 overflow-y-auto">
+						{#each $campaignStore?.campaign?.playables as playable}
+							<div class="flex justify-between items-center gap-4">
+								<p class="bg-black w-full text-white p-3 rounded">{playable?.name}</p>
+								<Button>Add</Button>
+							</div>
+						{/each}
+					</div>{/if}
 			</div>
 			<div class="flex items-center gap-3 justify-end mt-10">
 				<Button handleClick={() => resetForm()} className="bg-gray-400 hover:bg-gray-500"
