@@ -3,13 +3,13 @@
 	import { authStore } from '$lib/store/authStore';
 	import { sessionHandlers, sessionStore } from '$lib/store/sessionStore';
 	import Fa from 'svelte-fa';
-	import type { DateFormat, ISession } from '../../../../Interfaces';
+	import type { DateFormat, IPlayable, ISession } from '../../../../Interfaces';
 	import Button from '../../Button.svelte';
 	import { faFileEdit, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 	import NumberInput from '$lib/components/NumberInput.svelte';
 	import { campaignStore } from '$lib/store/campaignStore';
+	import PlayablesList from '../PlayablesList.svelte';
 
-	console.log($campaignStore);
 	const today = new Date();
 	let deleteConfirmationDialog: HTMLDialogElement;
 	let todayAsString = today.toISOString().split('T')[0] as DateFormat;
@@ -31,6 +31,8 @@
 	};
 	const MAX_SESSION_SLOTS = 10;
 	const MIN_SESSION_SLOTS = 1;
+	let playablesInSession: IPlayable[];
+	$: playablesInSession = [];
 
 	// --- Props ---
 	export let session: ISession = { ...defaultSession };
@@ -38,13 +40,13 @@
 	export let type: 'create' | 'edit';
 
 	async function createSession() {
-		console.log('Campaign', activeCampaign);
-		console.log('active_persona', active_persona);
 		if (!activeCampaign) return;
 		if (!(active_persona && active_persona?.id)) return;
 
 		const newSessionId = await sessionHandlers.createSessionForCampaign(activeCampaign, session);
 		session.id = newSessionId;
+
+		sessionHandlers.addPlayableToSession(activeCampaign, session, playablesInSession);
 		sessionStore.update((curr) => [...curr, session]);
 		dialog.close();
 		resetForm();
@@ -166,18 +168,8 @@
 					bind:value={session.description}
 				/>
 			</div>
-			<div>
-				<p class="text-lg font-semibold">Related Items</p>
-				{#if $campaignStore?.campaign?.playables}
-					<div class="flex flex-col gap-2 p-8 bg-gray-100 mt-4 max-h-60 overflow-y-auto">
-						{#each $campaignStore?.campaign?.playables as playable}
-							<div class="flex justify-between items-center gap-4">
-								<p class="bg-black w-full text-white p-3 rounded">{playable?.name}</p>
-								<Button>Add</Button>
-							</div>
-						{/each}
-					</div>{/if}
-			</div>
+			<PlayablesList bind:playablesInSession />
+
 			<div class="flex items-center gap-3 justify-end mt-10">
 				<Button handleClick={() => resetForm()} className="bg-gray-400 hover:bg-gray-500"
 					>Cancel</Button

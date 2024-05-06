@@ -21,7 +21,7 @@ export interface IPlayable extends Marker {
 	description: string;
 	type: PlayableType;
 }
-export type PlayableType = 'rumor' | 'mission';
+export type PlayableType = 'rumor' | 'mission' | 'location';
 
 export interface ILocation extends Marker {
 	name: string;
@@ -43,6 +43,7 @@ export interface ISession {
 	description: string;
 	personas: IPersona[];
 	gm_persona: IPersona;
+	playables?: any[];
 }
 
 export interface IPersona {

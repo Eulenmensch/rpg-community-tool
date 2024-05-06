@@ -8,10 +8,10 @@ export const unePlayables: IPlayable[] = [
 			lat: -50,
 			long: 30,
 		},
-		type: 'mission',
+		type: 'location',
 	},
 	{
-		name: 'The tavern',
+		name: 'The tavern holds a secret',
 		description: 'A lovely little tavern',
 		coordinates: {
 			lat: -5,
@@ -27,6 +27,15 @@ export const unePlayables: IPlayable[] = [
 			long: -100,
 		},
 		type: 'rumor',
+	},
+	{
+		name: 'Ember Tree',
+		description: 'Oh so shiny',
+		coordinates: {
+			lat: -70,
+			long: -100,
+		},
+		type: 'location',
 	},
 ];
 
@@ -48,5 +57,14 @@ export const theUnknownPlayables: IPlayable[] = [
 			long: -10,
 		},
 		type: 'rumor',
+	},
+	{
+		name: 'Kill some outlaws',
+		description: 'It is so freaking huge',
+		coordinates: {
+			lat: -55,
+			long: -30,
+		},
+		type: 'mission',
 	},
 ];

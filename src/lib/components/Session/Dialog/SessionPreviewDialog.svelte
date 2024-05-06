@@ -20,6 +20,7 @@
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <Dialog bind:dialog>
+	<!-- svelte-ignore a11y-no-static-element-interactions -->
 	<div
 		class="bg-white flex flex-col mx-auto w-2/3 rounded-2xl font-inknut overflow-hidden"
 		on:click|stopPropagation
@@ -69,6 +70,14 @@
 			<p class="leading-relaxed">
 				{session?.description ? session?.description : 'No description'}
 			</p>
+			{#if session?.playables}
+				<div>
+					<p class="text-lg font-semibold">Related Items</p>
+					{#each session?.playables as playable}
+						<div>{playable.name}</div>
+					{/each}
+				</div>
+			{/if}
 		</div>
 	</div>
 </Dialog>
