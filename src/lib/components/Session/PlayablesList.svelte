@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { campaignStore } from '$lib/store/campaignStore';
 	import type { IPlayable } from '../../../Interfaces';
-	import Button from '../Button.svelte';
+	import PlayableListItem from './PlayableListItem.svelte';
 
 	export let playablesInSession: IPlayable[];
 
@@ -72,8 +72,8 @@
 					</p>
 				{/if}
 
-				{#each playablesInSession as playableInSession}
-					<div>{playableInSession.name}</div>
+				{#each playablesInSession as playable}
+					<PlayableListItem {playable} bind:playablesInSession />
 				{/each}
 			{:else}
 				{#if $campaignStore?.campaign?.playables.filter((playable) => playable.type == selectedType).length == 0}
@@ -83,12 +83,7 @@
 				{/if}
 
 				{#each $campaignStore?.campaign?.playables.filter((playable) => playable.type == selectedType) as playable}
-					<div class="flex justify-between items-center gap-4">
-						<p class="bg-black w-full text-white p-3 rounded">{playable?.name}</p>
-						<Button handleClick={() => (playablesInSession = [...playablesInSession, playable])}>
-							Add
-						</Button>
-					</div>
+					<PlayableListItem {playable} bind:playablesInSession />
 				{/each}
 			{/if}
 		</div>

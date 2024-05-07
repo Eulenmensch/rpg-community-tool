@@ -47,6 +47,8 @@
 		session.id = newSessionId;
 
 		sessionHandlers.addPlayableToSession(activeCampaignId, session, playablesInSession);
+		session.playables = playablesInSession;
+
 		sessionStore.update((curr) => [...curr, session]);
 		dialog.close();
 		resetForm();
