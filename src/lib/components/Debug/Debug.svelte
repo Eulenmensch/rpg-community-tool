@@ -2,6 +2,7 @@
 	import type { Writable } from 'svelte/store';
 	import type { ICampaign } from '../../../Interfaces';
 	import type { IAuthData } from '$lib/store/authStore';
+	import { sessionStore } from '$lib/store/sessionStore';
 
 	export let activeCampaignId: undefined | string = undefined;
 	export let campaignStore:
@@ -12,6 +13,10 @@
 				campaign: ICampaign | null;
 		  }> = undefined;
 	export let authStore: undefined | Writable<IAuthData> = undefined;
+
+	console.log('CampaignStore', $campaignStore);
+	console.log('AuthStore', $authStore);
+	console.log('SessionStore', $sessionStore);
 </script>
 
 <div class="text-left">
@@ -23,6 +28,7 @@
 			<ol class="">
 				<li>name: {$campaignStore?.campaign?.name}</li>
 				<li>owner_id: {$campaignStore?.campaign?.owner_id}</li>
+				<li>selectedCampaign: {$campaignStore?.selectedCampaign}</li>
 			</ol>
 		</li>
 		<li class="">
@@ -34,6 +40,7 @@
 						<li>
 							Id: {$authStore?.data?.active_persona?.id}
 						</li>
+						<li>UID: {$authStore?.data.uid}</li>
 					</ol>
 				</li>
 			</ol>

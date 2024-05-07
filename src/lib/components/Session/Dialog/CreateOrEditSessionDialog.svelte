@@ -13,7 +13,7 @@
 	const today = new Date();
 	let deleteConfirmationDialog: HTMLDialogElement;
 	let todayAsString = today.toISOString().split('T')[0] as DateFormat;
-	let activeCampaign = $authStore.data.active_campaign;
+	$: activeCampaignId = $authStore.data.active_persona?.campaignId;
 	let active_persona = $authStore.data.active_persona;
 	let defaultSession: ISession = {
 		date: todayAsString,
@@ -23,7 +23,7 @@
 			name: active_persona?.name ? active_persona?.name : '',
 			type: 'master',
 			id: active_persona?.id,
-			campaignId: activeCampaign ? activeCampaign : '',
+			campaignId: activeCampaignId ? activeCampaignId : '',
 		},
 		slots: 4,
 		status: 'available',
@@ -40,13 +40,13 @@
 	export let type: 'create' | 'edit';
 
 	async function createSession() {
-		if (!activeCampaign) return;
+		if (!activeCampaignId) return;
 		if (!(active_persona && active_persona?.id)) return;
 
-		const newSessionId = await sessionHandlers.createSessionForCampaign(activeCampaign, session);
+		const newSessionId = await sessionHandlers.createSessionForCampaign(activeCampaignId, session);
 		session.id = newSessionId;
 
-		sessionHandlers.addPlayableToSession(activeCampaign, session, playablesInSession);
+		sessionHandlers.addPlayableToSession(activeCampaignId, session, playablesInSession);
 		sessionStore.update((curr) => [...curr, session]);
 		dialog.close();
 		resetForm();
@@ -54,11 +54,11 @@
 	}
 
 	async function editSession() {
-		if (!activeCampaign) return;
+		if (!activeCampaignId) return;
 		if (!(active_persona && active_persona?.id)) return;
 		if (!session?.id) return;
 
-		await sessionHandlers.editSession(activeCampaign, session);
+		await sessionHandlers.editSession(activeCampaignId, session);
 
 		sessionStore.update((curr) =>
 			curr.map((_session) => {
@@ -81,10 +81,10 @@
 	}
 
 	async function deleteSession() {
-		if (!activeCampaign) return;
+		if (!activeCampaignId) return;
 		if (!(active_persona && active_persona?.id)) return;
 		if (!session?.id) return;
-		sessionHandlers.deleteSession(activeCampaign, session?.id);
+		sessionHandlers.deleteSession(activeCampaignId, session?.id);
 
 		sessionStore.update((curr) => curr.filter((_session) => session.id != _session.id));
 		resetForm();
