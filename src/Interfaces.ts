@@ -10,7 +10,7 @@ export interface ICampaign {
 export interface IUserData {
 	uid: string;
 	email: string;
-	// active_campaign: string | null | undefined;
+	active_campaign: string | null | undefined;
 	active_persona: IPersona | null;
 	username: string;
 	personas: IPersona[];

@@ -1,17 +1,14 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
+	import { switchActivePersona } from '$lib/helpers';
 	import { authHandlers, authStore } from '$lib/store/authStore';
 	import { personaHandlers } from '$lib/store/personaStore';
-	import { onMount } from 'svelte';
-	import type { IPersona } from '../../../Interfaces';
-	import Fa from 'svelte-fa';
-	import { faCheck, faPlus, faRightFromBracket, faUser } from '@fortawesome/free-solid-svg-icons';
-	import { goto } from '$app/navigation';
-	import { sessionHandlers, sessionStore } from '$lib/store/sessionStore';
-	import { campaignHandlers, campaignStore } from '$lib/store/campaignStore';
-	import { DropdownMenu } from 'bits-ui';
 	import { flyAndScale } from '$lib/utils';
+	import { faCheck, faPlus, faRightFromBracket, faUser } from '@fortawesome/free-solid-svg-icons';
+	import { DropdownMenu } from 'bits-ui';
+	import { onMount } from 'svelte';
+	import Fa from 'svelte-fa';
 
-	let open = false;
 	onMount(getPersonas);
 
 	async function getPersonas() {
@@ -20,26 +17,9 @@
 		$authStore.data.personas = await personaHandlers.getAllPersonasForUser(userData.uid);
 	}
 
-	async function switchActivePersona(persona: IPersona) {
-		if (!persona?.id) return;
-		let userData = $authStore.data;
-		personaHandlers.switchActivePersona(userData.uid, persona?.id);
-		$authStore.data.active_persona = persona;
-		getSessions(persona);
-		getCampaign(persona.campaignId);
-	}
-
-	async function getSessions(persona: IPersona) {
-		if (!persona?.campaignId) return;
-		const retrievedSessions = await sessionHandlers.getSessionsByCampaign(persona?.campaignId);
-		sessionStore.set(retrievedSessions);
-	}
-
-	async function getCampaign(campaignId: string) {
-		if (!campaignId) return;
-		let campaign = await campaignHandlers.getCampaign(campaignId);
-		$campaignStore.campaign = campaign;
-	}
+	$: playersInCampaign = $authStore?.data?.personas?.filter(
+		(p) => p.campaignId == $authStore.data.active_campaign,
+	);
 </script>
 
 <DropdownMenu.Root>
@@ -54,9 +34,9 @@
 	>
 		<div class="flex flex-col divide-y">
 			<div>
-				<p class="uppercase text-xs font-semibold text-white/60 py-1">My Characters</p>
+				<p class="uppercase text-xs font-semibold text-white/60 py-1">My Characters in Campaign</p>
 				<div class="max-h-48 overflow-y-auto">
-					{#each $authStore?.data?.personas as persona}
+					{#each playersInCampaign as persona}
 						<DropdownMenu.Item
 							class="data-[highlighted]:bg-primary/50 text-left flex cursor-pointer my-1 rounded p-1"
 							on:click={() => switchActivePersona(persona)}

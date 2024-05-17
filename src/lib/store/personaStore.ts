@@ -48,10 +48,11 @@ export const personaHandlers = {
 		const personaData = personaDocSnapshot.data() as IPersona;
 
 		updateDoc(userDocRef, {
-			'active_persona.id': personaDocSnapshot.id,
-			'active_persona.name': personaData.name,
-			'active_persona.type': personaData.type,
-			'active_persona.campaignId': personaData.campaignId,
+			'active_persona.id': personaDocSnapshot?.id,
+			'active_persona.name': personaData?.name,
+			'active_persona.type': personaData?.type,
+			'active_persona.campaignId': personaData?.campaignId,
+			active_campaign: personaData?.campaignId,
 		});
 	},
 };

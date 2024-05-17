@@ -1,6 +1,9 @@
 <script lang="ts">
+	import arrow from '$lib/images/Arrow.svg';
 	import { authStore } from '$lib/store/authStore';
-	import { campaignHandlers } from '$lib/store/campaignStore';
+	import { campaignHandlers, campaignStore } from '$lib/store/campaignStore';
+	import { faPlus } from '@fortawesome/free-solid-svg-icons';
+	import Fa from 'svelte-fa';
 	import type { IPlayable, PlayableType } from '../../../Interfaces';
 
 	export let addingNewMarkerOpen: boolean;
@@ -9,6 +12,7 @@
 	let playableName = '';
 	let playableDescription = '';
 	let playableType: PlayableType = 'mission';
+	$: activePersonaIsGM = $campaignStore?.campaign?.owner_id === $authStore?.data?.uid;
 
 	$: _authstore = $authStore;
 
@@ -23,6 +27,7 @@
 				long: coordinates.lng,
 			},
 		};
+
 		if (_authstore.data.active_campaign) {
 			campaignHandlers.createPlayable(newPlayable, _authstore.data.active_campaign);
 			editPanelOpen = false;
@@ -35,10 +40,20 @@
 	}
 </script>
 
-<div class="fixed bottom-0 left-0 bg-red-500 z-[1000000]">
-	<button class="py-4 px-8" on:click={() => (addingNewMarkerOpen = !addingNewMarkerOpen)}
-		>Add Marker</button
-	>
+<div
+	class="fixed bottom-1/2 left-5 z-[1000000] bg-white flex flex-col origin-center translate-y-1/2 image-border"
+>
+	<button class=" p-2 flex justify-center" on:click={() => (addingNewMarkerOpen = false)}>
+		<img src={arrow} class="w-8" alt="Arrow Icon" />
+	</button>
+	{#if activePersonaIsGM}
+		<button
+			class=" p-2 items-center flex justify-center"
+			on:click={() => (addingNewMarkerOpen = !addingNewMarkerOpen)}
+		>
+			<Fa icon={faPlus} class="text-4xl" />
+		</button>
+	{/if}
 </div>
 
 {#if addingNewMarkerOpen}
@@ -83,3 +98,12 @@
 		</div>
 	</div>
 {/if}
+
+<style>
+	.image-border {
+		border: 20px solid;
+		border-image-source: url('description-input-frame.svg');
+		border-image-slice: 32 fill;
+		border-image-repeat: round;
+	}
+</style>

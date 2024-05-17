@@ -1,27 +1,26 @@
 <script lang="ts">
 	import Button from '$lib/components/Button.svelte';
+	import Debug from '$lib/components/Debug/Debug.svelte';
 	import CreateSessionDialog from '$lib/components/Session/Dialog/CreateOrEditSessionDialog.svelte';
 	import Session from '$lib/components/Session/Session.svelte';
 	import WelcomeToCampaignScreen from '$lib/components/Welcome/WelcomeToCampaignScreen.svelte';
 	import { authStore } from '$lib/store/authStore';
-	import { campaignHandlers, campaignStore } from '$lib/store/campaignStore';
+	import { campaignStore } from '$lib/store/campaignStore';
 	import { personaHandlers } from '$lib/store/personaStore';
 	import { sessionHandlers, sessionStore } from '$lib/store/sessionStore';
 	import { faCopy } from '@fortawesome/free-solid-svg-icons';
 	import { onMount } from 'svelte';
 	import Fa from 'svelte-fa';
 	import type { IPersona } from '../Interfaces';
-	import Debug from '$lib/components/Debug/Debug.svelte';
 
 	let personasInActiveCampaign: IPersona[] = [];
 	let activeCampaignId = $authStore.data.active_persona?.campaignId;
 	let dialog: HTMLDialogElement;
-	let DEBUG = true;
+	let DEBUG = false;
 	$: activePersonaIsGM = $campaignStore?.campaign?.owner_id === $authStore?.data?.uid;
 
 	onMount(getSessions);
 	onMount(getPersonasForActiveCampaign);
-	onMount(getCampaign);
 
 	async function getPersonasForActiveCampaign() {
 		let userData = $authStore.data;
@@ -30,11 +29,6 @@
 			userData.uid,
 			activeCampaignId,
 		);
-	}
-
-	async function getCampaign() {
-		if (!activeCampaignId) return;
-		$campaignStore.campaign = await campaignHandlers.getCampaign(activeCampaignId);
 	}
 
 	async function getSessions() {

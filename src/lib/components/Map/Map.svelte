@@ -11,9 +11,6 @@
 	let addingNewMarkerOpen: boolean;
 	let editPanelOpen: boolean;
 
-	$: _campaignStore = $campaignStore;
-	$: _authstore = $authStore;
-
 	let map: L.Map;
 	let markerLayer = L.layerGroup();
 	let marker: L.Marker;
@@ -71,8 +68,8 @@
 			popupAnchor: [0, -55],
 		});
 
-		_campaignStore.campaigns
-			.find((c) => c.id == _authstore.data.active_campaign)
+		$campaignStore.campaigns
+			.find((c) => c.id == $authStore.data.active_campaign)
 			?.playables.map((playable) => {
 				let leafletMarker = L.marker([playable.coordinates.lat, playable.coordinates.long], {
 					title: playable.name,

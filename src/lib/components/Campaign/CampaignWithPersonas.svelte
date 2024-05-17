@@ -1,6 +1,7 @@
 <script lang="ts">
-	import Fa from 'svelte-fa';
-	import type { ICampaign, IPersona } from '../../../Interfaces';
+	import { goto } from '$app/navigation';
+	import { switchActivePersona } from '$lib/helpers';
+	import { authStore } from '$lib/store/authStore';
 	import {
 		faCheck,
 		faCircle,
@@ -8,28 +9,11 @@
 		faCopy,
 		faPlus,
 	} from '@fortawesome/free-solid-svg-icons';
-	import { authStore } from '$lib/store/authStore';
-	import { goto } from '$app/navigation';
-	import { personaHandlers } from '$lib/store/personaStore';
-	import { sessionHandlers, sessionStore } from '$lib/store/sessionStore';
+	import Fa from 'svelte-fa';
+	import type { ICampaign, IPersona } from '../../../Interfaces';
 
 	export let campaign: ICampaign;
 	export let personasInCampaign: IPersona[] = [];
-
-	//TODO: Unify with PersonaSelector
-	async function switchActivePersona(persona: IPersona) {
-		if (!persona?.id) return;
-		let userData = $authStore.data;
-		personaHandlers.switchActivePersona(userData.uid, persona?.id);
-		$authStore.data.active_persona = persona;
-		getSessions(persona);
-	}
-
-	async function getSessions(persona: IPersona) {
-		if (!persona?.campaignId) return;
-		const retrievedSessions = await sessionHandlers.getSessionsByCampaign(persona?.campaignId);
-		sessionStore.set(retrievedSessions);
-	}
 
 	function copyToClipboard(textToCopy: string | null | undefined) {
 		if (!textToCopy) return;

@@ -43,6 +43,9 @@
 				const userData = userFromDb.data() as IUserData;
 				const campaigns = await campaignHandlers.getAllCampaignsForUser(user.uid);
 
+				if (!userData.active_campaign) return;
+				const activeCampaign = await campaignHandlers.getCampaign(userData.active_campaign);
+
 				authStore.update((curr) => ({
 					...curr,
 					loading: false,
@@ -51,7 +54,11 @@
 				}));
 
 				if (!campaigns) return;
-				campaignStore.update((curr) => ({ ...curr, campaigns: campaigns }));
+				campaignStore.update((curr) => ({
+					...curr,
+					campaigns: campaigns,
+					campaign: activeCampaign,
+				}));
 			}
 		});
 		return unsubscribe;

@@ -114,7 +114,11 @@
 		</div>
 
 		<div class="flex gap-4 ml-auto mt-12">
-			<button type="reset" class="px-3 bg-gray-400 text-white rounded outline-primary">
+			<button
+				type="button"
+				on:click={() => history.back()}
+				class="px-3 bg-gray-400 text-white rounded outline-primary"
+			>
 				Cancel
 			</button>
 			<Button type="submit">Create</Button>
