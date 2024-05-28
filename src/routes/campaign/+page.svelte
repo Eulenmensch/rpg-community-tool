@@ -32,6 +32,10 @@
 	<div class="mt-20 flex">
 		<div class="md:mx-auto mx-4 w-full md:w-2/3 xl:w-1/3 flex flex-col gap-4">
 			<h1 class="text-xl font-semibold mb-2">My campaigns</h1>
+
+			{#if campaigns?.length == 0}
+				<p class="text-dark/80">You do not have any campaigns yet</p>
+			{/if}
 			{#each campaigns as campaign}
 				<CampaignWithPersonas
 					{campaign}

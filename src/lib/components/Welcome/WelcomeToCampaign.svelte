@@ -2,9 +2,8 @@
 	import { goto } from '$app/navigation';
 	import { navHeight } from '$lib/helpers';
 	import { authStore } from '$lib/store/authStore';
-
+	import Button from '$lib/components/Button.svelte';
 	import { campaignStore } from '$lib/store/campaignStore';
-	import Button from '../Button.svelte';
 
 	let campaign = $campaignStore.campaigns.find((c) => c.id === $authStore.data.active_campaign);
 </script>

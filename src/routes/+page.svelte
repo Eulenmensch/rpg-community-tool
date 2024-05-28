@@ -3,7 +3,8 @@
 	import Debug from '$lib/components/Debug/Debug.svelte';
 	import CreateSessionDialog from '$lib/components/Session/Dialog/CreateOrEditSessionDialog.svelte';
 	import Session from '$lib/components/Session/Session.svelte';
-	import WelcomeToCampaignScreen from '$lib/components/Welcome/WelcomeToCampaignScreen.svelte';
+	import WelcomeToCampaignScreen from '$lib/components/Welcome/WelcomeToCampaign.svelte';
+	import WelcomeWithoutCampaign from '$lib/components/Welcome/WelcomeWithoutCampaign.svelte';
 	import { authStore } from '$lib/store/authStore';
 	import { campaignStore } from '$lib/store/campaignStore';
 	import { personaHandlers } from '$lib/store/personaStore';
@@ -16,8 +17,9 @@
 	let personasInActiveCampaign: IPersona[] = [];
 	let activeCampaignId = $authStore.data.active_persona?.campaignId;
 	let dialog: HTMLDialogElement;
-	let DEBUG = false;
+	let DEBUG = true;
 	$: activePersonaIsGM = $campaignStore?.campaign?.owner_id === $authStore?.data?.uid;
+	let open = false;
 
 	onMount(getSessions);
 	onMount(getPersonasForActiveCampaign);
@@ -43,7 +45,9 @@
 	}
 </script>
 
-{#if personasInActiveCampaign.length == 0}
+{#if $authStore.data.active_campaign === null}
+	<WelcomeWithoutCampaign />
+{:else if personasInActiveCampaign.length == 0}
 	<WelcomeToCampaignScreen />
 {:else}
 	<div class="p-4 font-inknut">
@@ -63,12 +67,8 @@
 						</div>
 					</div>
 					{#if activePersonaIsGM}
-						<Button
-							handleClick={() => {
-								dialog.showModal();
-							}}
-							className="">Create Session</Button
-						>
+						<Button handleClick={() => (open = true)}>Create Session</Button>
+						<CreateSessionDialog bind:dialogOpen={open} type="create" />
 					{/if}
 				</div>
 				<div class="flex items-center gap-5 mb-2.5 ml-4 font-semibold">
@@ -96,10 +96,10 @@
 				{/if}
 			</div>
 		</div>
-		{#if DEBUG}
-			<Debug {campaignStore} {activeCampaignId} {authStore} />
-			<div>activePersonaIsGm: {activePersonaIsGM}</div>
-		{/if}
 	</div>
-	<CreateSessionDialog bind:dialog type="create" />
+{/if}
+
+{#if DEBUG}
+	<Debug {campaignStore} {activeCampaignId} {authStore} />
+	<div>activePersonaIsGm: {activePersonaIsGM}</div>
 {/if}

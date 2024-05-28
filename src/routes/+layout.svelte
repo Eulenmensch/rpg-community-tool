@@ -43,15 +43,15 @@
 				const userData = userFromDb.data() as IUserData;
 				const campaigns = await campaignHandlers.getAllCampaignsForUser(user.uid);
 
-				if (!userData.active_campaign) return;
-				const activeCampaign = await campaignHandlers.getCampaign(userData.active_campaign);
-
 				authStore.update((curr) => ({
 					...curr,
 					loading: false,
 					data: userData,
 					user: user,
 				}));
+
+				if (!userData.active_campaign) return;
+				const activeCampaign = await campaignHandlers.getCampaign(userData.active_campaign);
 
 				if (!campaigns) return;
 				campaignStore.update((curr) => ({
@@ -61,17 +61,20 @@
 				}));
 			}
 		});
+
 		return unsubscribe;
 	});
 </script>
 
-{#if nonAuthRoutes.includes($page.url.pathname)}
-	<slot />
-{:else if $authStore.user}
-	<Navigation />
-	<slot />
-{:else}
-	<div class="w-screen h-screen items-center flex text-center justify-center">
-		<Fa class="text-4xl animate-spin text-primary" icon={faSpinner} />
-	</div>
-{/if}
+<div class="font-inknut">
+	{#if nonAuthRoutes.includes($page.url.pathname)}
+		<slot />
+	{:else if $authStore.user}
+		<Navigation />
+		<slot />
+	{:else}
+		<div class="w-screen h-screen items-center flex text-center justify-center">
+			<Fa class="text-4xl animate-spin text-primary" icon={faSpinner} />
+		</div>
+	{/if}
+</div>
