@@ -1,13 +1,12 @@
 <script lang="ts">
-	import Dialog from '$lib/components/Dialog.svelte';
+	import CustomDialog from '$lib/components/CustomDialog.svelte';
+	import NumberInput from '$lib/components/NumberInput.svelte';
 	import { authStore } from '$lib/store/authStore';
 	import { sessionHandlers, sessionStore } from '$lib/store/sessionStore';
+	import { faFileEdit, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
 	import type { DateFormat, IPlayable, ISession } from '../../../../Interfaces';
 	import Button from '../../Button.svelte';
-	import { faFileEdit, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
-	import NumberInput from '$lib/components/NumberInput.svelte';
-	import { campaignStore } from '$lib/store/campaignStore';
 	import PlayablesList from '../PlayablesList.svelte';
 
 	const today = new Date();
@@ -33,11 +32,12 @@
 	const MIN_SESSION_SLOTS = 1;
 	let playablesInSession: IPlayable[];
 	$: playablesInSession = [];
+	let deleteDialogOpen = false;
 
 	// --- Props ---
 	export let session: ISession = { ...defaultSession };
-	export let dialog: HTMLDialogElement;
 	export let type: 'create' | 'edit';
+	export let dialogOpen = false;
 
 	async function createSession() {
 		if (!activeCampaignId) return;
@@ -50,7 +50,7 @@
 		session.playables = playablesInSession;
 
 		sessionStore.update((curr) => [...curr, session]);
-		dialog.close();
+		dialogOpen = false;
 		resetForm();
 		session = { ...defaultSession };
 	}
@@ -78,11 +78,12 @@
 		const form = document.getElementById('create_session_form') as HTMLFormElement;
 		if (!form) return;
 		form.reset();
-		dialog.close();
-		deleteConfirmationDialog.close();
+		dialogOpen = false;
+		deleteDialogOpen = false;
 	}
 
 	async function deleteSession() {
+		console.log('NOW');
 		if (!activeCampaignId) return;
 		if (!(active_persona && active_persona?.id)) return;
 		if (!session?.id) return;
@@ -93,13 +94,14 @@
 	}
 </script>
 
-<Dialog bind:dialog on:close={resetForm}>
+<CustomDialog bind:open={dialogOpen}>
 	<form
+		slot="content"
 		id="create_session_form"
 		on:submit|preventDefault={() => {
 			type === 'edit' ? editSession() : createSession();
 		}}
-		class="bg-white flex flex-col mx-auto w-2/3 rounded-2xl font-inknut overflow-hidden"
+		class="bg-white flex flex-col font-inknut overflow-hidden rounded-lg mx-auto w-[1200px]"
 	>
 		<div class="bg-black text-white py-5 px-10 text-xl flex items-center justify-between">
 			<div class="flex items-center gap-2">
@@ -115,15 +117,9 @@
 						: `Create: ${session?.name ? session?.name : 'New Session'}`}
 				</p>
 			</div>
-
-			<div class="">
-				{#if type === 'edit'}
-					<Button
-						handleClick={() => deleteConfirmationDialog.showModal()}
-						className="bg-red-500 hover:bg-red-600 py-1.5">Delete</Button
-					>
-				{/if}
-			</div>
+			{#if type === 'edit'}
+				<Button handleClick={() => (deleteDialogOpen = true)} className="bg-red-500">Delete</Button>
+			{/if}
 		</div>
 		<div class="px-16 flex flex-col gap-8 py-10">
 			<div class="flex lg:items-center justify-between lg:gap-20 gap-4 flex-col lg:flex-row">
@@ -182,16 +178,26 @@
 			</div>
 		</div>
 	</form>
-</Dialog>
+</CustomDialog>
 
-<Dialog bind:dialog={deleteConfirmationDialog}>
-	<div class="p-4 bg-white flex flex-col gap-2 mx-auto">
-		<p>Do you really want to delete the entry?</p>
-		<div class="flex items-center">
-			<button type="button" on:click={() => deleteConfirmationDialog.close()} class="p-2"
-				>Do not delete
-			</button>
-			<button type="button" on:click={deleteSession} class="bg-red-500"> Delete forever </button>
+{#if type === 'edit'}
+	<CustomDialog bind:open={deleteDialogOpen}>
+		<div
+			slot="content"
+			class="p-4 bg-white flex flex-col gap-2 mx-auto w-[400px] rounded font-inknut"
+		>
+			<p class="text-lg mb-4">Do you really want to delete the entry?</p>
+			<div class="flex items-strech justify-end gap-4">
+				<button
+					type="button"
+					on:click={() => (deleteDialogOpen = false)}
+					class="p-2 bg-slate-50 border rounded"
+					>Do not delete
+				</button>
+				<Button type="button" handleClick={deleteSession} className="bg-red-500"
+					>Delete forever</Button
+				>
+			</div>
 		</div>
-	</div>
-</Dialog>
+	</CustomDialog>
+{/if}

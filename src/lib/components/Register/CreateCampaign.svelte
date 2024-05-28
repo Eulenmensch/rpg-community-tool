@@ -24,8 +24,9 @@
 			showSuccessMessage = true;
 			setTimeout(() => (showSuccessMessage = false), 2000);
 			campaignStore.update((curr) => ({
-				campaigns: [...curr.campaigns, campaignData],
-				selectedCampaign: campaignData.id ? campaignData.id : null,
+				campaigns: [...curr?.campaigns, campaignData],
+				selectedCampaign: campaignData?.id ? campaignData?.id : null,
+				campaign: campaignData ? campaignData : null,
 			}));
 			authStore.update((curr) => ({
 				...curr,
@@ -46,9 +47,11 @@
 		const unsubscribe = authStore.subscribe(async (user) => {
 			if (!user) return;
 			const newCampaign = await campaignHandlers.createCampaign(user.data.uid, type, campaignName);
+
 			campaignStore.update((curr) => ({
 				campaigns: [...curr.campaigns, newCampaign],
 				selectedCampaign: newCampaign.id ? newCampaign.id : null,
+				campaign: newCampaign ? newCampaign : null,
 			}));
 			authStore.update((curr) => ({
 				...curr,

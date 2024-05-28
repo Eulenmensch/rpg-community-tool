@@ -6,24 +6,25 @@
 	import CreateOrEditSessionDialog from './CreateOrEditSessionDialog.svelte';
 	import Fa from 'svelte-fa';
 	import { faEdit, faXmark } from '@fortawesome/free-solid-svg-icons';
-	import Dialog from '../../Dialog.svelte';
+	import CustomDialog from '../../CustomDialog.svelte';
 	import { formatDateAsDisplayVersion, sessionStatusToIcon } from '$lib/helpers';
 	import StartButton from './StartButton.svelte';
 
 	// --- Props ---
 	export let session: ISession;
-	export let dialog: HTMLDialogElement;
+	export let dialogOpen = false;
 
 	let active_persona = $authStore.data.active_persona;
-	let editDialog: HTMLDialogElement;
+	let editDialogOpen = false;
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<Dialog bind:dialog>
+<CustomDialog bind:open={dialogOpen}>
 	<!-- svelte-ignore a11y-no-static-element-interactions -->
 	<div
-		class="bg-white flex flex-col mx-auto w-2/3 rounded-2xl font-inknut overflow-hidden"
+		class="bg-white flex flex-col mx-auto rounded-2xl font-inknut overflow-hidden w-[1200px]"
 		on:click|stopPropagation
+		slot="content"
 	>
 		<div class="bg-black text-white py-5 px-10 text-xl flex items-center justify-between">
 			<div class="flex items-center gap-4">
@@ -36,16 +37,12 @@
 				{#if active_persona?.id == session.gm_persona.id}
 					<StartButton {session} />
 					<button
-						on:click={() => {
-							editDialog.showModal();
-						}}
+						on:click={() => (editDialogOpen = true)}
 						class="w-8 h-8 flex items-center justify-center hover:bg-white hover:text-primary rounded"
 						><Fa class="text-2xl" icon={faEdit} />
 					</button>
 					<button
-						on:click={() => {
-							dialog.close();
-						}}
+						on:click={() => (dialogOpen = false)}
 						class="w-8 h-8 flex items-center justify-center hover:bg-white hover:text-primary rounded"
 						><Fa class="text-4xl" icon={faXmark} />
 					</button>
@@ -80,5 +77,5 @@
 			{/if}
 		</div>
 	</div>
-</Dialog>
-<CreateOrEditSessionDialog bind:dialog={editDialog} {session} type="edit" />
+</CustomDialog>
+<CreateOrEditSessionDialog bind:dialogOpen={editDialogOpen} {session} type="edit" />
