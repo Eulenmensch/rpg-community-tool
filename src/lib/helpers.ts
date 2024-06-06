@@ -48,3 +48,10 @@ export async function switchActivePersona(persona: IPersona) {
 	const sessions = await sessionHandlers.getSessionsByCampaign(persona?.campaignId);
 	sessionStore.set(sessions);
 }
+
+export function userOwnsCampaign() {
+	const campaignStoreRef = get(campaignStore);
+	const authStoreRef = get(authStore);
+
+	return campaignStoreRef.campaign?.owner_id === authStoreRef?.data?.uid;
+}

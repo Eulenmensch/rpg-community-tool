@@ -10,7 +10,6 @@
 	import PlayablesList from '../PlayablesList.svelte';
 
 	const today = new Date();
-	let deleteConfirmationDialog: HTMLDialogElement;
 	let todayAsString = today.toISOString().split('T')[0] as DateFormat;
 	$: activeCampaignId = $authStore.data.active_persona?.campaignId;
 	let active_persona = $authStore.data.active_persona;
@@ -83,7 +82,6 @@
 	}
 
 	async function deleteSession() {
-		console.log('NOW');
 		if (!activeCampaignId) return;
 		if (!(active_persona && active_persona?.id)) return;
 		if (!session?.id) return;

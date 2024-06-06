@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Debug from '$lib/components/Debug/Debug.svelte';
-	import { formatDateAsDisplayVersion, sessionStatusToIcon } from '$lib/helpers';
+	import { formatDateAsDisplayVersion, sessionStatusToIcon, userOwnsCampaign } from '$lib/helpers';
 	import { authStore } from '$lib/store/authStore';
 	import { campaignStore } from '$lib/store/campaignStore';
 	import { faEdit } from '@fortawesome/free-solid-svg-icons';
@@ -13,7 +13,6 @@
 	export let session: ISession;
 	let DEBUG = false;
 
-	let active_persona = $authStore.data.active_persona;
 	let open = false;
 	let editOpen = false;
 </script>
@@ -21,9 +20,7 @@
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <button
 	on:click={() => (open = true)}
-	class={`text-white py-4 px-5 rounded flex items-center justify-between ${
-		active_persona?.id == session.gm_persona.id ? 'bg-black' : 'bg-black'
-	}`}
+	class={`text-white py-4 px-5 rounded flex items-center justify-between bg-black`}
 >
 	<div class="flex items-center gap-7">
 		<Fa class="fa-fw text-lg w-10" icon={sessionStatusToIcon[session.status]} />
@@ -47,7 +44,7 @@
 			{/each}
 		</div>
 		<p class="w-12 text-center">{session?.personas?.length}/{session.slots}</p>
-		{#if $campaignStore?.campaign?.owner_id === $authStore?.data?.uid}
+		{#if userOwnsCampaign()}
 			<div class="w-10 flex">
 				<div
 					tabindex="0"
@@ -68,5 +65,5 @@
 	{/if}
 </button>
 
-<SessionPreviewDialog bind:dialogOpen={open} {session} />
+<SessionPreviewDialog bind:open {session} />
 <CreateOrEditSessionDialog {session} bind:dialogOpen={editOpen} type="edit" />

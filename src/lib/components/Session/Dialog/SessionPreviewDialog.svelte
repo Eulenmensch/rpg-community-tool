@@ -1,29 +1,25 @@
 <script lang="ts">
+	import { formatDateAsDisplayVersion, sessionStatusToIcon, userOwnsCampaign } from '$lib/helpers';
+	import { faEdit, faXmark } from '@fortawesome/free-solid-svg-icons';
+	import Fa from 'svelte-fa';
 	import type { ISession } from '../../../../Interfaces';
-	import { authStore } from '$lib/store/authStore';
+	import CustomDialog from '../../CustomDialog.svelte';
 	import EmptySlot from '../EmptySlot.svelte';
 	import FilledSlot from '../FilledSlot.svelte';
 	import CreateOrEditSessionDialog from './CreateOrEditSessionDialog.svelte';
-	import Fa from 'svelte-fa';
-	import { faEdit, faXmark } from '@fortawesome/free-solid-svg-icons';
-	import CustomDialog from '../../CustomDialog.svelte';
-	import { formatDateAsDisplayVersion, sessionStatusToIcon } from '$lib/helpers';
 	import StartButton from './StartButton.svelte';
 
 	// --- Props ---
 	export let session: ISession;
-	export let dialogOpen = false;
+	export let open = false;
 
-	let active_persona = $authStore.data.active_persona;
 	let editDialogOpen = false;
 </script>
 
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-<CustomDialog bind:open={dialogOpen}>
-	<!-- svelte-ignore a11y-no-static-element-interactions -->
+<CustomDialog bind:open>
 	<div
 		class="bg-white flex flex-col mx-auto rounded-2xl font-inknut overflow-hidden w-[1200px]"
-		on:click|stopPropagation
+		role="dialog"
 		slot="content"
 	>
 		<div class="bg-black text-white py-5 px-10 text-xl flex items-center justify-between">
@@ -34,7 +30,7 @@
 				</p>
 			</div>
 			<div class="flex items-center gap-8">
-				{#if active_persona?.id == session.gm_persona.id}
+				{#if userOwnsCampaign()}
 					<StartButton {session} />
 					<button
 						on:click={() => (editDialogOpen = true)}
@@ -42,7 +38,7 @@
 						><Fa class="text-2xl" icon={faEdit} />
 					</button>
 					<button
-						on:click={() => (dialogOpen = false)}
+						on:click={() => (open = false)}
 						class="w-8 h-8 flex items-center justify-center hover:bg-white hover:text-primary rounded"
 						><Fa class="text-4xl" icon={faXmark} />
 					</button>
