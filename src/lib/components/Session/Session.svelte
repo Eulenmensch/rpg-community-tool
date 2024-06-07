@@ -15,6 +15,8 @@
 
 	let open = false;
 	let editOpen = false;
+
+	$: userIsOwner = userOwnsCampaign();
 </script>
 
 <button
@@ -43,7 +45,7 @@
 			{/each}
 		</div>
 		<p class="w-12 text-center">{session?.personas?.length}/{session.slots}</p>
-		{#if userOwnsCampaign()}
+		{#if userIsOwner}
 			<div class="w-10 flex">
 				<!-- svelte-ignore a11y-click-events-have-key-events -->
 				<div
@@ -65,5 +67,5 @@
 	{/if}
 </button>
 
-<SessionPreviewDialog bind:open {session} />
+<SessionPreviewDialog bind:open bind:session />
 <CreateOrEditSessionDialog bind:session bind:dialogOpen={editOpen} type="edit" />

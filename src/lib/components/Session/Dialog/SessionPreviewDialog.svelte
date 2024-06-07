@@ -14,6 +14,8 @@
 	export let open = false;
 
 	let editDialogOpen = false;
+
+	$: userIsOwner = userOwnsCampaign();
 </script>
 
 <CustomDialog bind:open>
@@ -33,8 +35,8 @@
 				</p>
 			</div>
 			<div class="flex items-center gap-8">
-				{#if userOwnsCampaign()}
-					<StartButton {session} />
+				{#if userIsOwner}
+					<StartButton bind:session />
 					<button
 						on:click={() => (editDialogOpen = true)}
 						class="w-8 h-8 flex items-center justify-center hover:bg-white hover:text-primary rounded"
