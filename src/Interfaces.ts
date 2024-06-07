@@ -43,7 +43,7 @@ export interface ISession {
 	description: string;
 	personas: IPersona[];
 	gm_persona: IPersona;
-	playables?: any[];
+	playables: IPlayable[];
 }
 
 export interface IPersona {

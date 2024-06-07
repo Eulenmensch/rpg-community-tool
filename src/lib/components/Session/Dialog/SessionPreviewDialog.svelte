@@ -17,7 +17,10 @@
 </script>
 
 <CustomDialog bind:open>
+	<!-- svelte-ignore a11y-click-events-have-key-events -->
+	<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 	<div
+		on:click|stopPropagation
 		class="bg-white flex flex-col mx-auto rounded-2xl font-inknut overflow-hidden w-[1200px]"
 		role="dialog"
 		slot="content"

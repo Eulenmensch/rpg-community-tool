@@ -1,7 +1,7 @@
 import { db } from '$lib/firebase/firebase.client';
-import { doc, collection, getDocs, addDoc, setDoc, deleteDoc, updateDoc } from 'firebase/firestore';
-import type { IPersona, IPlayable, ISession } from '../../Interfaces';
+import { addDoc, collection, deleteDoc, doc, getDocs, setDoc, updateDoc } from 'firebase/firestore';
 import { writable, type Writable } from 'svelte/store';
+import type { IPersona, ISession } from '../../Interfaces';
 
 export const sessionStore: Writable<ISession[]> = writable([]);
 
@@ -36,6 +36,7 @@ export const sessionHandlers = {
 			description: session.description,
 			slots: session.slots,
 			status: session.status,
+			playables: session?.playables,
 		});
 	},
 	deleteSession: async (campaignId: string, sessionId: string) => {
@@ -66,11 +67,11 @@ export const sessionHandlers = {
 
 		return sessions;
 	},
-	addPlayableToSession: async (campaignId: string, session: ISession, playables: IPlayable[]) => {
+	addPlayableToSession: async (campaignId: string, session: ISession) => {
 		const docRef = doc(db, `campaign/${campaignId}/sessions/${session.id}`);
 
 		await updateDoc(docRef, {
-			playables: playables,
+			playables: session?.playables,
 		});
 	},
 };

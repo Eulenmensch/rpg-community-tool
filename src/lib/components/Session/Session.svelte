@@ -17,7 +17,6 @@
 	let editOpen = false;
 </script>
 
-<!-- svelte-ignore a11y-click-events-have-key-events -->
 <button
 	on:click={() => (open = true)}
 	class={`text-white py-4 px-5 rounded flex items-center justify-between bg-black`}
@@ -46,6 +45,7 @@
 		<p class="w-12 text-center">{session?.personas?.length}/{session.slots}</p>
 		{#if userOwnsCampaign()}
 			<div class="w-10 flex">
+				<!-- svelte-ignore a11y-click-events-have-key-events -->
 				<div
 					tabindex="0"
 					role="button"
@@ -66,4 +66,4 @@
 </button>
 
 <SessionPreviewDialog bind:open {session} />
-<CreateOrEditSessionDialog {session} bind:dialogOpen={editOpen} type="edit" />
+<CreateOrEditSessionDialog bind:session bind:dialogOpen={editOpen} type="edit" />

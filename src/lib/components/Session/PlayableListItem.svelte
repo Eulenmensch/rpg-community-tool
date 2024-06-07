@@ -1,31 +1,38 @@
 <script lang="ts">
-	import type { IPlayable } from '../../../Interfaces';
+	import type { IPlayable, ISession } from '../../../Interfaces';
 	import Button from '../Button.svelte';
 
-	export let playable;
-	export let playablesInSession: IPlayable[];
+	export let playable: IPlayable;
+	export let session: ISession;
+
+	function addPlayable(playable: IPlayable) {
+		session.playables = [...session.playables, playable];
+	}
+
+	function removePlayable(playable: IPlayable) {
+		session.playables = session?.playables.filter((item) => item.name !== playable.name);
+	}
+
+	let isInSession = false;
+	$: isInSession = session?.playables?.some((item) => item.name === playable.name);
 </script>
 
 <div class="flex justify-between items-center gap-4">
-	<p
-		class="bg-black w-full text-white p-3 rounded {playablesInSession.includes(playable) &&
-			'opacity-60'}"
-	>
+	<p class="bg-black w-full text-white p-3 rounded {isInSession && 'opacity-60'}">
 		{playable?.name}
 	</p>
 
-	{#if playablesInSession.includes(playable)}
+	{#if isInSession}
 		<Button
 			className="w-32 items-center text-center flex justify-center"
-			handleClick={() =>
-				(playablesInSession = playablesInSession.filter((item) => item !== playable))}
+			handleClick={() => removePlayable(playable)}
 		>
 			Remove
 		</Button>
 	{:else}
 		<Button
 			className="w-32 items-center text-center flex justify-center"
-			handleClick={() => (playablesInSession = [...playablesInSession, playable])}
+			handleClick={() => addPlayable(playable)}
 		>
 			Add
 		</Button>

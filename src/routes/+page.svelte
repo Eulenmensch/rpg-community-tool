@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Button from '$lib/components/Button.svelte';
 	import Debug from '$lib/components/Debug/Debug.svelte';
-	import CreateSessionDialog from '$lib/components/Session/Dialog/CreateOrEditSessionDialog.svelte';
+	import CreateOrEditSessionDialog from '$lib/components/Session/Dialog/CreateOrEditSessionDialog.svelte';
 	import Session from '$lib/components/Session/Session.svelte';
 	import WelcomeToCampaignScreen from '$lib/components/Welcome/WelcomeToCampaign.svelte';
 	import WelcomeWithoutCampaign from '$lib/components/Welcome/WelcomeWithoutCampaign.svelte';
@@ -16,7 +16,6 @@
 
 	let personasInActiveCampaign: IPersona[] = [];
 	let activeCampaignId = $authStore.data.active_persona?.campaignId;
-	let dialog: HTMLDialogElement;
 	let DEBUG = true;
 	$: activePersonaIsGM = $campaignStore?.campaign?.owner_id === $authStore?.data?.uid;
 	let open = false;
@@ -68,7 +67,7 @@
 					</div>
 					{#if activePersonaIsGM}
 						<Button handleClick={() => (open = true)}>Create Session</Button>
-						<CreateSessionDialog bind:dialogOpen={open} type="create" />
+						<CreateOrEditSessionDialog bind:dialogOpen={open} type="create" />
 					{/if}
 				</div>
 				<div class="flex items-center gap-5 mb-2.5 ml-4 font-semibold">

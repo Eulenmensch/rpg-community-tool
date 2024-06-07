@@ -1,11 +1,12 @@
 <script lang="ts">
 	import { campaignStore } from '$lib/store/campaignStore';
-	import type { IPlayable } from '../../../Interfaces';
+	import type { ISession } from '../../../Interfaces';
 	import PlayableListItem from './PlayableListItem.svelte';
 
-	export let playablesInSession: IPlayable[];
-
 	let selectedType = 'location';
+
+	// --- Props ---
+	export let session: ISession;
 </script>
 
 <div>
@@ -52,12 +53,12 @@
 			>
 				<p>Selected</p>
 				<p
-					class="size-5 text-xs text-white justify-center flex rounded-full items-center font-bold {playablesInSession.length >
-					0
+					class="size-5 text-xs text-white justify-center flex rounded-full items-center font-bold {session
+						?.playables?.length > 0
 						? 'bg-red-500'
 						: 'bg-slate-400'}"
 				>
-					{playablesInSession.length}
+					{session?.playables?.length}
 				</p>
 			</button>
 		</div>
@@ -66,14 +67,14 @@
 	{#if $campaignStore?.campaign?.playables}
 		<div class="flex flex-col gap-2 p-8 bg-slate-200 max-h-60 overflow-y-auto">
 			{#if selectedType == 'selected'}
-				{#if playablesInSession.length == 0}
+				{#if session?.playables?.length == 0}
 					<p class="text-dark/80 text-sm">
 						Related items will appear here once you added them them to the session
 					</p>
 				{/if}
 
-				{#each playablesInSession as playable}
-					<PlayableListItem {playable} bind:playablesInSession />
+				{#each session?.playables as playable}
+					<PlayableListItem {playable} bind:session />
 				{/each}
 			{:else}
 				{#if $campaignStore?.campaign?.playables.filter((playable) => playable.type == selectedType).length == 0}
@@ -83,7 +84,7 @@
 				{/if}
 
 				{#each $campaignStore?.campaign?.playables.filter((playable) => playable.type == selectedType) as playable}
-					<PlayableListItem {playable} bind:playablesInSession />
+					<PlayableListItem {playable} bind:session />
 				{/each}
 			{/if}
 		</div>

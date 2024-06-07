@@ -5,9 +5,9 @@
 	import { sessionHandlers, sessionStore } from '$lib/store/sessionStore';
 	import { faFileEdit, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
-	import type { DateFormat, IPlayable, ISession } from '../../../../Interfaces';
-	import Button from '../../Button.svelte';
-	import PlayablesList from '../PlayablesList.svelte';
+	import type { DateFormat, ISession } from '../../../../Interfaces';
+	import Button from '$lib/components/Button.svelte';
+	import PlayablesList from '$lib/components/Session/PlayablesList.svelte';
 
 	const today = new Date();
 	let todayAsString = today.toISOString().split('T')[0] as DateFormat;
@@ -26,11 +26,11 @@
 		slots: 4,
 		status: 'available',
 		personas: [],
+		playables: [],
 	};
 	const MAX_SESSION_SLOTS = 10;
 	const MIN_SESSION_SLOTS = 1;
-	let playablesInSession: IPlayable[];
-	$: playablesInSession = [];
+
 	let deleteDialogOpen = false;
 
 	// --- Props ---
@@ -45,9 +45,7 @@
 		const newSessionId = await sessionHandlers.createSessionForCampaign(activeCampaignId, session);
 		session.id = newSessionId;
 
-		sessionHandlers.addPlayableToSession(activeCampaignId, session, playablesInSession);
-		session.playables = playablesInSession;
-
+		sessionHandlers.addPlayableToSession(activeCampaignId, session);
 		sessionStore.update((curr) => [...curr, session]);
 		dialogOpen = false;
 		resetForm();
@@ -164,7 +162,8 @@
 					bind:value={session.description}
 				/>
 			</div>
-			<PlayablesList bind:playablesInSession />
+
+			<PlayablesList bind:session />
 
 			<div class="flex items-center gap-3 justify-end mt-10">
 				<Button handleClick={() => resetForm()} className="bg-gray-400 hover:bg-gray-500"
