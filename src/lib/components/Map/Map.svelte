@@ -1,6 +1,6 @@
 <script lang="ts">
 	import L, { type MarkerOptions } from 'leaflet';
-	import { afterUpdate, onMount } from 'svelte';
+	import { afterUpdate, onDestroy, onMount } from 'svelte';
 	import { navHeight } from '$lib/helpers';
 	import { iconStore } from '$lib/store/iconStore';
 	import Popup from './Popup.svelte';
@@ -16,29 +16,53 @@
 	let marker: L.Marker;
 
 	onMount(async () => {
-		const bounds = L.latLngBounds(L.latLng(-285, -101), L.latLng(31, 355));
-		map = L.map('map', {
-			zoom: 1.7,
-			zoomSnap: 0.1,
-			center: [-128, 128],
-			crs: L.CRS.Simple,
-			maxBounds: bounds,
-		});
-
-		map.on('click', createMarker);
-
-		L.tileLayer('src/lib/images/map/theUnknown/{z}/{x}/{y}.png', {
-			minZoom: 1,
-			maxZoom: 5,
-			noWrap: true,
-			bounds: bounds,
-		}).addTo(map);
-		addMarkers();
+		initMap();
 	});
 
 	afterUpdate(() => {
 		addMarkers();
 	});
+
+	onDestroy(async () => {
+		if (map) {
+			console.log('Unloading Leaflet map.');
+			map.remove();
+		}
+	});
+
+	async function initMap() {
+		const DEFAULT_ZOOM_LEVEL = 1;
+		const MIN_ZOOM_LEVEL = 1;
+		const MAX_ZOOM_LEVEL = 5;
+		const TILE_SIZE = 256;
+		const bounds = L.latLngBounds(L.latLng(-285, -101), L.latLng(31, 355));
+
+		const mapContainer = document.getElementById('map');
+		if (!mapContainer) {
+			setTimeout(initMap, 100);
+			return;
+		}
+
+		map = L.map('map', {
+			zoom: DEFAULT_ZOOM_LEVEL,
+			zoomSnap: 0.1,
+			center: [-TILE_SIZE / 2, TILE_SIZE / 2],
+			crs: L.CRS.Simple,
+			maxBounds: bounds,
+			maxBoundsViscosity: 1.0,
+		});
+
+		map.on('click', createMarker);
+
+		L.tileLayer('/src/lib/images/map/theUnknown/{z}/{x}/{y}.png', {
+			minZoom: MIN_ZOOM_LEVEL,
+			maxZoom: MAX_ZOOM_LEVEL,
+			noWrap: true,
+			tileSize: TILE_SIZE,
+			bounds: bounds,
+		}).addTo(map);
+		addMarkers();
+	}
 
 	function createMarker(e: any) {
 		// This function only creates the default Marker. The Customization is done in <MarkerEditor/>
@@ -103,7 +127,7 @@
 </div>
 
 <style>
-	@import 'https://unpkg.com/leaflet@1.8.0/dist/leaflet.css';
+	@import 'leaflet/dist/leaflet.css';
 
 	#map {
 		max-width: 100vw;
