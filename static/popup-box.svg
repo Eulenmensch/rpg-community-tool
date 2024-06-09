@@ -1,0 +1,22 @@
+<svg width="284" height="206" viewBox="0 0 284 206" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g filter="url(#filter0_d_10_536)">
+<path d="M5 2.5H2.5V5V46V46.4057L2.62829 46.7906L4.96958 53.8144L2.50693 86.8139L2.5 86.9068V87V125.5V126.208L2.87085 126.81L5.94885 131.812L3.04783 135.438L2.5 136.123V137V169V171.5H5H67.9931L74.1133 175.58L74.9504 176.138L75.9408 175.961L100.847 171.5H118.814L138.063 195.081L140.193 197.689L142.074 194.896L157.83 171.5H226.5H227.377L228.062 170.952L234.52 165.786L252.247 171.384L252.615 171.5H253H275H277.5V169V62.5V61.7617L277.099 61.1419L272.505 54.042L277.06 47.4163L277.5 46.7765V46V5V2.5H275H120H119.908L119.815 2.50683L79.5542 5.48914L54.2921 2.51712L54.1466 2.5H54H5Z" fill="white" stroke="url(#pattern0)" stroke-width="5"/>
+<path d="M154.821 167.913L139.844 191.06L121.574 167.766L120.973 167H120H100.625H100.447L100.272 167.031L75.9397 171.389L69.8594 167.336L69.3556 167H68.75H7V137.702L10.5617 133.249L11.4409 132.15L10.7033 130.952L7 124.934V87.0745L9.49445 53.6488L9.52433 53.2484L9.39737 52.8675L7 45.6754V7H53.8828L79.2663 9.9863L79.4566 10.0087L79.6477 9.99454L120.074 7H273V45.3788L267.852 52.8669L267.096 53.9664L267.821 55.0865L273 63.0906V167H253.308L234.602 161.093L233.584 160.771L232.751 161.438L225.798 167H156.5H155.412L154.821 167.913Z" fill="white" stroke="black" stroke-width="4"/>
+</g>
+<defs>
+<filter id="filter0_d_10_536" x="0" y="0" width="284" height="205.879" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dx="3" dy="3"/>
+<feGaussianBlur stdDeviation="0.5"/>
+<feComposite in2="hardAlpha" operator="out"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.4 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_10_536"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_10_536" result="shape"/>
+</filter>
+<pattern id="pattern0" patternContentUnits="objectBoundingBox" width="0.0355556" height="0.0509284">
+<use xlink:href="#image0_10_536" transform="scale(0.000555556 0.000795756)"/>
+</pattern>
+<image id="image0_10_536" width="64" height="64" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAAAXNSR0IArs4c6QAAAONJREFUeF7t20EOhEAIRFG4/6F7DvEnYeFzryQIv6pBd2behOu9dPvsbog+k+NLgArQAqmJcw9iAAhSgZKB3IJkkAySQTJ4CiE+gA8oBeg0mH3Ai084P89HhqwEqIA209ICsQdjAeaZIgaAYKxBDMCAYy8fXwAIgiAIcoJpJEYGI4VjB3YrbC9gL2AvkCB43cM5PgZgAAZgQFnNZAhdGykQBEEQBEEQDBmgAm2glM/z+QUYisYUGoldO7kY32IEAzCg6RgIRgjFAsw+AgRBMNYgBmCAT2TCYfoPPz/HCqQCX1eBHzHnv7C7WhBSAAAAAElFTkSuQmCC"/>
+</defs>
+</svg>

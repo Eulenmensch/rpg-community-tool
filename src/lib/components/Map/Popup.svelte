@@ -3,8 +3,14 @@
 	export let marker: IPlayable;
 </script>
 
-<div class={` text-center ${marker.type === 'mission' ? 'bg-green-500' : 'bg-yellow-500'}`}>
-	<p class="">{marker.name}</p>
-	<p>{marker.description}</p>
-	<p>Type: {marker.type}</p>
+<div
+	class={`text-center flex flex-col
+	 ${marker.type === 'mission' ? '' : ''}`}
+>
+	<h3
+		class="text-3xl font-bold top-6 backdrop-blur-[1px] bg-white/70 font-schmaltzy absolute left-7 right-7 mx-auto items-center"
+	>
+		{marker.name}
+	</h3>
+	<p class=" w-full text-lg pt-12 text-left">{marker.description}</p>
 </div>

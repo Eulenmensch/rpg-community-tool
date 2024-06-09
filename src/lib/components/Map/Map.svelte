@@ -103,6 +103,7 @@
 				}).addTo(markerLayer);
 
 				let popupContainer = L.DomUtil.create('div');
+
 				new Popup({
 					target: popupContainer,
 					props: {
@@ -110,10 +111,10 @@
 					},
 				});
 				leafletMarker.bindPopup(popupContainer, {
-					className: 'leaflet-popup',
-					offset: L.point(-2, 10),
-					maxWidth: 250,
-					maxHeight: 181,
+					//className: 'leaflet-popup',
+					offset: L.point(0, 15),
+					// maxWidth: 350,
+					//maxHeight: 181,
 					closeButton: false,
 				});
 			});
@@ -134,16 +135,32 @@
 		background: white;
 	}
 
+	/* Reset styles for the custom popup */
+	:global(.leaflet-popup-content) {
+		padding: 0;
+		margin: 0;
+		width: auto;
+		height: auto;
+	}
+
+	:global(.leaflet-popup-content-wrapper) {
+		background: none;
+		padding: 0;
+		margin: 0;
+		border-radius: 0;
+	}
+
 	:global(.leaflet-popup) {
 		aspect-ratio: 142 / 103;
 		margin: 0;
-		padding: 1rem;
+		padding: 1.1rem;
 		min-width: 25rem;
 		background-image: url('popup-box.svg');
 		background-size: contain;
 		background-repeat: no-repeat;
 		background-clip: padding-box;
 		overflow: hidden;
+		width: 100%;
 	}
 
 	:global(.leaflet-popup-content-wrapper) {
@@ -151,59 +168,37 @@
 		border-radius: 0;
 		box-shadow: none;
 		height: 100%;
-		padding-top: 3.3rem;
-		padding-bottom: 2rem;
+		width: 100%;
 	}
 
 	:global(.leaflet-popup-content) {
-		max-height: 70%;
+		max-height: 80%;
+		padding: 20px;
+		margin-left: auto;
+		margin-right: auto;
+		display: flex;
 		border-style: none;
 		overflow-y: auto;
 	}
 
 	:global(.leaflet-popup-content-wrapper p) {
-		margin-top: 0;
+		margin-top: 0px;
 		font-family: 'Inknut Antiqua', serif;
-		font-size: 1.3rem;
 		line-height: 150%;
 		font-weight: 400;
 	}
 
-	:global(.leaflet-popup-content h1) {
-		position: absolute;
-		top: 2.5rem;
-
-		font-family: 'Titanscript', sans-serif;
-		font-size: 2rem;
-	}
-
-	:global(#edit-panel-button) {
-		position: absolute;
-		top: 1.7rem;
-		right: 2.3rem;
-
-		background: none;
-		border-style: none;
-
-		cursor: pointer;
-	}
-
-	:global(#edit-panel-button > img) {
-		height: 2.5rem;
+	:global(.leaflet-popup-tip) {
+		display: none;
 	}
 
 	:global(.leaflet-popup ::-webkit-scrollbar) {
 		width: 0.5rem;
 	}
 	:global(.leaflet-popup ::-webkit-scrollbar-track) {
-		/* background: #b5b5b5; */
 		background: transparent;
 	}
 	:global(.leaflet-popup ::-webkit-scrollbar-thumb) {
 		background: black;
-	}
-
-	:global(.leaflet-popup-tip) {
-		display: none;
 	}
 </style>
