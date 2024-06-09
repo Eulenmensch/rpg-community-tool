@@ -8,6 +8,7 @@
 	import FilledSlot from '../FilledSlot.svelte';
 	import CreateOrEditSessionDialog from './CreateOrEditSessionDialog.svelte';
 	import StartButton from './StartButton.svelte';
+	import Divider from '$lib/components/Divider.svelte';
 
 	// --- Props ---
 	export let session: ISession;
@@ -65,15 +66,17 @@
 				</div>
 				<span class="text-lg">{formatDateAsDisplayVersion(session.date)}</span>
 			</div>
-			<p class="leading-relaxed">
-				{session?.description ? session?.description : 'No description'}
+			<p class="leading-relaxed text-dark/70">
+				{session?.description ? session?.description : 'There is no description yet'}
 			</p>
 			{#if session?.playables}
 				<div>
-					<p class="text-lg font-semibold">Related Items</p>
-					{#each session?.playables as playable}
-						<div>{playable.name}</div>
-					{/each}
+					<Divider label="Related Items" />
+					<div class="flex flex-col gap-2 mt-8">
+						{#each session?.playables as playable}
+							<div class="p-2 py-3 rounded bg-black text-white">{playable.name}</div>
+						{/each}
+					</div>
 				</div>
 			{/if}
 		</div>

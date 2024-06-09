@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { campaignStore } from '$lib/store/campaignStore';
 	import type { ISession } from '../../../Interfaces';
+	import Divider from '../Divider.svelte';
 	import PlayableListItem from './PlayableListItem.svelte';
 
 	let selectedType = 'location';
@@ -14,8 +15,8 @@
 	}
 </script>
 
-<div>
-	<p class="text-lg font-semibold">Related Items</p>
+<div class="py-8">
+	<Divider label="Related Items" />
 	<div class="flex justify-between items-end">
 		<div class="flex gap-1 mt-4">
 			<button

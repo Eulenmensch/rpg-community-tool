@@ -40,7 +40,7 @@
 	</DropdownMenu.Trigger>
 	<DropdownMenu.Content
 		transition={flyAndScale}
-		class="absolute left-0 bg-black py-2 px-4 right-0 mt-6 rounded z-40 max-w-xs text-white"
+		class="absolute left-0 bg-black py-2 px-4 right-0 mt-6 rounded z-[1000] max-w-xs text-white"
 	>
 		<div class="flex flex-col divide-y">
 			<div>

@@ -97,7 +97,7 @@
 		on:submit|preventDefault={() => {
 			type === 'edit' ? editSession() : createSession();
 		}}
-		class="bg-white flex flex-col font-inknut overflow-hidden rounded-lg mx-auto w-[1200px]"
+		class="flex-col flex font-inknut overflow-hidden rounded-lg mx-auto w-[1200px] h-screen"
 	>
 		<div class="bg-black text-white py-5 px-10 text-xl flex items-center justify-between">
 			<div class="flex items-center gap-2">
@@ -117,7 +117,7 @@
 				<Button handleClick={() => (deleteDialogOpen = true)} className="bg-red-500">Delete</Button>
 			{/if}
 		</div>
-		<div class="px-16 flex flex-col gap-8 py-10">
+		<div class="px-16 flex flex-col gap-8 py-10 bg-white overflow-auto h-full">
 			<div class="flex lg:items-center justify-between lg:gap-20 gap-4 flex-col lg:flex-row">
 				<div class="flex flex-col gap-2 w-full lg:w-2/3">
 					<label for="title" class="text-lg font-semibold">Title</label>
