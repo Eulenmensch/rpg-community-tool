@@ -17,6 +17,16 @@
 		$authStore.data.personas = await personaHandlers.getAllPersonasForUser(userData.uid);
 	}
 
+	async function logout() {
+		authHandlers.logout();
+
+		authStore.update((curr) => ({
+			...curr,
+			loading: false,
+			user: null,
+		}));
+	}
+
 	$: playersInCampaign = $authStore?.data?.personas?.filter(
 		(p) => p.campaignId == $authStore.data.active_campaign,
 	);
@@ -68,10 +78,7 @@
 					Change Campaign
 				</div>
 			</DropdownMenu.Item>
-			<DropdownMenu.Item
-				on:click={() => authHandlers.logout()}
-				class="py-2 flex w-full cursor-pointer"
-			>
+			<DropdownMenu.Item on:click={logout} class="py-2 flex w-full cursor-pointer">
 				<div
 					class=" text-white px-2 rounded-sm w-full flex items-center gap-4 py-1 hover:bg-primary/50"
 				>

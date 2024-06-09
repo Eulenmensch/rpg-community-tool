@@ -5,7 +5,7 @@
 	import Button from '$lib/components/Button.svelte';
 	import { campaignStore } from '$lib/store/campaignStore';
 
-	let campaign = $campaignStore.campaigns.find((c) => c.id === $authStore.data.active_campaign);
+	$: campaign = $campaignStore.campaigns.find((c) => c.id === $authStore.data.active_campaign);
 </script>
 
 <div
@@ -25,8 +25,5 @@
 	</div>
 	<div class="flex gap-8 text-2xl">
 		<Button handleClick={() => goto(`/character/create?campaignId=${campaign?.id}`)}>Create</Button>
-		<button class="py-3 px-6 bg-gray-400 text-lg text-white rounded hover:bg-gray-500">
-			Skip for now
-		</button>
 	</div>
 </div>

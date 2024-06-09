@@ -16,7 +16,7 @@
 
 	let personasInActiveCampaign: IPersona[] = [];
 	let activeCampaignId = $authStore.data.active_persona?.campaignId;
-	let DEBUG = true;
+	let DEBUG = false;
 	$: activePersonaIsGM = $campaignStore?.campaign?.owner_id === $authStore?.data?.uid;
 	let open = false;
 

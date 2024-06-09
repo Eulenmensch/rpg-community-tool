@@ -7,6 +7,11 @@
 
 	// --- Props ---
 	export let session: ISession;
+
+	//For older DB Documents that do not have playables
+	if (!session.playables) {
+		session.playables = [];
+	}
 </script>
 
 <div>
