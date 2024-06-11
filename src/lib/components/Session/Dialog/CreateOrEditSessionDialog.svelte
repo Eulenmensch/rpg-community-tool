@@ -97,7 +97,7 @@
 		on:submit|preventDefault={() => {
 			type === 'edit' ? editSession() : createSession();
 		}}
-		class="flex-col flex font-inknut overflow-hidden rounded-lg mx-auto w-[1200px] h-screen"
+		class="flex-col flex font-inknut overflow-hidden rounded-lg mx-auto w-[1200px] h-[calc(100vh-60px)]"
 	>
 		<div class="bg-black text-white py-5 px-10 text-xl flex items-center justify-between">
 			<div class="flex items-center gap-2">

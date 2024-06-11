@@ -17,7 +17,7 @@
 		<Dialog.Content
 			transition={flyAndScale}
 			transitionConfig={{ duration: 150 }}
-			class="fixed left-[50%] top-[50%] z-50 w-full translate-x-[-50%]  translate-y-[-50%] rounded-card-lg outline-none md:w-auto"
+			class="fixed left-[50%] top-[50%] z-50 w-full translate-x-[-50%] translate-y-[-50%] rounded-card-lg outline-none md:w-auto overflow-y-auto shadow-white shadow rounded-lg"
 		>
 			<slot name="content" />
 		</Dialog.Content>

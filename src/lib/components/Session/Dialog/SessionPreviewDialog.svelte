@@ -24,7 +24,7 @@
 	<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 	<div
 		on:click|stopPropagation
-		class="bg-white flex flex-col mx-auto rounded-2xl font-inknut overflow-hidden w-[1200px]"
+		class="bg-white flex flex-col mx-auto rounded-lg font-inknut overflow-hidden w-[1200px] max-h-[calc(100vh-60px)]"
 		role="dialog"
 		slot="content"
 	>
@@ -51,7 +51,7 @@
 				{/if}
 			</div>
 		</div>
-		<div class="py-16 px-[10%] text-dark/90 flex flex-col gap-14">
+		<div class="py-16 px-[10%] text-dark/90 flex flex-col gap-14 overflow-y-auto">
 			<div class="flex justify-between">
 				<div class="flex items-center gap-10">
 					<FilledSlot disableUnsubscribe {session} persona={session.gm_persona} />
