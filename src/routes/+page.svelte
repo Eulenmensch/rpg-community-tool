@@ -12,13 +12,16 @@
 	import { faCopy } from '@fortawesome/free-solid-svg-icons';
 	import { onMount } from 'svelte';
 	import Fa from 'svelte-fa';
-	import type { IPersona } from '../Interfaces';
+	import type { IPersona, ISession } from '../Interfaces';
+	import Fuse from 'fuse.js';
 
 	let personasInActiveCampaign: IPersona[] = [];
 	let activeCampaignId = $authStore.data.active_persona?.campaignId;
 	let DEBUG = false;
 	$: activePersonaIsGM = $campaignStore?.campaign?.owner_id === $authStore?.data?.uid;
 	let open = false;
+	let filterText = '';
+	let fuse: Fuse<any>;
 
 	onMount(getSessions);
 	onMount(getPersonasForActiveCampaign);
@@ -36,12 +39,24 @@
 		if (!activeCampaignId) return;
 		const retrievedSessions = await sessionHandlers.getSessionsByCampaign(activeCampaignId);
 		sessionStore.set(retrievedSessions);
+		initFuse(retrievedSessions);
+	}
+
+	function initFuse(sessions: ISession[]) {
+		const options = {
+			keys: ['name', 'description'],
+			threshold: 0.3,
+		};
+		fuse = new Fuse(sessions, options);
 	}
 
 	function copyToClipboard(textToCopy: string | null | undefined) {
 		if (!textToCopy) return;
 		navigator?.clipboard?.writeText(textToCopy);
 	}
+
+	$: displayedSessions =
+		filterText && fuse ? fuse.search(filterText).map((result) => result.item) : $sessionStore;
 </script>
 
 {#if $authStore.data.active_campaign === null}
@@ -69,7 +84,16 @@
 						<Button handleClick={() => (open = true)}>Create Session</Button>
 						<CreateOrEditSessionDialog bind:dialogOpen={open} type="create" />
 					{/if}
+					<div class="flex items-center justify-between ml-auto">
+						<input
+							type="text"
+							bind:value={filterText}
+							placeholder="Filter sessions..."
+							class="p-1 px-2 border rounded-md w-72"
+						/>
+					</div>
 				</div>
+
 				<div class="flex items-center gap-5 mb-2.5 ml-4 font-semibold">
 					<span>Status</span>
 					<span>GM</span>
@@ -83,12 +107,14 @@
 						{/if}
 					</div>
 				</div>
-				{#each $sessionStore as session}
+				{#each displayedSessions as session}
 					<Session {session} />
 				{/each}
-				{#if $sessionStore.length <= 0}
+				{#if displayedSessions.length <= 0}
 					<p class="bg-gray-100 text-center py-6 px-2">
-						{activePersonaIsGM
+						{filterText
+							? 'No sessions match your filter.'
+							: activePersonaIsGM
 							? 'Create your first sessions to start your adventure.'
 							: 'No Session inside the campaign yet. Ask your GM to create a session'}
 					</p>
