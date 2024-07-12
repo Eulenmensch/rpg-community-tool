@@ -5,6 +5,7 @@ export interface ICampaign {
 	playables: IPlayable[];
 	users: string[];
 	sessions?: ISession[];
+	personas: IPersona[];
 }
 
 export interface IUserData {

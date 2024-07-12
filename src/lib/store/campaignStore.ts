@@ -1,5 +1,5 @@
 import { type Writable, writable } from 'svelte/store';
-import type { ICampaign, IPlayable } from '../../Interfaces';
+import type { ICampaign, IPersona, IPlayable, ISession } from '../../Interfaces';
 import { db } from '$lib/firebase/firebase.client';
 import {
 	addDoc,
@@ -11,6 +11,8 @@ import {
 	updateDoc,
 	getDoc,
 	or,
+	setDoc,
+	deleteDoc,
 } from 'firebase/firestore';
 import { theUnknownPlayables, unePlayables } from '../../utils';
 import { authHandlers } from './authStore';
@@ -30,7 +32,42 @@ export const campaignHandlers = {
 	getCampaign: async (campaignId: string): Promise<ICampaign> => {
 		const campaignDocRef = doc(db, `campaign/${campaignId}`);
 		const docSnapshot = await getDoc(campaignDocRef);
-		return docSnapshot.data() as ICampaign;
+		const campaignData = docSnapshot.data() as ICampaign;
+
+		// Fetch personas subcollection
+		const personasCollectionRef = collection(db, `campaign/${campaignId}/personas`);
+		const personasSnapshot = await getDocs(personasCollectionRef);
+		const personas = personasSnapshot.docs.map(
+			(doc) => ({ id: doc.id, ...doc.data() } as IPersona),
+		);
+
+		// Fetch sessions subcollection
+		const sessionsCollectionRef = collection(db, `campaign/${campaignId}/sessions`);
+		const sessionsSnapshot = await getDocs(sessionsCollectionRef);
+		const sessions = sessionsSnapshot.docs.map(
+			(doc) => ({ id: doc.id, ...doc.data() } as ISession),
+		);
+
+		return {
+			...campaignData,
+			id: campaignId,
+			personas: personas,
+			sessions: sessions,
+		};
+	},
+	addPersonaToCampaign: async (campaignId: string, persona: IPersona) => {
+		const personaRef = doc(db, `campaign/${campaignId}/personas/${persona.id}`);
+		await setDoc(personaRef, persona);
+	},
+	removePersonaFromCampaign: async (campaignId: string, personaId: string) => {
+		const personaRef = doc(db, `campaign/${campaignId}/personas/${personaId}`);
+		await deleteDoc(personaRef);
+	},
+	getAllPersonasInCampaign: async (campaignId: string): Promise<IPersona[]> => {
+		console.log('NOAAA', campaignId);
+		const personasCollectionRef = collection(db, `campaign/${campaignId}/personas`);
+		const snapshot = await getDocs(personasCollectionRef);
+		return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() } as IPersona));
 	},
 	createCampaign: async (
 		owner_id: string,
@@ -42,6 +79,7 @@ export const campaignHandlers = {
 			name: name,
 			playables: type == 'Une' ? unePlayables : theUnknownPlayables,
 			users: [],
+			personas: [],
 		};
 		const campaignRef = await addDoc(collection(db, `campaign`), campaignToCreate);
 		await authHandlers.update(owner_id, campaignRef.id);

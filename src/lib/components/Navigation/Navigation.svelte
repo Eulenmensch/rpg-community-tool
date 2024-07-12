@@ -16,9 +16,12 @@
 	</a>
 	<ol class="flex gap-4">
 		<li>
-			<a href="/" class={$page.route.id == '/' ? `` : ''}>Dashboard</a>
+			<a href="/" class={$page.route.id == '/' ? `underline` : ''}>Dashboard</a>
 		</li>
-		<li><a href="/map" class={$page.route.id == '/map' ? `` : ''}>Map</a></li>
+		<li><a href="/map" class={$page.route.id == '/map' ? `underline` : ''}>Map</a></li>
+		<li>
+			<a href="/data" class={$page.route.id == '/data' ? `underline` : ''}>Data</a>
+		</li>
 	</ol>
 	<div class="flex">
 		<PersonaSelector />

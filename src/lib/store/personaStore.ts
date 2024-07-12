@@ -2,6 +2,7 @@ import { db } from '$lib/firebase/firebase.client';
 import {
 	addDoc,
 	collection,
+	deleteDoc,
 	doc,
 	getDoc,
 	getDocs,
@@ -10,6 +11,7 @@ import {
 	where,
 } from 'firebase/firestore';
 import type { IPersona } from '../../Interfaces';
+import { campaignHandlers } from './campaignStore';
 
 export const personaHandlers = {
 	createPersona: async (userId: string, persona: IPersona): Promise<string> => {
@@ -17,6 +19,13 @@ export const personaHandlers = {
 		const userRef = doc(db, 'user', userId);
 		const personasCollectionRef = collection(userRef, 'personas');
 		const newPersonaRef = await addDoc(personasCollectionRef, persona);
+		const newPersonaId = newPersonaRef.id;
+
+		// Add persona to campaign's personas subcollection
+		await campaignHandlers.addPersonaToCampaign(persona.campaignId, {
+			...persona,
+			id: newPersonaId,
+		});
 
 		// Update active persona in user
 		updateDoc(userRef, {
@@ -25,6 +34,7 @@ export const personaHandlers = {
 			'active_persona.type': persona.type,
 			'active_persona.campaignId': persona.campaignId,
 		});
+
 		return newPersonaRef.id;
 	},
 	getAllPersonasForUser: async (userId: string) => {
@@ -54,5 +64,13 @@ export const personaHandlers = {
 			'active_persona.campaignId': personaData?.campaignId,
 			active_campaign: personaData?.campaignId,
 		});
+	},
+	deletePersona: async (userId: string, personaId: string, campaignId: string) => {
+		// Remove persona from user's personas subcollection
+		const personaRef = doc(db, `user/${userId}/personas/${personaId}`);
+		await deleteDoc(personaRef);
+
+		// Remove persona from campaign's personas subcollection
+		await campaignHandlers.removePersonaFromCampaign(campaignId, personaId);
 	},
 };

@@ -73,10 +73,6 @@ export const authHandlers = {
 		//TODO: Make this a more general version once we update other parameters as well
 		const docRef = doc(db, `user/${userId}`);
 
-		console.log('CAMPAIGN', campaignId);
-		console.log('USER', userId);
-		console.log('REST', reset_persona);
-
 		if (reset_persona) {
 			setDoc(
 				docRef,
