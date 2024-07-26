@@ -54,6 +54,7 @@ export interface IPersona {
 	level?: number;
 	characterClass?: string;
 	campaignId: string;
+	about: string;
 }
 
 export type SessionStatus = 'available' | 'ongoing' | 'closed';

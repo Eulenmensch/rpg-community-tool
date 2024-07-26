@@ -32,7 +32,7 @@
 			: $campaignStore?.campaign?.personas;
 </script>
 
-<div class="container mx-auto py-8 xl:px-32 lg:px-16 px-4 pb-32">
+<div class="container mx-auto py-8 xl:px-32 lg:px-16 px-4 pb-32 pt-16">
 	<h1 class="lg:text-3xl text-xl font-bold">What do you seek in the Darkness?</h1>
 	<div class="flex flex-col sticky left-0 top-0 right-0 w-full h-32 py-4 bg-white">
 		<div class="flex relative mt-2 group">
@@ -90,11 +90,11 @@
 		</div>
 		<div>
 			<div class="bg-white p-6 py-4 grid grid-cols-6 gap-8 items-center border-b border-dark">
-				<p class="text-gray-600 text-sm" />
 				<p class="text-gray-600 text-sm">Name</p>
 				<p class="text-gray-600 text-sm">Level</p>
 				<p class="text-gray-600 text-sm">Class</p>
 				<p class="text-gray-600 text-sm">Status</p>
+				<p class="text-gray-600 text-sm">Actions</p>
 			</div>
 		</div>
 	</div>
@@ -103,13 +103,18 @@
 			{#if displayedPersonas}
 				{#each displayedPersonas as persona}
 					<div class="p-6 py-3 grid grid-cols-6 gap-8 items-center">
-						<div class="bg-red-500 size-7 rounded-full" />
-						<h2 class="text-lg font-semibold whitespace-nowrap text-ellipsis overflow-hidden">
-							{persona.name}
-						</h2>
+						<div class="flex items-center gap-3">
+							<div class="bg-red-500 size-7 rounded-full" />
+							<h2 class="text-lg font-semibold whitespace-nowrap text-ellipsis overflow-hidden">
+								{persona.name}
+							</h2>
+						</div>
 						<p class="text-gray-600 text-sm">Level {persona.level}</p>
 						<p class="text-gray-600 text-sm">{persona.characterClass}</p>
 						<p class="text-gray-600 text-sm">NO STATUS YET</p>
+						<div class="text-gray-600 text-sm">
+							<a href={'/persona/' + persona.id} class="p-1 rounded border">Go to page</a>
+						</div>
 					</div>
 				{/each}{/if}
 			{#if personas.length === 0}

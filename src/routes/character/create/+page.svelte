@@ -5,7 +5,7 @@
 	import { authStore } from '$lib/store/authStore';
 	import { personaHandlers } from '$lib/store/personaStore';
 	import { goto } from '$app/navigation';
-	import { campaignHandlers } from '$lib/store/campaignStore';
+	import { campaignHandlers, campaignStore } from '$lib/store/campaignStore';
 	import { getContext, onMount } from 'svelte';
 	import { page } from '$app/stores';
 	import type { ICampaign, IPersona } from '../../../Interfaces';
@@ -40,28 +40,43 @@
 		let userData = $authStore.data;
 		if (!activeCampaignId || !userData || !selectedCampaign) return;
 
-		const persona: IPersona = {
+		let persona: IPersona = {
 			name: name,
 			type: type,
 			level: level,
 			characterClass: characterClass,
 			campaignId: selectedCampaign,
+			about: about,
 		};
 
 		const newPersonaId = await personaHandlers.createPersona(userData?.uid, persona);
+
+		persona = { ...persona, id: newPersonaId };
 
 		authStore.update((curr) => ({
 			...curr,
 			data: {
 				...curr.data,
 				active_campaign: selectedCampaign,
-				active_persona: {
-					...persona,
-					id: newPersonaId,
-				},
+				active_persona: persona,
 				personas: [...curr.data.personas, persona],
 			},
 		}));
+
+		campaignStore.update((curr) => {
+			if (!curr.campaign) return curr;
+
+			const updatedCampaign: ICampaign = {
+				...curr.campaign,
+				personas: [...curr?.campaign?.personas, persona],
+			};
+
+			return {
+				...curr,
+				campaign: updatedCampaign,
+			};
+		});
+
 		goto('/');
 	}
 </script>

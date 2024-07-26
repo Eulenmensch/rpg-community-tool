@@ -33,9 +33,21 @@ export const personaHandlers = {
 			'active_persona.name': persona.name,
 			'active_persona.type': persona.type,
 			'active_persona.campaignId': persona.campaignId,
+			'active_persona.about': persona.about,
 		});
 
 		return newPersonaRef.id;
+	},
+	getPersonaById: async (userId: string, personaId: string): Promise<IPersona | null> => {
+		const personaDocRef = doc(db, `user/${userId}/personas/${personaId}`);
+		const personaDocSnapshot = await getDoc(personaDocRef);
+
+		if (personaDocSnapshot.exists()) {
+			return { id: personaDocSnapshot.id, ...(personaDocSnapshot.data() as IPersona) };
+		} else {
+			console.log(`No persona found with ID: ${personaId}`);
+			return null;
+		}
 	},
 	getAllPersonasForUser: async (userId: string) => {
 		const personaCollectionRef = collection(db, `user/${userId}/personas`);
