@@ -3,9 +3,9 @@ export interface ICampaign {
 	owner_id: string;
 	name: string;
 	playables: IPlayable[];
-	users: string[];
+	users?: string[];
 	sessions?: ISession[];
-	personas: IPersona[];
+	personas?: IPersona[];
 }
 
 export interface IUserData {
@@ -55,6 +55,7 @@ export interface IPersona {
 	characterClass?: string;
 	campaignId: string;
 	about: string;
+	userId: string;
 }
 
 export type SessionStatus = 'available' | 'ongoing' | 'closed';

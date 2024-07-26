@@ -34,12 +34,13 @@ export const personaHandlers = {
 			'active_persona.type': persona.type,
 			'active_persona.campaignId': persona.campaignId,
 			'active_persona.about': persona.about,
+			'active_persona.userId': persona.userId,
 		});
 
 		return newPersonaRef.id;
 	},
-	getPersonaById: async (userId: string, personaId: string): Promise<IPersona | null> => {
-		const personaDocRef = doc(db, `user/${userId}/personas/${personaId}`);
+	getPersonaById: async (campaignId: string, personaId: string): Promise<IPersona | null> => {
+		const personaDocRef = doc(db, `campaign/${campaignId}/personas/${personaId}`);
 		const personaDocSnapshot = await getDoc(personaDocRef);
 
 		if (personaDocSnapshot.exists()) {

@@ -48,6 +48,7 @@
 			characterClass: characterClass,
 			campaignId: selectedCampaign,
 			about: about,
+			userId: userData.uid,
 		};
 
 		const newPersonaId = await personaHandlers.createPersona(userData?.uid, persona);
@@ -65,7 +66,8 @@
 		}));
 
 		campaignStore.update((curr) => {
-			if (!curr.campaign) return curr;
+			if (!curr?.campaign) return curr;
+			if (!curr?.campaign?.personas) return curr;
 
 			const updatedCampaign: ICampaign = {
 				...curr.campaign,

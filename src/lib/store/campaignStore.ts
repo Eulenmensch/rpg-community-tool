@@ -64,7 +64,6 @@ export const campaignHandlers = {
 		await deleteDoc(personaRef);
 	},
 	getAllPersonasInCampaign: async (campaignId: string): Promise<IPersona[]> => {
-		console.log('NOAAA', campaignId);
 		const personasCollectionRef = collection(db, `campaign/${campaignId}/personas`);
 		const snapshot = await getDocs(personasCollectionRef);
 		return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() } as IPersona));
@@ -78,8 +77,6 @@ export const campaignHandlers = {
 			owner_id: owner_id,
 			name: name,
 			playables: type == 'Une' ? unePlayables : theUnknownPlayables,
-			users: [],
-			personas: [],
 		};
 		const campaignRef = await addDoc(collection(db, `campaign`), campaignToCreate);
 		await authHandlers.update(owner_id, campaignRef.id);
