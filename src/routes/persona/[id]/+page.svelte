@@ -4,6 +4,7 @@
 	import type { IPersona } from '../../../Interfaces';
 	import { personaHandlers } from '$lib/store/personaStore';
 	import { authStore } from '$lib/store/authStore';
+	import RichTextPreview from '$lib/components/RichText/RichTextPreview.svelte';
 
 	let character: IPersona | null = null;
 
@@ -29,7 +30,9 @@
 				<p class="w-full px-4 py-6 text-xl">{character?.characterClass}</p>
 			</div>
 		</div>
-		<p class="bg-red-200 w-full">{character?.about}</p>
+		<div class="p-4 border">
+			<RichTextPreview content={character?.about} />
+		</div>
 	</div>
 	<div class="bg-yellow-200 w-96">Placeholder Picture</div>
 </div>

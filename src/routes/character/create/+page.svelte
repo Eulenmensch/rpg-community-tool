@@ -1,13 +1,14 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
+	import { page } from '$app/stores';
 	import Button from '$lib/components/Button.svelte';
 	import NumberInput from '$lib/components/NumberInput.svelte';
+	import RichTextEditor from '$lib/components/RichText/RichTextEditor.svelte';
 	import { navHeight } from '$lib/helpers';
 	import { authStore } from '$lib/store/authStore';
-	import { personaHandlers } from '$lib/store/personaStore';
-	import { goto } from '$app/navigation';
 	import { campaignHandlers, campaignStore } from '$lib/store/campaignStore';
-	import { getContext, onMount } from 'svelte';
-	import { page } from '$app/stores';
+	import { personaHandlers } from '$lib/store/personaStore';
+	import { onMount } from 'svelte';
 	import type { ICampaign, IPersona } from '../../../Interfaces';
 
 	let activeCampaignId = $authStore.data.active_campaign;
@@ -18,7 +19,7 @@
 	const type = 'player';
 	let level = 1;
 	let characterClass = '';
-	let about = '';
+	let about = '<p>Tell us about your character...</p>';
 
 	onMount(() => {
 		getCampaigns();
@@ -125,7 +126,8 @@
 		</div>
 		<div class="flex flex-col">
 			<label class="font-semibold mb-0.5" for="about">About</label>
-			<textarea bind:value={about} name="about" class="border h-40 outline-primary p-4 text-sm" />
+			<!-- <textarea bind:value={about} name="about" class="border h-40 outline-primary p-4 text-sm" /> -->
+			<RichTextEditor bind:content={about} on:update={(e) => (about = e.detail)} />
 		</div>
 
 		<div class="flex gap-4 ml-auto mt-12">

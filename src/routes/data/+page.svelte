@@ -48,14 +48,14 @@
 		</div>
 		<div class="flex flex-wrap gap-4 bg-white py-3 pb-8">
 			<button
-				class="rounded-lg border px-3 group py-2 hover:bg-primary-100 flex items-center gap-2"
+				class="rounded-lg px-3 group py-2 hover:bg-primary-100 flex items-center gap-2 text-white bg-primary hover:text-primary"
 			>
 				<span
-					class="border size-2 flex rounded-full group-hover:bg-primary-400 group-hover:border-primary-400"
+					class="size-2 flex rounded-full group-hover:bg-primary-400 group-hover:border-primary-400 bg-green-500"
 				/>
 				<span>Characters</span>
 			</button>
-			<button
+			<!-- <button
 				class="rounded-lg border px-3 group py-2 hover:bg-primary-100 flex items-center gap-2"
 			>
 				<span
@@ -86,10 +86,12 @@
 					class="border size-2 flex rounded-full group-hover:bg-primary-400 group-hover:border-primary-400"
 				/>
 				<span>Sessions</span>
-			</button>
+			</button> -->
 		</div>
 		<div>
-			<div class="bg-white p-6 py-4 grid grid-cols-6 gap-8 items-center border-b border-dark">
+			<div
+				class="bg-white p-6 py-4 grid grid-cols-[300px,1fr,1fr,1fr,1fr,1fr] gap-8 items-center border-b border-dark"
+			>
 				<p class="text-gray-600 text-sm">Name</p>
 				<p class="text-gray-600 text-sm">Level</p>
 				<p class="text-gray-600 text-sm">Class</p>
@@ -102,7 +104,7 @@
 		<div class="flex flex-col divide-y mt-32">
 			{#if displayedPersonas}
 				{#each displayedPersonas as persona}
-					<div class="p-6 py-3 grid grid-cols-6 gap-8 items-center">
+					<div class="p-6 py-3 grid grid-cols-[300px,1fr,1fr,1fr,1fr,1fr] gap-8 items-center">
 						<div class="flex items-center gap-3">
 							<div class="bg-red-500 size-7 rounded-full" />
 							<h2 class="text-lg font-semibold whitespace-nowrap text-ellipsis overflow-hidden">
@@ -113,7 +115,7 @@
 						<p class="text-gray-600 text-sm">{persona.characterClass}</p>
 						<p class="text-gray-600 text-sm">NO STATUS YET</p>
 						<div class="text-gray-600 text-sm">
-							<a href={'/persona/' + persona.id} class="p-1 rounded border">Go to page</a>
+							<a href={'/persona/' + persona.id} class="px-1 rounded border">Go to page</a>
 						</div>
 					</div>
 				{/each}{/if}

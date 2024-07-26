@@ -13,5 +13,5 @@
 		"editor.formatOnSave": true
 	},
 	"editor.formatOnSave": true,
-	"cSpell.words": ["firestore", "playables", "Questseeker", "uuidv"]
+	"cSpell.words": ["firestore", "playables", "Questseeker", "tiptap", "uuidv"]
 }
