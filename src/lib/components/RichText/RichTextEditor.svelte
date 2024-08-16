@@ -3,6 +3,8 @@
 		faBold,
 		faExpand,
 		faItalic,
+		faList,
+		faListOl,
 		faMinimize,
 		faUnderline,
 	} from '@fortawesome/free-solid-svg-icons';
@@ -41,8 +43,11 @@
 						if (node.type.name === 'paragraph') {
 							return 'Write a paragraph';
 						}
-						if (node.type.name === 'unordered-list') {
-							return '';
+						if (node.type.name === 'bulletList') {
+							return 'List';
+						}
+						if (node.type.name === 'orderedList') {
+							return 'List';
 						}
 
 						return 'Can you add some further context?';
@@ -102,9 +107,27 @@
 					type="button"
 					on:click={() => editor.chain().focus().setParagraph().run()}
 					class="p-2 size-10 flex items-center justify-center hover:bg-slate-200 rounded-sm"
-					class:active={editor.isActive('paragraph')}
+					class:active={editor.isActive('paragraph') &&
+						!editor.isActive('bulletList') &&
+						!editor.isActive('orderedList')}
 				>
 					P
+				</button>
+				<button
+					type="button"
+					on:click={() => editor.chain().focus().toggleBulletList().run()}
+					class="p-2 size-10 flex items-center justify-center hover:bg-slate-200 rounded-sm"
+					class:active={editor.isActive('bulletList')}
+				>
+					<Fa class="fa-fw text-lg" icon={faList} />
+				</button>
+				<button
+					type="button"
+					on:click={() => editor.chain().focus().toggleOrderedList().run()}
+					class="p-2 size-10 flex items-center justify-center hover:bg-slate-200 rounded-sm"
+					class:active={editor.isActive('orderedList')}
+				>
+					<Fa class="fa-fw text-lg" icon={faListOl} />
 				</button>
 			</div>
 			<div class="w-[1px] bg-slate-300 h-10" />
