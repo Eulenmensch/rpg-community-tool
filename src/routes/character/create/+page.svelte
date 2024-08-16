@@ -88,7 +88,10 @@
 	class="flex items-center flex-col justify-center font-inknut"
 	style={`height: calc(100vh - ${navHeight})`}
 >
-	<form on:submit|preventDefault={createPersona} class="flex flex-col gap-6">
+	<form
+		on:submit|preventDefault={createPersona}
+		class="flex flex-col gap-6 w-full lg:w-2/3 xl:w-1/2 px-4"
+	>
 		<p class="text-left text-xl font-bold">Create a new character</p>
 		<div class="flex flex-col">
 			<label class="font-semibold mb-0.5" for="name">Name</label>
