@@ -40,18 +40,21 @@
 	{#if editor}
 		<div class="flex flex-row items-center gap-4 bg-slate-100 w-full p-3">
 			<button
+				type="button"
 				on:click={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
 				class:active={editor.isActive('heading', { level: 1 })}
 			>
 				H1
 			</button>
 			<button
+				type="button"
 				on:click={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
 				class:active={editor.isActive('heading', { level: 2 })}
 			>
 				H2
 			</button>
 			<button
+				type="button"
 				on:click={() => editor.chain().focus().setParagraph().run()}
 				class:active={editor.isActive('paragraph')}
 			>
@@ -59,12 +62,14 @@
 			</button>
 			<div class="ml-8">
 				<button
+					type="button"
 					on:click={() => editor.chain().focus().toggleBold().run()}
 					class:active={editor.isActive('bold')}
 				>
 					Bold
 				</button>
 				<button
+					type="button"
 					on:click={() => editor.chain().focus().toggleItalic().run()}
 					class:active={editor.isActive('italic')}
 				>

@@ -24,6 +24,7 @@
 
 	{#if isInSession}
 		<Button
+			type="button"
 			className="w-32 items-center text-center flex justify-center"
 			handleClick={() => removePlayable(playable)}
 		>
@@ -31,6 +32,7 @@
 		</Button>
 	{:else}
 		<Button
+			type="button"
 			className="w-32 items-center text-center flex justify-center"
 			handleClick={() => addPlayable(playable)}
 		>

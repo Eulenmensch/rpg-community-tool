@@ -9,6 +9,7 @@
 	import CreateOrEditSessionDialog from './CreateOrEditSessionDialog.svelte';
 	import StartButton from './StartButton.svelte';
 	import Divider from '$lib/components/Divider.svelte';
+	import RichTextPreview from '$lib/components/RichText/RichTextPreview.svelte';
 
 	// --- Props ---
 	export let session: ISession;
@@ -66,9 +67,10 @@
 				</div>
 				<span class="text-lg">{formatDateAsDisplayVersion(session.date)}</span>
 			</div>
-			<p class="leading-relaxed text-dark/70">
-				{session?.description ? session?.description : 'There is no description yet'}
-			</p>
+			{#if !session?.description}
+				<p class="leading-relaxed text-dark/70">There is no description yet</p>
+			{/if}
+			<RichTextPreview content={session?.description} />
 			{#if session?.playables}
 				<div>
 					<Divider label="Related Items" />

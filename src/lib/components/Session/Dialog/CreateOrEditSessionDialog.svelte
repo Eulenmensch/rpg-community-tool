@@ -8,6 +8,7 @@
 	import type { DateFormat, ISession } from '../../../../Interfaces';
 	import Button from '$lib/components/Button.svelte';
 	import PlayablesList from '$lib/components/Session/PlayablesList.svelte';
+	import RichTextEditor from '$lib/components/RichText/RichTextEditor.svelte';
 
 	const today = new Date();
 	let todayAsString = today.toISOString().split('T')[0] as DateFormat;
@@ -22,6 +23,8 @@
 			type: 'master',
 			id: active_persona?.id,
 			campaignId: activeCampaignId ? activeCampaignId : '',
+			about: '',
+			userId: '',
 		},
 		slots: 4,
 		status: 'available',
@@ -155,11 +158,9 @@
 			</div>
 			<div class="flex flex-col gap-2">
 				<label class="text-lg font-semibold" for="description">Info</label>
-				<textarea
-					name="description"
-					class="min-h-[150px] border border-gray-400 rounded-sm p-4"
-					placeholder="Describe your session"
-					bind:value={session.description}
+				<RichTextEditor
+					bind:content={session.description}
+					on:update={(e) => (session.description = e.detail)}
 				/>
 			</div>
 
