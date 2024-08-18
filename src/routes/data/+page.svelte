@@ -4,6 +4,7 @@
 	import Fuse from 'fuse.js';
 	import Fa from 'svelte-fa';
 	import type { IPersona } from '../../Interfaces';
+	import Avatar from '$lib/components/Avatar.svelte';
 
 	//TODO: Add other types
 
@@ -106,7 +107,7 @@
 				{#each displayedPersonas as persona}
 					<div class="p-6 py-3 grid grid-cols-[300px,1fr,1fr,1fr,1fr,1fr] gap-8 items-center">
 						<div class="flex items-center gap-3">
-							<div class="bg-red-500 size-7 rounded-full" />
+							<Avatar {persona} size="xs" />
 							<h2 class="text-lg font-semibold whitespace-nowrap text-ellipsis overflow-hidden">
 								{persona.name}
 							</h2>
