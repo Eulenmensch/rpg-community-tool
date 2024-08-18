@@ -10,6 +10,7 @@
 	import { onMount } from 'svelte';
 	import Fa from 'svelte-fa';
 	import type { IPersona } from '../../../Interfaces';
+	import { campaignStore } from '$lib/store/campaignStore';
 
 	let character: IPersona | null = null;
 	let fileInput: HTMLInputElement;
@@ -29,7 +30,6 @@
 		if (!campaignId) return;
 		character = await personaHandlers.getPersonaById(campaignId, id);
 		isOwnCharacter = character?.userId === userData.uid;
-		console.log(character);
 	}
 
 	function handleSave() {
@@ -59,6 +59,40 @@
 			// Update local character state
 			character.imageUrl = downloadURL;
 			character = { ...character }; // Trigger Svelte reactivity
+
+			// Update Stores
+			authStore.update((store) => {
+				return {
+					...store,
+					data: {
+						...store.data,
+						active_persona:
+							store.data.active_persona?.id === personaId
+								? { ...store.data.active_persona, imageUrl: downloadURL }
+								: store.data.active_persona,
+						personas: store.data.personas?.map((p) =>
+							p.id === personaId ? { ...p, imageUrl: downloadURL } : p,
+						),
+					},
+				};
+			});
+			campaignStore.update((store) => {
+				return {
+					...store,
+					campaigns: store.campaigns.map((campaign) => {
+						if (campaign.id === character?.campaignId) {
+							return {
+								...campaign,
+								personas:
+									campaign.personas?.map((p) =>
+										p.id === personaId ? { ...p, imageUrl: downloadURL } : p,
+									) || [],
+							};
+						}
+						return campaign;
+					}),
+				};
+			});
 		} catch (error) {
 			console.error('Error uploading file:', error);
 		}
@@ -67,7 +101,6 @@
 	async function handleRemoveImage() {
 		if (!character?.id || !character.imageUrl) return;
 
-		console.log(character.imageUrl);
 		const userId = $authStore.data.uid;
 		const personaId = character.id;
 
@@ -82,6 +115,50 @@
 			// Update local character state
 			character.imageUrl = null;
 			character = { ...character }; // Trigger Svelte reactivity
+
+			// Update stores
+			authStore.update((store) => {
+				if (!store.data.active_persona) return store;
+
+				let personas = store.data.personas?.map((p) =>
+					p.id === personaId ? { ...p, imageUrl: null } : p,
+				);
+
+				let active_persona =
+					store.data.active_persona.id === $page.params.id
+						? {
+								...store.data.active_persona,
+								imageUrl: null,
+						  }
+						: store.data.active_persona;
+
+				return {
+					...store,
+					data: {
+						...store.data,
+						active_persona: active_persona,
+						personas: personas,
+					},
+				};
+			});
+
+			campaignStore.update((store) => {
+				return {
+					...store,
+					campaigns: store.campaigns.map((campaign) => {
+						if (campaign.id === character?.campaignId) {
+							return {
+								...campaign,
+								personas:
+									campaign.personas?.map((p) =>
+										p.id === personaId ? { ...p, imageUrl: null } : p,
+									) || [],
+							};
+						}
+						return campaign;
+					}),
+				};
+			});
 		} catch (error) {
 			console.error('Error removing image:', error);
 		}
@@ -160,7 +237,7 @@
 					</div>
 					<div class="w-full bg-gradient-to-b from-gray-300 via-gray-300/40 to-white/0 pr-[1px]">
 						<div class="lg:px-20 px-4 bg-white">
-							<div class="flex h-full w-full items-center justify-center bg-white back">
+							<div class="flex h-full w-full items-center bg-white back">
 								<RichTextPreview content={character?.about} />
 							</div>
 						</div>
@@ -170,7 +247,7 @@
 			<div class="w-1/2">
 				{#if character.imageUrl}
 					<div class="relative">
-						<img src={character.imageUrl} alt="Character" class="w-full object-cover pt-12 px-4" />
+						<img src={character.imageUrl} alt="Character" class="w-full object-cover px-4" />
 						{#if isEditing}
 							<button
 								on:click={handleRemoveImage}
