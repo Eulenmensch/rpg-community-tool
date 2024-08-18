@@ -8,6 +8,7 @@
 	import { DropdownMenu } from 'bits-ui';
 	import { onMount } from 'svelte';
 	import Fa from 'svelte-fa';
+	import Avatar from '../Avatar.svelte';
 
 	onMount(getPersonas);
 
@@ -19,7 +20,6 @@
 
 	async function logout() {
 		authHandlers.logout();
-
 		authStore.update((curr) => ({
 			...curr,
 			loading: false,
@@ -33,10 +33,10 @@
 </script>
 
 <DropdownMenu.Root>
-	<DropdownMenu.Trigger
-		class="bg-primary hover:bg-primary/80 size-10 rounded-full flex items-center justify-center"
-	>
-		<Fa class="" icon={faUser} />
+	<DropdownMenu.Trigger>
+		{#if $authStore?.data?.active_persona}
+			<Avatar persona={$authStore.data.active_persona} size="sm" />
+		{/if}
 	</DropdownMenu.Trigger>
 	<DropdownMenu.Content
 		transition={flyAndScale}
@@ -51,10 +51,12 @@
 							class="data-[highlighted]:bg-primary/50 text-left flex cursor-pointer my-1 rounded p-1"
 							on:click={() => switchActivePersona(persona)}
 						>
-							<div class="text-left flex items-center w-full">
+							<div class="text-left flex items-center w-full gap-2">
+								<Avatar {persona} size="xs" />
+
 								<span class="whitespace-nowrap text-ellipsis overflow-hidden">{persona.name}</span>
 								{#if $authStore.data.active_persona?.id == persona?.id}
-									<Fa class="ml-auto px-2 " icon={faCheck} />
+									<Fa class="ml-auto px-2" icon={faCheck} />
 								{/if}
 							</div>
 						</DropdownMenu.Item>
@@ -72,7 +74,6 @@
 					</div>
 				</DropdownMenu.Item>
 			</div>
-
 			<DropdownMenu.Item on:click={() => goto('/campaign')} class="py-2 cursor-pointer">
 				<div class="py-1 px-2 hover:bg-primary/50 rounded data-[highlighted]:bg-primary/50">
 					Change Campaign
@@ -80,7 +81,7 @@
 			</DropdownMenu.Item>
 			<DropdownMenu.Item on:click={logout} class="py-2 flex w-full cursor-pointer">
 				<div
-					class=" text-white px-2 rounded-sm w-full flex items-center gap-4 py-1 hover:bg-primary/50"
+					class="text-white px-2 rounded-sm w-full flex items-center gap-4 py-1 hover:bg-primary/50"
 				>
 					<Fa icon={faRightFromBracket} />
 					<span>Logout</span>
