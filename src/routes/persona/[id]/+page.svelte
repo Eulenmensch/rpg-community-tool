@@ -13,7 +13,7 @@
 	let character: IPersona | null = null;
 
 	let isOwnCharacter = false;
-	let isEditing = true;
+	let isEditing = false;
 
 	onMount(() => {
 		getPersonaData();
@@ -39,7 +39,7 @@
 </script>
 
 {#if character}
-	<section class="px-20 py-12">
+	<section class="xl:px-20 2xl:px-40 px-4 py-12">
 		{#if isOwnCharacter}
 			<div class="py-5 flex items-center">
 				{#if !isEditing}
@@ -62,16 +62,16 @@
 			</div>
 		{/if}
 
-		<div class="flex">
+		<div class="flex flex-col-reverse lg:flex-row">
 			<div class="flex flex-col w-full">
 				{#if isEditing}
-					<div class="flex flex-row w-full border divide-x items-center">
+					<div class="flex lg:flex-row flex-col w-full border divide-x items-center">
 						<input
 							type="text"
 							bind:value={character.name}
 							class="text-4xl mx-4 py-2 focus:outline-none w-full focus:border-primary bg-slate-100 border border-transparent"
 						/>
-						<div class="divide-y w-1/3">
+						<div class="divide-y w-full lg:w-1/3">
 							<p class="w-full px-4 py-6 text-xl">No status yet</p>
 							<div class="flex flex-row items-center py-6 px-4 gap-2">
 								<label class="mb-0.5 text-xl" for="level">Level:</label>
@@ -81,7 +81,7 @@
 								<input
 									type="text"
 									bind:value={character.characterClass}
-									class="text-xl border border-transparent bg-slate-100 py-2 focus:outline-none focus:border-primary"
+									class="text-xl border w-full border-transparent bg-slate-100 py-2 focus:outline-none focus:border-primary"
 									placeholder="Character Class"
 								/>
 							</div>
@@ -96,9 +96,11 @@
 						/>
 					</div>
 				{:else}
-					<div class="flex flex-row w-full border divide-x items-center">
-						<h1 class="text-4xl w-2/3 px-4 py-6">{character?.name}</h1>
-						<div class="divide-y w-1/3">
+					<div class="flex flex-col lg:flex-row w-full border divide-x items-center">
+						<h1 class="text-4xl w-full border-b lg:border-b-0 lg:w-2/3 px-4 py-6">
+							{character?.name}
+						</h1>
+						<div class="divide-y w-full lg:w-1/3">
 							<p class="w-full px-4 py-6 text-xl">No status yet</p>
 							<p class="w-full px-4 py-6 text-xl">Level: {character?.level}</p>
 							<p class="w-full px-4 py-6 text-xl">{character?.characterClass}</p>
