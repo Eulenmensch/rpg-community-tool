@@ -56,6 +56,7 @@ export interface IPersona {
 	campaignId: string;
 	about: string;
 	userId: string;
+	imageUrl?: string;
 }
 
 export type SessionStatus = 'available' | 'ongoing' | 'closed';

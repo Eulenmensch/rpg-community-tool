@@ -4,13 +4,15 @@
 	import RichTextEditor from '$lib/components/RichText/RichTextEditor.svelte';
 	import RichTextPreview from '$lib/components/RichText/RichTextPreview.svelte';
 	import { authStore } from '$lib/store/authStore';
+	import { fileHandlers } from '$lib/store/fileStore';
 	import { personaHandlers } from '$lib/store/personaStore';
+	import { faPen, faSave } from '@fortawesome/free-solid-svg-icons';
 	import { onMount } from 'svelte';
-	import type { IPersona } from '../../../Interfaces';
-	import { faCaretLeft, faPen, faSave } from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
+	import type { IPersona } from '../../../Interfaces';
 
 	let character: IPersona | null = null;
+	let fileInput: HTMLInputElement;
 
 	let isOwnCharacter = false;
 	let isEditing = false;
@@ -24,7 +26,6 @@
 		let userData = $authStore.data;
 
 		let campaignId = $authStore.data?.active_campaign;
-
 		if (!campaignId) return;
 		character = await personaHandlers.getPersonaById(campaignId, id);
 		isOwnCharacter = character?.userId === userData.uid;
@@ -36,10 +37,35 @@
 		if (!character?.id) return;
 		personaHandlers.updatePersona(userData.uid, character?.id, character);
 	}
+
+	async function handleFileUpload(event: Event) {
+		const target = event.target as HTMLInputElement;
+		if (!target.files || !target.files[0]) return;
+		if (!character?.id) return;
+
+		const file = target.files[0];
+		const userId = $authStore.data.uid;
+		const personaId = character?.id;
+
+		if (!userId || !personaId) return;
+		try {
+			const path = `users/${userId}/personas/${personaId}/profile_image`;
+			const downloadURL = await fileHandlers.uploadFile(file, path);
+			let userData = $authStore.data;
+			await personaHandlers.updatePersona(userData.uid, character?.id, {
+				imageUrl: downloadURL,
+				campaignId: character.campaignId,
+			});
+
+			//TODO: Update Stores
+		} catch (error) {
+			console.error('Error uploading file:', error);
+		}
+	}
 </script>
 
 {#if character}
-	<section class="xl:px-20 2xl:px-40 px-4 py-12">
+	<section class="xl:px-20 2xl:px-40 px-4 py-12 pb-40">
 		{#if isOwnCharacter}
 			<div class="py-5 flex items-center">
 				{#if !isEditing}
@@ -111,7 +137,17 @@
 					</div>
 				{/if}
 			</div>
-			<div class="bg-yellow-200 w-96">Placeholder Picture</div>
+			{#if isEditing}
+				<div class="bg-slate-100 w-96">
+					<input type="file" accept="image/*" on:change={handleFileUpload} bind:this={fileInput} />
+				</div>
+			{:else if character.imageUrl}
+				<img src={character.imageUrl} alt="Character" class="size-96 object-contain" />
+			{:else}
+				<div class="w-96 object-contain bg-slate-100 justify-center items-center flex text-dark/50">
+					No Image yet
+				</div>
+			{/if}
 		</div>
 	</section>
 {/if}
