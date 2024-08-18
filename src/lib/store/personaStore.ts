@@ -69,6 +69,7 @@ export const personaHandlers = {
 				'active_persona.campaignId':
 					updatedPersona.campaignId || userData.active_persona.campaignId,
 				'active_persona.about': updatedPersona.about || userData.active_persona.about,
+				'active_persona.imageUrl': updatedPersona.imageUrl || userData.active_persona.imageUrl,
 			});
 		}
 	},
@@ -108,6 +109,7 @@ export const personaHandlers = {
 			'active_persona.name': personaData?.name,
 			'active_persona.type': personaData?.type,
 			'active_persona.campaignId': personaData?.campaignId,
+			'active_persona.imageUrl': personaData?.imageUrl,
 			active_campaign: personaData?.campaignId,
 		});
 	},
