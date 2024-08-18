@@ -27,7 +27,7 @@
 		<PersonaSelector />
 	</div>
 
-	<div class="fixed bottom-0 left-0 right-0 w-full z-[99999999]">
+	<div class="fixed -bottom-10 left-0 right-0 w-full z-[99999999]">
 		<img src={bottomBar} alt="bottomBar" class="w-full bottom-0" />
 	</div>
 </div>

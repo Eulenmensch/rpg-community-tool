@@ -67,6 +67,7 @@
 	async function handleRemoveImage() {
 		if (!character?.id || !character.imageUrl) return;
 
+		console.log(character.imageUrl);
 		const userId = $authStore.data.uid;
 		const personaId = character.id;
 
@@ -74,12 +75,12 @@
 			const path = `users/${userId}/personas/${personaId}/profile_image`;
 			await fileHandlers.deleteFile(path);
 			await personaHandlers.updatePersona(userId, personaId, {
-				imageUrl: undefined,
+				imageUrl: null,
 				campaignId: character.campaignId,
 			});
 
 			// Update local character state
-			character.imageUrl = undefined;
+			character.imageUrl = null;
 			character = { ...character }; // Trigger Svelte reactivity
 		} catch (error) {
 			console.error('Error removing image:', error);
@@ -118,7 +119,7 @@
 						<input
 							type="text"
 							bind:value={character.name}
-							class="text-4xl mx-4 py-2 focus:outline-none w-full focus:border-primary bg-slate-100 border border-transparent"
+							class="text-4xl mx-4 py-2 focus:outline-none w-full focus:border-primary bg-slate-100 border border-transparent lg:ml-20"
 						/>
 						<div class="divide-y w-full lg:w-1/3">
 							<p class="w-full px-4 py-6 text-xl">No status yet</p>
@@ -136,7 +137,7 @@
 							</div>
 						</div>
 					</div>
-					<div class="p-4 border">
+					<div class="p-4 border lg:px-20">
 						<RichTextEditor
 							content={character?.about}
 							on:update={(e) => {
@@ -182,13 +183,13 @@
 					</div>
 				{:else}
 					<div
-						class="w-full bg-slate-100 rounded-lg h-full flex items-center justify-center text-dark/50 pt-12"
+						class="w-full bg-slate-100 rounded-lg h-96 flex items-center justify-center text-dark/50 pt-12"
 					>
 						No Image yet
 					</div>
 				{/if}
 				{#if isEditing}
-					<div class="mt-4">
+					<div class="mt-4 px-6">
 						<input
 							type="file"
 							accept="image/*"
