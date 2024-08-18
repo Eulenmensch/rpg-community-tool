@@ -51,7 +51,7 @@ export interface IPersona {
 	id?: string;
 	name: string;
 	type: Persona;
-	level?: number;
+	level: number;
 	characterClass?: string;
 	campaignId: string;
 	about: string;

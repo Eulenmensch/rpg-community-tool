@@ -15,7 +15,7 @@ import { campaignHandlers } from './campaignStore';
 
 export const personaHandlers = {
 	createPersona: async (userId: string, persona: IPersona): Promise<string> => {
-		// Add persona to sub-collection
+		// Add persona to users sub-collection
 		const userRef = doc(db, 'user', userId);
 		const personasCollectionRef = collection(userRef, 'personas');
 		const newPersonaRef = await addDoc(personasCollectionRef, persona);
@@ -38,6 +38,39 @@ export const personaHandlers = {
 		});
 
 		return newPersonaRef.id;
+	},
+	updatePersona: async (
+		userId: string,
+		personaId: string,
+		updatedPersona: Partial<IPersona>,
+	): Promise<void> => {
+		// Update persona in user's personas subcollection
+		const userPersonaRef = doc(db, `user/${userId}/personas/${personaId}`);
+		await updateDoc(userPersonaRef, updatedPersona);
+
+		// Update persona in campaign's personas subcollection
+		if (updatedPersona.campaignId) {
+			const campaignPersonaRef = doc(
+				db,
+				`campaign/${updatedPersona.campaignId}/personas/${personaId}`,
+			);
+			await updateDoc(campaignPersonaRef, updatedPersona);
+		}
+
+		// Update active persona in user if it's the currently active one
+		const userRef = doc(db, `user/${userId}`);
+		const userDoc = await getDoc(userRef);
+		const userData = userDoc.data();
+
+		if (userData && userData.active_persona && userData.active_persona.id === personaId) {
+			await updateDoc(userRef, {
+				'active_persona.name': updatedPersona.name || userData.active_persona.name,
+				'active_persona.type': updatedPersona.type || userData.active_persona.type,
+				'active_persona.campaignId':
+					updatedPersona.campaignId || userData.active_persona.campaignId,
+				'active_persona.about': updatedPersona.about || userData.active_persona.about,
+			});
+		}
 	},
 	getPersonaById: async (campaignId: string, personaId: string): Promise<IPersona | null> => {
 		const personaDocRef = doc(db, `campaign/${campaignId}/personas/${personaId}`);
