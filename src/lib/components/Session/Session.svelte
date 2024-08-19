@@ -5,18 +5,39 @@
 	import { campaignStore } from '$lib/store/campaignStore';
 	import { faEdit } from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
-	import type { ISession } from '../../../Interfaces';
+	import type { IPersona, ISession } from '../../../Interfaces';
 	import CreateOrEditSessionDialog from './Dialog/CreateOrEditSessionDialog.svelte';
 	import SessionPreviewDialog from './Dialog/SessionPreviewDialog.svelte';
 	import FilledSlot from './FilledSlot.svelte';
+	import { onMount } from 'svelte';
+	import { personaHandlers } from '$lib/store/personaStore';
+	import Avatar from '../Avatar.svelte';
 
 	export let session: ISession;
 	let DEBUG = false;
 
 	let open = false;
 	let editOpen = false;
-
 	$: userIsOwner = userOwnsCampaign();
+
+	onMount(async () => {
+		await fetchPersonaImagesAndUpdateSession();
+	});
+
+	async function fetchPersonaImagesAndUpdateSession() {
+		const personaPromises = session.personas.map(async (personaRef): Promise<IPersona | null> => {
+			if (!$authStore.data.active_campaign || !personaRef.id) return null;
+			const persona = await personaHandlers.getPersonaById(
+				$authStore.data.active_campaign,
+				personaRef.id,
+			);
+			return persona;
+		});
+
+		const personaEntries = await Promise.all(personaPromises);
+		const validPersonas = personaEntries.filter((persona): persona is IPersona => persona !== null);
+		session = { ...session, personas: validPersonas };
+	}
 </script>
 
 <button

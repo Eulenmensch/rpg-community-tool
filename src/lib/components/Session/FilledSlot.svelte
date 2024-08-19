@@ -2,6 +2,7 @@
 	import { authStore } from '$lib/store/authStore';
 	import { sessionHandlers, sessionStore } from '$lib/store/sessionStore';
 	import type { IPersona, ISession } from '../../../Interfaces';
+	import Avatar from '../Avatar.svelte';
 
 	export let session: ISession;
 	export let persona: IPersona;
@@ -31,9 +32,10 @@
 	<button
 		disabled={activePersona?.id != persona.id || disableUnsubscribe}
 		on:click={() => handleUnsubscribeFromSession(session, activePersona)}
-		class="h-10 w-10 rounded-full bg-gradient-to-b from-[#b61414] to-[#edcbf1] border-[5px] border-black font-bold mb-0.5"
-		>{persona.name.slice(0, 1)}</button
+		class="rounded-full bg-gradient-to-b border-4 border-black font-bold"
 	>
+		<Avatar {persona} size="xs" />
+	</button>
 
 	{#if activePersona?.id === persona.id && !disableUnsubscribe}
 		<div
