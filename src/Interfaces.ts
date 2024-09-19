@@ -21,8 +21,11 @@ export interface IPlayable extends Marker {
 	name: string;
 	description: string;
 	type: PlayableType;
+	color: string;
+	iconType: IconType;
 }
 export type PlayableType = 'rumor' | 'mission' | 'location';
+export type IconType = 'default' | 'building' | 'castle' | 'poi' | 'town';
 
 export interface ILocation extends Marker {
 	name: string;

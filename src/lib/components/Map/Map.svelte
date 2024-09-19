@@ -1,12 +1,13 @@
 <script lang="ts">
+	import MarkerEditor from '$lib/components/Map/MarkerEditor.svelte';
+	import { navHeight } from '$lib/helpers';
+	import { authStore } from '$lib/store/authStore';
+	import { campaignStore } from '$lib/store/campaignStore';
+	import { iconStore } from '$lib/store/iconStore';
 	import L, { type MarkerOptions } from 'leaflet';
 	import { afterUpdate, onDestroy, onMount } from 'svelte';
-	import { navHeight } from '$lib/helpers';
-	import { iconStore } from '$lib/store/iconStore';
+	import type { IconType } from '../../../Interfaces';
 	import Popup from './Popup.svelte';
-	import { campaignStore } from '$lib/store/campaignStore';
-	import { authStore } from '$lib/store/authStore';
-	import MarkerEditor from '$lib/components/Map/MarkerEditor.svelte';
 
 	let addingNewMarkerOpen: boolean;
 	let editPanelOpen: boolean;
@@ -64,17 +65,26 @@
 		addMarkers();
 	}
 
+	function createDivIcon(color: string, iconType: IconType) {
+		return L.divIcon({
+			className: 'div-icon',
+			html: `
+				<div style="color: ${color};">
+					${$iconStore[iconType]}
+				</div>
+			`,
+			iconSize: [50, 50],
+			iconAnchor: [27, 50],
+			popupAnchor: [0, -55],
+		});
+	}
+
 	function createMarker(e: any) {
 		// This function only creates the default Marker. The Customization is done in <MarkerEditor/>
 		if (addingNewMarkerOpen) {
+			const divIcon = createDivIcon('#000000', 'default');
 			const markerOptions: MarkerOptions = {
-				icon: L.divIcon({
-					className: 'div-icon',
-					html: $iconStore['default'],
-					iconSize: [50, 50],
-					iconAnchor: [27, 50],
-					popupAnchor: [0, -55],
-				}),
+				icon: divIcon,
 			};
 			marker = L.marker(e.latlng, markerOptions).addTo(map); //TODO: Use markerlayer which does whyever not work
 			addingNewMarkerOpen = false;
@@ -84,17 +94,12 @@
 
 	function addMarkers() {
 		markerLayer.clearLayers();
-		let divIcon = L.divIcon({
-			className: 'div-icon',
-			html: $iconStore['default'],
-			iconSize: [50, 50],
-			iconAnchor: [27, 50],
-			popupAnchor: [0, -55],
-		});
 
 		$campaignStore.campaigns
 			.find((c) => c.id == $authStore.data.active_campaign)
 			?.playables.map((playable) => {
+				let divIcon = createDivIcon(playable?.color ?? '#000000', playable?.iconType ?? 'default');
+
 				let leafletMarker = L.marker([playable.coordinates.lat, playable.coordinates.long], {
 					title: playable.name,
 					alt: playable.name,
@@ -111,10 +116,7 @@
 					},
 				});
 				leafletMarker.bindPopup(popupContainer, {
-					//className: 'leaflet-popup',
 					offset: L.point(0, 15),
-					// maxWidth: 350,
-					//maxHeight: 181,
 					closeButton: false,
 				});
 			});
