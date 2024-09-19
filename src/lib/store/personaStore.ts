@@ -109,7 +109,7 @@ export const personaHandlers = {
 			'active_persona.name': personaData?.name,
 			'active_persona.type': personaData?.type,
 			'active_persona.campaignId': personaData?.campaignId,
-			'active_persona.imageUrl': personaData?.imageUrl,
+			'active_persona.imageUrl': personaData?.imageUrl == undefined ? null : personaData?.imageUrl,
 			active_campaign: personaData?.campaignId,
 		});
 	},
