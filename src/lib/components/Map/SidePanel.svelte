@@ -5,11 +5,16 @@
 	import type { IPlayable, View } from '../../../Interfaces';
 	import LocationList from './LocationList.svelte';
 	import LocationDetails from './LocationDetails.svelte';
+	import MarkerEditor from './MarkerEditor.svelte';
 
 	export let playables: IPlayable[];
 	export let sidePanelOpen: boolean;
 	export let selectedPlayable: IPlayable | null;
 	export let currentView: View;
+	export let addingNewMarkerOpen: boolean;
+	export let newPlayable: IPlayable;
+	export let updateMarkerOnMap;
+	export let marker;
 
 	function handleSelectLocation(playable: IPlayable) {
 		currentView = 'Details';
@@ -31,7 +36,8 @@
 </button>
 {#if sidePanelOpen}
 	<div
-		class="absolute bottom-0 right-0 p-6 top-0 w-1/4 bg-black bg-opacity-80 text-white z-[9999999999]"
+		style="width: {currentView == 'Edit' ? '33' : '25'}%;"
+		class="absolute bottom-0 right-0 p-6 top-0 w-1/3 bg-black bg-opacity-80 text-white z-[9999999999]"
 		transition:slide={{ duration: 500, axis: 'x' }}
 	>
 		<button
@@ -45,6 +51,9 @@
 		{/if}
 		{#if currentView == 'List'}
 			<LocationList {handleSelectLocation} {playables} />
+		{/if}
+		{#if currentView == 'Edit'}
+			<MarkerEditor {marker} {updateMarkerOnMap} bind:playable={newPlayable} {handleBackToList} />
 		{/if}
 	</div>
 {/if}

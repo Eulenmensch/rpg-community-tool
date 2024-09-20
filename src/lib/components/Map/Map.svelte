@@ -8,6 +8,9 @@
 	import { afterUpdate, onDestroy, onMount } from 'svelte';
 	import type { IconType, IPlayable, View } from '../../../Interfaces';
 	import SidePanel from './SidePanel.svelte';
+	import { faPlus } from '@fortawesome/free-solid-svg-icons';
+	import Fa from 'svelte-fa';
+	import arrow from '$lib/images/Arrow.svg';
 
 	// --- STATE ---
 	let addingNewMarkerOpen: boolean;
@@ -123,6 +126,8 @@
 			playable.coordinates.long = e.latlng.lng;
 			addingNewMarkerOpen = false;
 			editPanelOpen = true;
+			currentView = 'Edit';
+			sidePanelOpen = true;
 		}
 	}
 
@@ -142,7 +147,7 @@
 
 			leafletMarker.on('click', () => {
 				selectedPlayable = playable;
-				sidePanelOpen = true; // Open the Side Panel
+				sidePanelOpen = true;
 				currentView = 'Details';
 			});
 		});
@@ -155,22 +160,44 @@
 			marker.setIcon(newIcon);
 		}
 	}
+
+	$: activePersonaIsGM = $campaignStore?.campaign?.owner_id === $authStore?.data?.uid;
 </script>
 
 <div>
 	<div style={`height: calc(100vh - ${navHeight})`} class="bg-white w-full grow" id="map" />
-	<MarkerEditor
-		updateMarkerOnMap={updateMarkerColor}
-		bind:playable
-		bind:editPanelOpen
-		bind:addingNewMarkerOpen
-		bind:marker
-	/>
+	<div
+		class="fixed bottom-1/2 left-5 z-[1000000] bg-white flex flex-col origin-center translate-y-1/2 image-border"
+	>
+		<button class=" p-2 flex justify-center" on:click={() => (addingNewMarkerOpen = false)}>
+			<img src={arrow} class="w-8" alt="Arrow Icon" />
+		</button>
+		{#if activePersonaIsGM}
+			<button
+				class=" p-2 items-center flex justify-center"
+				on:click={() => (addingNewMarkerOpen = !addingNewMarkerOpen)}
+			>
+				<Fa icon={faPlus} class="text-4xl" />
+			</button>
+		{/if}
+	</div>
+
+	{#if addingNewMarkerOpen}
+		<div
+			class="fixed top-20 left-1/2 -translate-x-1/2 text-lg bg-slate-500 text-white z-[10000] p-6 rounded shadow"
+		>
+			Click anywhere on the map to add the marker
+		</div>
+	{/if}
 	<SidePanel
 		bind:sidePanelOpen
 		bind:currentView
 		bind:selectedPlayable
+		bind:addingNewMarkerOpen
 		playables={visiblePlayables}
+		updateMarkerOnMap={updateMarkerColor}
+		bind:newPlayable={playable}
+		bind:marker
 	/>
 </div>
 
@@ -180,6 +207,12 @@
 	#map {
 		max-width: 100vw;
 		background: white;
+	}
+	.image-border {
+		border: 20px solid;
+		border-image-source: url('description-input-frame.svg');
+		border-image-slice: 32 fill;
+		border-image-repeat: round;
 	}
 
 	/* Reset styles for the custom popup */

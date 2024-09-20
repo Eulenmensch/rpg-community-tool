@@ -21,6 +21,11 @@
 					<span class="">{playable.name}</span>
 				</button>
 			{/each}
+			{#if playables.length == 0}
+				<div class="bg-dark p-4 text-center rounded text-white/70">
+					There are no locations in this area yet.
+				</div>
+			{/if}
 		</div>
 	{/if}
 </div>
