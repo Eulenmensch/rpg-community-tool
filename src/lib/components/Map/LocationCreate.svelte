@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { authStore } from '$lib/store/authStore';
-	import { campaignHandlers } from '$lib/store/campaignStore';
+	import { campaignHandlers, campaignStore } from '$lib/store/campaignStore';
 	import type { IPlayable } from '../../../Interfaces';
 	import RichTextEditor from '../RichText/RichTextEditor.svelte';
 	import IconRow from './MarkerEditor/IconRow.svelte';
@@ -14,15 +14,21 @@
 	// --- Local Variables ---
 	let colors = ['#000000', '#95DBD7', '#D46DB2', '#B4CE4C', '#CB9223'];
 
-	/* $: activePersonaIsGM = $campaignStore?.campaign?.owner_id === $authStore?.data?.uid; */
 	$: _authstore = $authStore;
 	$: updateMarkerOnMap(playable);
 
 	function handleConfirm() {
-		if (_authstore.data.active_campaign) {
-			campaignHandlers.createPlayable(playable, _authstore.data.active_campaign);
-			handleBackToList();
-		}
+		if (!_authstore.data.active_campaign) return;
+
+		campaignHandlers.createPlayable(playable, _authstore.data.active_campaign);
+		campaignStore.update((store) => {
+			const campaign = store.campaigns.find((c) => c.id == _authstore.data.active_campaign);
+			if (campaign) {
+				campaign.playables = [...campaign.playables, playable];
+			}
+			return store;
+		});
+		handleBackToList();
 	}
 
 	function handleCancel() {

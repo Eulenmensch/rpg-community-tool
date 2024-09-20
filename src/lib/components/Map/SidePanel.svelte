@@ -5,13 +5,12 @@
 	import type { IPlayable, View } from '../../../Interfaces';
 	import LocationList from './LocationList.svelte';
 	import LocationDetails from './LocationDetails.svelte';
-	import MarkerEditor from './MarkerEditor.svelte';
+	import LocationCreate from './LocationCreate.svelte';
 
-	export let playables: IPlayable[];
+	export let visiblePlayables: IPlayable[];
 	export let sidePanelOpen: boolean;
 	export let selectedPlayable: IPlayable | null;
 	export let currentView: View;
-	export let addingNewMarkerOpen: boolean;
 	export let newPlayable: IPlayable;
 	export let updateMarkerOnMap;
 	export let marker;
@@ -50,10 +49,10 @@
 			<LocationDetails {handleBackToList} playable={selectedPlayable} />
 		{/if}
 		{#if currentView == 'List'}
-			<LocationList {handleSelectLocation} {playables} />
+			<LocationList {handleSelectLocation} {visiblePlayables} />
 		{/if}
 		{#if currentView == 'Edit'}
-			<MarkerEditor {marker} {updateMarkerOnMap} bind:playable={newPlayable} {handleBackToList} />
+			<LocationCreate {marker} {updateMarkerOnMap} bind:playable={newPlayable} {handleBackToList} />
 		{/if}
 	</div>
 {/if}

@@ -2,15 +2,15 @@
 	import { iconStore } from '$lib/store/iconStore';
 	import type { IPlayable } from '../../../Interfaces';
 
-	export let playables: IPlayable[];
+	export let visiblePlayables: IPlayable[];
 	export let handleSelectLocation: (playable: IPlayable) => void;
 </script>
 
 <div class="flex flex-col gap-6">
 	<div class="text-center text-xl font-black p-4 bg-dark rounded-lg">Locations</div>
-	{#if playables}
+	{#if visiblePlayables}
 		<div class="flex flex-col gap-2 w-full">
-			{#each playables as playable}
+			{#each visiblePlayables as playable}
 				<button
 					on:click={() => handleSelectLocation(playable)}
 					class="flex p-2 bg-dark rounded-lg items-center hover:bg-primary-900 gap-2"
@@ -21,7 +21,7 @@
 					<span class="">{playable.name}</span>
 				</button>
 			{/each}
-			{#if playables.length == 0}
+			{#if visiblePlayables.length == 0}
 				<div class="bg-dark p-4 text-center rounded text-white/70">
 					There are no locations in this area yet.
 				</div>

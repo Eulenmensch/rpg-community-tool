@@ -1,5 +1,5 @@
 <script lang="ts">
-	import MarkerEditor from '$lib/components/Map/MarkerEditor.svelte';
+	import MarkerEditor from '$lib/components/Map/LocationCreate.svelte';
 	import { navHeight } from '$lib/helpers';
 	import { authStore } from '$lib/store/authStore';
 	import { campaignStore } from '$lib/store/campaignStore';
@@ -22,9 +22,9 @@
 	let currentView: View = 'List';
 	let sidePanelOpen: boolean = true;
 
-	$: playables = $campaignStore.campaigns.find(
-		(c) => c.id == $authStore.data.active_campaign,
-	)?.playables;
+	$: playables =
+		$campaignStore.campaigns.find((c) => c.id == $authStore.data.active_campaign)?.playables ?? [];
+
 	$: visiblePlayables =
 		playables?.filter((playable) =>
 			map?.getBounds().contains([playable.coordinates.lat, playable.coordinates.long]),
@@ -79,15 +79,8 @@
 			maxBoundsViscosity: 1.0,
 		});
 
-		map.on('click', createMarker);
-
-		map.on('moveend', () => {
-			// This will trigger the reactive statement to update visiblePlayables
-			visiblePlayables =
-				playables?.filter((playable) =>
-					map?.getBounds().contains([playable.coordinates.lat, playable.coordinates.long]),
-				) ?? [];
-		});
+		map.on('click', createDefaultMarker);
+		map.on('moveend', updateVisiblePlayables);
 
 		L.tileLayer('/src/lib/images/map/theUnknown/{z}/{x}/{y}.png', {
 			minZoom: MIN_ZOOM_LEVEL,
@@ -97,6 +90,13 @@
 			bounds: bounds,
 		}).addTo(map);
 		addMarkers();
+	}
+
+	function updateVisiblePlayables() {
+		visiblePlayables =
+			playables?.filter((playable) =>
+				map?.getBounds().contains([playable.coordinates.lat, playable.coordinates.long]),
+			) ?? [];
 	}
 
 	function createDivIcon(color: string, iconType: IconType) {
@@ -113,22 +113,29 @@
 		});
 	}
 
-	function createMarker(e: any) {
-		// This function only creates the default Marker. The Customization is done in <MarkerEditor/>
-		if (addingNewMarkerOpen) {
-			const divIcon = createDivIcon('#000000', 'default');
-			const markerOptions: MarkerOptions = {
-				icon: divIcon,
-			};
-			//TODO: Use MarkerLayer which does not work due to unknown reasons
-			marker = L.marker(e.latlng, markerOptions).addTo(map);
-			playable.coordinates.lat = e.latlng.lat;
-			playable.coordinates.long = e.latlng.lng;
-			addingNewMarkerOpen = false;
-			editPanelOpen = true;
-			currentView = 'Edit';
+	function createDefaultMarker(e: any) {
+		// This function only creates the default Marker. The Customization is done in <LocationCreate/>
+		if (!addingNewMarkerOpen) return;
+
+		const divIcon = createDivIcon('#000000', 'default');
+		const markerOptions: MarkerOptions = {
+			icon: divIcon,
+		};
+
+		//TODO: Use MarkerLayer which does not work due to unknown reasons
+		marker = L.marker(e.latlng, markerOptions).addTo(map);
+		playable.coordinates.lat = e.latlng.lat;
+		playable.coordinates.long = e.latlng.lng;
+		addingNewMarkerOpen = false;
+		editPanelOpen = true;
+		currentView = 'Edit';
+		sidePanelOpen = true;
+
+		marker.on('click', () => {
+			selectedPlayable = playable;
 			sidePanelOpen = true;
-		}
+			currentView = 'Details';
+		});
 	}
 
 	function addMarkers() {
@@ -155,12 +162,11 @@
 	}
 
 	function updateMarkerColor(playable: IPlayable) {
-		if (marker) {
-			const newIcon = createDivIcon(playable?.color, playable.iconType);
-			marker.setIcon(newIcon);
-		}
-	}
+		if (!marker) return;
 
+		const newIcon = createDivIcon(playable?.color, playable.iconType);
+		marker.setIcon(newIcon);
+	}
 	$: activePersonaIsGM = $campaignStore?.campaign?.owner_id === $authStore?.data?.uid;
 </script>
 
@@ -184,7 +190,7 @@
 
 	{#if addingNewMarkerOpen}
 		<div
-			class="fixed top-20 left-1/2 -translate-x-1/2 text-lg bg-slate-500 text-white z-[10000] p-6 rounded shadow"
+			class="fixed top-20 left-1/2 -translate-x-1/2 text-lg bg-dark text-white z-[10000] p-6 rounded shadow"
 		>
 			Click anywhere on the map to add the marker
 		</div>
@@ -193,11 +199,10 @@
 		bind:sidePanelOpen
 		bind:currentView
 		bind:selectedPlayable
-		bind:addingNewMarkerOpen
-		playables={visiblePlayables}
-		updateMarkerOnMap={updateMarkerColor}
+		bind:visiblePlayables
 		bind:newPlayable={playable}
 		bind:marker
+		updateMarkerOnMap={updateMarkerColor}
 	/>
 </div>
 
