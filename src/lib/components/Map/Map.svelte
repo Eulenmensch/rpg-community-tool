@@ -144,6 +144,11 @@
 				selectedPlayable = playable;
 				sidePanelOpen = true;
 				currentView = 'Details';
+				console.log(map.getZoom());
+				map.setView(
+					[playable.coordinates.lat, playable.coordinates.long],
+					Math.max(map.getZoom(), 3.5),
+				);
 			});
 		});
 		markerLayer.addTo(map);
@@ -189,6 +194,7 @@
 		bind:visiblePlayables
 		bind:newPlayable={playable}
 		bind:marker
+		bind:map
 		updateMarkerOnMap={updateMarkerColor}
 	/>
 </div>

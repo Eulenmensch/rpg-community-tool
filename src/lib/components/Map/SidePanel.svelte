@@ -14,10 +14,12 @@
 	export let newPlayable: IPlayable;
 	export let updateMarkerOnMap;
 	export let marker;
+	export let map: L.Map;
 
 	function handleSelectLocation(playable: IPlayable) {
 		currentView = 'Details';
 		selectedPlayable = playable;
+		map.setView([playable.coordinates.lat, playable.coordinates.long], map.getZoom());
 	}
 
 	function handleBackToList() {
