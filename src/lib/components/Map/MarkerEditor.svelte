@@ -4,43 +4,24 @@
 	import { campaignHandlers, campaignStore } from '$lib/store/campaignStore';
 	import { faPlus } from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
-	import type { IconType, IPlayable } from '../../../Interfaces';
+	import { slide } from 'svelte/transition';
+	import type { IPlayable } from '../../../Interfaces';
 	import RichTextEditor from '../RichText/RichTextEditor.svelte';
 	import IconRow from './MarkerEditor/IconRow.svelte';
-	import { slide } from 'svelte/transition';
 
 	export let addingNewMarkerOpen: boolean;
 	export let editPanelOpen: boolean;
 	export let marker: L.Marker;
-	let playableName = '';
-	let playableDescription = '';
-	let selectedColor = {
-		color: 'Black',
-		twClass: 'bg-black',
-		twClassText: 'text-black',
-		colorCode: '#000000',
-	};
-	let selectedIconType: IconType = 'default';
+	export let playable: IPlayable;
+	export let updateMarkerOnMap: (playable: IPlayable) => void;
 
 	$: activePersonaIsGM = $campaignStore?.campaign?.owner_id === $authStore?.data?.uid;
 	$: _authstore = $authStore;
+	$: updateMarkerOnMap(playable);
 
 	function handleConfirm() {
-		const coordinates = marker.getLatLng();
-		const newPlayable: IPlayable = {
-			name: playableName,
-			description: playableDescription,
-			type: 'location',
-			coordinates: {
-				lat: coordinates.lat,
-				long: coordinates.lng,
-			},
-			color: selectedColor.colorCode,
-			iconType: selectedIconType,
-		};
-
 		if (_authstore.data.active_campaign) {
-			campaignHandlers.createPlayable(newPlayable, _authstore.data.active_campaign);
+			campaignHandlers.createPlayable(playable, _authstore.data.active_campaign);
 			editPanelOpen = false;
 		}
 	}
@@ -50,39 +31,7 @@
 		editPanelOpen = false;
 	}
 
-	let colors = [
-		{
-			color: 'Black',
-			twClass: 'bg-black',
-			twClassText: 'text-black',
-			colorCode: '#000000',
-		},
-		{
-			color: 'Blue',
-			twClass: 'bg-[#95DBD7]',
-			twClassText: 'text-[#95DBD7]',
-			colorCode: '#95DBD7',
-		},
-		{
-			color: 'Purple',
-			twClass: 'bg-[#D46DB2]',
-			twClassText: 'text-[#D46DB2]',
-			colorCode: '#D46DB2',
-		},
-		{
-			color: 'Green',
-			twClass: 'bg-[#B4CE4C]',
-			twClassText: 'text-[#B4CE4C]',
-			colorCode: '#B4CE4C',
-		},
-
-		{
-			color: 'Orange',
-			twClass: 'bg-[#CB9223]',
-			twClassText: 'text-[#CB9223]',
-			colorCode: '#CB9223',
-		},
-	];
+	let colors = ['#000000', '#95DBD7', '#D46DB2', '#B4CE4C', '#CB9223'];
 </script>
 
 <div
@@ -116,27 +65,28 @@
 		<div class="flex flex-col w-full p-2 py-4 gap-3">
 			<div class="flex w-full flex-col gap-8">
 				<div class="flex flex-col text-left mx-auto">
-					<IconRow bind:selectedIconType currentColor={selectedColor.twClassText} />
+					<IconRow bind:selectedIconType={playable.iconType} bind:currentColor={playable.color} />
 				</div>
 				<div class="flex flex-col gap-2 text-left mt-2">
 					<div class="flex gap-1 mx-auto">
 						{#each colors as color}
 							<button
-								on:click={() => (selectedColor = color)}
-								class="rounded p-2 {selectedColor.color == color.color
+								on:click={() => (playable.color = color)}
+								class="rounded p-2 {playable.color == color
 									? 'bg-primary-800/50'
 									: 'hover:bg-primary-800/70'}"
 							>
-								<div class="{color.twClass} size-8 rounded-lg" />
+								<div style="background-color: {color};" class="size-8 rounded-lg" />
 							</button>
 						{/each}
 					</div>
 				</div>
 				<div class="flex flex-col text-left gap-1">
 					<label class="text-lg font-black" for="name">Title</label>
+					<!-- svelte-ignore a11y-autofocus -->
 					<input
 						autofocus
-						bind:value={playableName}
+						bind:value={playable.name}
 						name="name"
 						placeholder="Playbale name"
 						class="border py-2 px-4 rounded-xl text-black"
@@ -145,15 +95,20 @@
 
 				<div class="text-left flex flex-col gap-2 text-black">
 					<span class="font-black text-lg text-white">Description</span>
-					<RichTextEditor bind:content={playableDescription} />
+					<RichTextEditor
+						bind:content={playable.description}
+						on:update={(e) => (playable.description = e.detail)}
+					/>
 				</div>
 			</div>
 			<div class="flex gap-4 absolute bottom-12 right-12">
-				<button on:click={handleCancel} class="bg-gray-400 p-4 py-3 rounded-lg font-boldv"
-					>Cancel</button
+				<button
+					on:click={handleCancel}
+					class="bg-gray-400 hover:bg-gray-500 p-4 py-3 rounded-lg font-boldv">Cancel</button
 				>
-				<button on:click={handleConfirm} class="bg-primary p-4 py-3 rounded-lg font-boldv"
-					>Confirm</button
+				<button
+					on:click={handleConfirm}
+					class="bg-primary hover:bg-primary-600 p-4 py-3 rounded-lg font-boldv">Confirm</button
 				>
 			</div>
 		</div>

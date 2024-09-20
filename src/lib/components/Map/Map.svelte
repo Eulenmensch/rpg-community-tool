@@ -6,8 +6,11 @@
 	import { iconStore } from '$lib/store/iconStore';
 	import L, { type MarkerOptions } from 'leaflet';
 	import { afterUpdate, onDestroy, onMount } from 'svelte';
-	import type { IconType } from '../../../Interfaces';
+	import type { IconType, IPlayable } from '../../../Interfaces';
 	import Popup from './Popup.svelte';
+	import { faChevronRight, faFontAwesome, faUser } from '@fortawesome/free-solid-svg-icons';
+	import Fa from 'svelte-fa';
+	import SidePanel from './SidePanel.svelte';
 
 	let addingNewMarkerOpen: boolean;
 	let editPanelOpen: boolean;
@@ -15,6 +18,26 @@
 	let map: L.Map;
 	let markerLayer = L.layerGroup();
 	let marker: L.Marker;
+
+	$: playables = $campaignStore.campaigns.find(
+		(c) => c.id == $authStore.data.active_campaign,
+	)?.playables;
+	$: visiblePlayables =
+		playables?.filter((playable) =>
+			map?.getBounds().contains([playable.coordinates.lat, playable.coordinates.long]),
+		) ?? [];
+
+	let playable: IPlayable = {
+		name: '',
+		description: '',
+		iconType: 'default',
+		coordinates: {
+			lat: 0,
+			long: 0,
+		},
+		color: '#000000',
+		type: 'location',
+	};
 
 	onMount(async () => {
 		initMap();
@@ -55,6 +78,14 @@
 
 		map.on('click', createMarker);
 
+		map.on('moveend', () => {
+			// This will trigger the reactive statement to update visiblePlayables
+			visiblePlayables =
+				playables?.filter((playable) =>
+					map?.getBounds().contains([playable.coordinates.lat, playable.coordinates.long]),
+				) ?? [];
+		});
+
 		L.tileLayer('/src/lib/images/map/theUnknown/{z}/{x}/{y}.png', {
 			minZoom: MIN_ZOOM_LEVEL,
 			maxZoom: MAX_ZOOM_LEVEL,
@@ -86,7 +117,10 @@
 			const markerOptions: MarkerOptions = {
 				icon: divIcon,
 			};
-			marker = L.marker(e.latlng, markerOptions).addTo(map); //TODO: Use markerlayer which does whyever not work
+			//TODO: Use MarkerLayer which does not work due to unknown reasons
+			marker = L.marker(e.latlng, markerOptions).addTo(map);
+			playable.coordinates.lat = e.latlng.lat;
+			playable.coordinates.long = e.latlng.lng;
 			addingNewMarkerOpen = false;
 			editPanelOpen = true;
 		}
@@ -94,39 +128,52 @@
 
 	function addMarkers() {
 		markerLayer.clearLayers();
+		if (!playables) return;
 
-		$campaignStore.campaigns
-			.find((c) => c.id == $authStore.data.active_campaign)
-			?.playables.map((playable) => {
-				let divIcon = createDivIcon(playable?.color ?? '#000000', playable?.iconType ?? 'default');
+		playables.map((playable) => {
+			let divIcon = createDivIcon(playable?.color ?? '#000000', playable?.iconType ?? 'default');
 
-				let leafletMarker = L.marker([playable.coordinates.lat, playable.coordinates.long], {
-					title: playable.name,
-					alt: playable.name,
-					icon: divIcon,
-					draggable: false,
-				}).addTo(markerLayer);
+			let leafletMarker = L.marker([playable.coordinates.lat, playable.coordinates.long], {
+				title: playable.name,
+				alt: playable.name,
+				icon: divIcon,
+				draggable: false,
+			}).addTo(markerLayer);
 
-				let popupContainer = L.DomUtil.create('div');
+			let popupContainer = L.DomUtil.create('div');
 
-				new Popup({
-					target: popupContainer,
-					props: {
-						marker: playable,
-					},
-				});
-				leafletMarker.bindPopup(popupContainer, {
-					offset: L.point(0, 15),
-					closeButton: false,
-				});
+			new Popup({
+				target: popupContainer,
+				props: {
+					marker: playable,
+				},
 			});
+			leafletMarker.bindPopup(popupContainer, {
+				offset: L.point(0, 15),
+				closeButton: false,
+			});
+		});
 		markerLayer.addTo(map);
+	}
+
+	function updateMarkerColor(playable: IPlayable) {
+		if (marker) {
+			const newIcon = createDivIcon(playable?.color, playable.iconType);
+			marker.setIcon(newIcon);
+		}
 	}
 </script>
 
 <div>
 	<div style={`height: calc(100vh - ${navHeight})`} class="bg-white w-full grow" id="map" />
-	<MarkerEditor bind:editPanelOpen bind:addingNewMarkerOpen bind:marker />
+	<MarkerEditor
+		updateMarkerOnMap={updateMarkerColor}
+		bind:playable
+		bind:editPanelOpen
+		bind:addingNewMarkerOpen
+		bind:marker
+	/>
+	<SidePanel playables={visiblePlayables} />
 </div>
 
 <style>
