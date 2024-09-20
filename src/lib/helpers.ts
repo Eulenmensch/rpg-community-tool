@@ -1,12 +1,12 @@
 import { faClock, faLock, faLockOpen } from '@fortawesome/free-solid-svg-icons';
-import type { DateFormat, IPersona } from '../Interfaces';
+import type { DateFormat, IPersona, IPlayable } from '../Interfaces';
 import { get } from 'svelte/store';
 import { authStore } from './store/authStore';
 import { personaHandlers } from './store/personaStore';
 import { campaignHandlers, campaignStore } from './store/campaignStore';
 import { sessionHandlers, sessionStore } from './store/sessionStore';
 
-export const navHeight = '60px';
+export const navHeight = '75px';
 
 export const sessionStatusToIcon = {
 	available: faLockOpen,
@@ -54,4 +54,18 @@ export function userOwnsCampaign() {
 	const authStoreRef = get(authStore);
 
 	return campaignStoreRef.campaign?.owner_id === authStoreRef?.data?.uid;
+}
+
+export function createDefaultPlayable(): IPlayable {
+	return {
+		color: 'black',
+		coordinates: {
+			lat: 0,
+			long: 0,
+		},
+		description: '',
+		iconType: 'default',
+		name: '',
+		type: 'location',
+	};
 }

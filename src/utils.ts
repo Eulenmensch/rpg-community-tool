@@ -20,7 +20,7 @@ export const unePlayables: IPlayable[] = [
 			long: -10,
 		},
 		type: 'mission',
-		color: '#fff',
+		color: '#000',
 		iconType: 'default',
 	},
 	{
@@ -42,7 +42,7 @@ export const unePlayables: IPlayable[] = [
 			long: -100,
 		},
 		type: 'location',
-		color: '#fff',
+		color: '#000',
 		iconType: 'default',
 	},
 ];

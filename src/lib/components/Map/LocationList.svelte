@@ -4,12 +4,14 @@
 
 	export let visiblePlayables: IPlayable[];
 	export let handleSelectLocation: (playable: IPlayable) => void;
+
+	let headerHeight = '150px';
 </script>
 
 <div class="flex flex-col gap-6">
 	<div class="text-center text-xl font-black p-4 bg-dark rounded-lg">Locations</div>
 	{#if visiblePlayables}
-		<div class="flex flex-col gap-2 w-full">
+		<div class="flex flex-col gap-2 w-full overflow-y-auto max-h-[calc(100vh-{headerHeight})]">
 			{#each visiblePlayables as playable}
 				<button
 					on:click={() => handleSelectLocation(playable)}

@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { createDefaultPlayable } from '$lib/helpers';
+	import { Playable } from '$lib/Models/Playable';
 	import { authStore } from '$lib/store/authStore';
 	import { campaignHandlers, campaignStore } from '$lib/store/campaignStore';
 	import type { IPlayable } from '../../../Interfaces';
@@ -27,11 +29,13 @@
 			}
 			return store;
 		});
+		playable = createDefaultPlayable(); // Reset state to default playable
 		handleBackToList();
 	}
 
 	function handleCancel() {
 		marker.remove();
+		playable = createDefaultPlayable(); // Reset state to default playable;
 		handleBackToList();
 	}
 </script>

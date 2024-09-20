@@ -28,7 +28,7 @@
 
 <button
 	on:click={() => (sidePanelOpen = !sidePanelOpen)}
-	class="absolute hover:bg-primary-800 right-4 bg-dark text-white top-20 size-10 items-center flex justify-center rounded cursor-pointer {sidePanelOpen &&
+	class="absolute hover:bg-primary-800 right-4 bg-dark text-white top-24 size-10 items-center flex justify-center rounded cursor-pointer {sidePanelOpen &&
 		'hidden'}"
 >
 	<Fa icon={faChevronLeft} class="text-white text-xl" />
@@ -36,12 +36,12 @@
 {#if sidePanelOpen}
 	<div
 		style="width: {currentView == 'Edit' ? '33' : '25'}%;"
-		class="absolute bottom-0 right-0 p-6 top-0 w-1/3 bg-black bg-opacity-80 text-white z-[9999999999]"
+		class="absolute bottom-0 right-0 p-6 top-0 w-1/3 bg-black bg-opacity-85 text-white z-[9999999999]"
 		transition:slide={{ duration: 500, axis: 'x' }}
 	>
 		<button
 			on:click={() => (sidePanelOpen = !sidePanelOpen)}
-			class="absolute -left-5 bg-dark text-white top-20 size-10 items-center flex justify-center rounded cursor-pointer z-[99999] hover:bg-primary-800"
+			class="absolute -left-5 bg-dark text-white top-24 size-10 items-center flex justify-center rounded cursor-pointer z-[99999] hover:bg-primary-800"
 		>
 			<Fa icon={faChevronRight} class="text-white text-xl" />
 		</button>

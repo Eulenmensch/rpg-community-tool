@@ -1,16 +1,16 @@
 <script lang="ts">
-	import MarkerEditor from '$lib/components/Map/LocationCreate.svelte';
-	import { navHeight } from '$lib/helpers';
+	import { createDefaultPlayable, navHeight } from '$lib/helpers';
+	import arrow from '$lib/images/Arrow.svg';
+	import { Playable } from '$lib/Models/Playable';
 	import { authStore } from '$lib/store/authStore';
 	import { campaignStore } from '$lib/store/campaignStore';
 	import { iconStore } from '$lib/store/iconStore';
+	import { faPlus } from '@fortawesome/free-solid-svg-icons';
 	import L, { type MarkerOptions } from 'leaflet';
 	import { afterUpdate, onDestroy, onMount } from 'svelte';
+	import Fa from 'svelte-fa';
 	import type { IconType, IPlayable, View } from '../../../Interfaces';
 	import SidePanel from './SidePanel.svelte';
-	import { faPlus } from '@fortawesome/free-solid-svg-icons';
-	import Fa from 'svelte-fa';
-	import arrow from '$lib/images/Arrow.svg';
 
 	// --- STATE ---
 	let addingNewMarkerOpen: boolean;
@@ -30,17 +30,7 @@
 			map?.getBounds().contains([playable.coordinates.lat, playable.coordinates.long]),
 		) ?? [];
 
-	let playable: IPlayable = {
-		name: '',
-		description: '',
-		iconType: 'default',
-		coordinates: {
-			lat: 0,
-			long: 0,
-		},
-		color: '#000000',
-		type: 'location',
-	};
+	let playable: IPlayable = createDefaultPlayable();
 
 	onMount(async () => {
 		initMap();
@@ -51,10 +41,8 @@
 	});
 
 	onDestroy(async () => {
-		if (map) {
-			console.log('Unloading Leaflet map.');
-			map.remove();
-		}
+		if (!map) return;
+		map.remove();
 	});
 
 	async function initMap() {
@@ -187,7 +175,6 @@
 			</button>
 		{/if}
 	</div>
-
 	{#if addingNewMarkerOpen}
 		<div
 			class="fixed top-20 left-1/2 -translate-x-1/2 text-lg bg-dark text-white z-[10000] p-6 rounded shadow"
@@ -212,6 +199,8 @@
 	#map {
 		max-width: 100vw;
 		background: white;
+		height: 100%;
+		overflow: hidden;
 	}
 	.image-border {
 		border: 20px solid;
@@ -264,6 +253,12 @@
 		display: flex;
 		border-style: none;
 		overflow-y: auto;
+	}
+
+	:global(.leaflet-container) {
+		width: 100%;
+		height: 100%;
+		overflow: hidden; /* Ensure no overflow */
 	}
 
 	:global(.leaflet-popup-content-wrapper p) {
