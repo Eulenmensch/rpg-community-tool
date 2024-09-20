@@ -13,7 +13,7 @@
 			{#each playables as playable}
 				<button
 					on:click={() => handleSelectLocation(playable)}
-					class="flex p-2 bg-dark rounded-lg items-center hover:bg-primary-900"
+					class="flex p-2 bg-dark rounded-lg items-center hover:bg-primary-900 gap-2"
 				>
 					<div class="icons-in-side" style="color:{playable.color ?? 'black'};">
 						{@html $iconStore[playable.iconType ?? 'default']}
@@ -24,3 +24,11 @@
 		</div>
 	{/if}
 </div>
+
+<style>
+	/* Style svg inside our SidePanel */
+	.icons-in-side :global(svg) {
+		width: 2.3rem;
+		height: 2.3rem;
+	}
+</style>

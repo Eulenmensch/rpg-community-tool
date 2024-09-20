@@ -65,3 +65,4 @@ export interface IPersona {
 export type SessionStatus = 'available' | 'ongoing' | 'closed';
 type Persona = 'master' | 'player';
 export type DateFormat = `${number}-${string}-${string}`;
+export type View = 'Details' | 'Edit' | 'Create' | 'List';

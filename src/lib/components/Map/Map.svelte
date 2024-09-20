@@ -6,18 +6,18 @@
 	import { iconStore } from '$lib/store/iconStore';
 	import L, { type MarkerOptions } from 'leaflet';
 	import { afterUpdate, onDestroy, onMount } from 'svelte';
-	import type { IconType, IPlayable } from '../../../Interfaces';
-	import Popup from './Popup.svelte';
-	import { faChevronRight, faFontAwesome, faUser } from '@fortawesome/free-solid-svg-icons';
-	import Fa from 'svelte-fa';
+	import type { IconType, IPlayable, View } from '../../../Interfaces';
 	import SidePanel from './SidePanel.svelte';
 
+	// --- STATE ---
 	let addingNewMarkerOpen: boolean;
 	let editPanelOpen: boolean;
-
 	let map: L.Map;
 	let markerLayer = L.layerGroup();
 	let marker: L.Marker;
+	let selectedPlayable: IPlayable | null = null;
+	let currentView: View = 'List';
+	let sidePanelOpen: boolean = true;
 
 	$: playables = $campaignStore.campaigns.find(
 		(c) => c.id == $authStore.data.active_campaign,
@@ -140,17 +140,10 @@
 				draggable: false,
 			}).addTo(markerLayer);
 
-			let popupContainer = L.DomUtil.create('div');
-
-			new Popup({
-				target: popupContainer,
-				props: {
-					marker: playable,
-				},
-			});
-			leafletMarker.bindPopup(popupContainer, {
-				offset: L.point(0, 15),
-				closeButton: false,
+			leafletMarker.on('click', () => {
+				selectedPlayable = playable;
+				sidePanelOpen = true; // Open the Side Panel
+				currentView = 'Details';
 			});
 		});
 		markerLayer.addTo(map);
@@ -173,7 +166,12 @@
 		bind:addingNewMarkerOpen
 		bind:marker
 	/>
-	<SidePanel playables={visiblePlayables} />
+	<SidePanel
+		bind:sidePanelOpen
+		bind:currentView
+		bind:selectedPlayable
+		playables={visiblePlayables}
+	/>
 </div>
 
 <style>

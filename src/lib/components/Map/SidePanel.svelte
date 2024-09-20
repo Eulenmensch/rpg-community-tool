@@ -2,15 +2,14 @@
 	import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
 	import { slide } from 'svelte/transition';
-	import type { IPlayable } from '../../../Interfaces';
+	import type { IPlayable, View } from '../../../Interfaces';
 	import LocationList from './LocationList.svelte';
 	import LocationDetails from './LocationDetails.svelte';
 
 	export let playables: IPlayable[];
-	let sidePanelOpen = false;
-	type View = 'Details' | 'Edit' | 'Create' | 'List';
-	let currentView: View = 'List';
-	let selectedPlayable: IPlayable | null = null;
+	export let sidePanelOpen: boolean;
+	export let selectedPlayable: IPlayable | null;
+	export let currentView: View;
 
 	function handleSelectLocation(playable: IPlayable) {
 		currentView = 'Details';
@@ -25,7 +24,7 @@
 
 <button
 	on:click={() => (sidePanelOpen = !sidePanelOpen)}
-	class="absolute right-4 bg-dark text-white top-20 size-10 items-center flex justify-center rounded cursor-pointer {sidePanelOpen &&
+	class="absolute hover:bg-primary-800 right-4 bg-dark text-white top-20 size-10 items-center flex justify-center rounded cursor-pointer {sidePanelOpen &&
 		'hidden'}"
 >
 	<Fa icon={faChevronLeft} class="text-white text-xl" />
@@ -37,7 +36,7 @@
 	>
 		<button
 			on:click={() => (sidePanelOpen = !sidePanelOpen)}
-			class="absolute -left-5 bg-dark text-white top-20 size-10 items-center flex justify-center rounded cursor-pointer z-[99999]"
+			class="absolute -left-5 bg-dark text-white top-20 size-10 items-center flex justify-center rounded cursor-pointer z-[99999] hover:bg-primary-800"
 		>
 			<Fa icon={faChevronRight} class="text-white text-xl" />
 		</button>
@@ -49,11 +48,3 @@
 		{/if}
 	</div>
 {/if}
-
-<style>
-	/* Style svg inside our SidePanel */
-	.icons-in-side :global(svg) {
-		width: 2.5rem;
-		height: 2.5rem;
-	}
-</style>
