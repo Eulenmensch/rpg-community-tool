@@ -9,6 +9,8 @@ export const unePlayables: IPlayable[] = [
 			long: 30,
 		},
 		type: 'location',
+		color: '#fff',
+		iconType: 'default',
 	},
 	{
 		name: 'The tavern holds a secret',
@@ -18,6 +20,8 @@ export const unePlayables: IPlayable[] = [
 			long: -10,
 		},
 		type: 'mission',
+		color: '#fff',
+		iconType: 'default',
 	},
 	{
 		name: 'Pirates entering the bay',
@@ -27,6 +31,8 @@ export const unePlayables: IPlayable[] = [
 			long: -100,
 		},
 		type: 'rumor',
+		color: '#fff',
+		iconType: 'default',
 	},
 	{
 		name: 'Ember Tree',
@@ -36,6 +42,8 @@ export const unePlayables: IPlayable[] = [
 			long: -100,
 		},
 		type: 'location',
+		color: '#fff',
+		iconType: 'default',
 	},
 ];
 
@@ -48,6 +56,8 @@ export const theUnknownPlayables: IPlayable[] = [
 			long: 40,
 		},
 		type: 'rumor',
+		color: '#fff',
+		iconType: 'default',
 	},
 	{
 		name: 'A fire that burns the world-tree',
@@ -57,6 +67,8 @@ export const theUnknownPlayables: IPlayable[] = [
 			long: -10,
 		},
 		type: 'rumor',
+		color: '#fff',
+		iconType: 'default',
 	},
 	{
 		name: 'Kill some outlaws',
@@ -66,5 +78,7 @@ export const theUnknownPlayables: IPlayable[] = [
 			long: -30,
 		},
 		type: 'mission',
+		color: '#fff',
+		iconType: 'default',
 	},
 ];
