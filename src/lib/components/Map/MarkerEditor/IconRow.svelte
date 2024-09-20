@@ -9,6 +9,8 @@
 <div class="flex gap-2">
 	{#each Object.entries($iconStore) as [name, svg]}
 		<button
+			type="button"
+			style="color: {selectedIconType == name ? currentColor : 'rgb(243 244 246)'};"
 			on:click={() => (selectedIconType = name)}
 			class="flex items-center justify-center rounded p-0.5 {selectedIconType == name
 				? currentColor + ' ' + 'bg-primary-800/50'

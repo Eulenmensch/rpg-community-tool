@@ -12,17 +12,16 @@
 	export let handleBackToList: () => void;
 
 	// --- Local Variables ---
-	let colors = ['#000000', '#95DBD7', '#D46DB2', '#B4CE4C', '#CB9223'];
+	let colors = ['#FFF', '#000000', '#95DBD7', '#D46DB2', '#B4CE4C', '#CB9223'];
 
-	$: _authstore = $authStore;
 	$: updateMarkerOnMap(playable);
 
-	function handleConfirm() {
-		if (!_authstore.data.active_campaign) return;
+	function handleSubmit() {
+		if (!$authStore.data.active_campaign) return;
 
-		campaignHandlers.createPlayable(playable, _authstore.data.active_campaign);
+		campaignHandlers.createPlayable(playable, $authStore.data.active_campaign);
 		campaignStore.update((store) => {
-			const campaign = store.campaigns.find((c) => c.id == _authstore.data.active_campaign);
+			const campaign = store.campaigns.find((c) => c.id == $authStore.data.active_campaign);
 			if (campaign) {
 				campaign.playables = [...campaign.playables, playable];
 			}
@@ -38,7 +37,7 @@
 </script>
 
 <div class="flex flex-col w-full p-2 py-4 gap-3">
-	<div class="flex w-full flex-col gap-8">
+	<form on:submit={handleSubmit} class="flex w-full flex-col gap-8">
 		<div class="flex flex-col text-left mx-auto">
 			<IconRow bind:selectedIconType={playable.iconType} bind:currentColor={playable.color} />
 		</div>
@@ -46,6 +45,7 @@
 			<div class="flex gap-1 mx-auto">
 				{#each colors as color}
 					<button
+						type="button"
 						on:click={() => (playable.color = color)}
 						class="rounded p-2 {playable.color == color
 							? 'bg-primary-800/50'
@@ -62,8 +62,9 @@
 			<input
 				autofocus
 				bind:value={playable.name}
+				required
 				name="name"
-				placeholder="Playbale name"
+				placeholder="Name of the location"
 				class="border py-2 px-4 rounded-xl text-black"
 			/>
 		</div>
@@ -75,15 +76,15 @@
 				on:update={(e) => (playable.description = e.detail)}
 			/>
 		</div>
-	</div>
-	<div class="flex gap-4 absolute bottom-12 right-12">
-		<button
-			on:click={handleCancel}
-			class="bg-gray-400 hover:bg-gray-500 p-4 py-3 rounded-lg font-boldv">Cancel</button
-		>
-		<button
-			on:click={handleConfirm}
-			class="bg-primary hover:bg-primary-600 p-4 py-3 rounded-lg font-boldv">Confirm</button
-		>
-	</div>
+		<div class="flex gap-4 absolute bottom-12 right-12">
+			<button
+				type="reset"
+				on:click={handleCancel}
+				class="bg-gray-400 hover:bg-gray-500 p-4 py-3 rounded-lg font-boldv">Cancel</button
+			>
+			<button type="submit" class="bg-primary hover:bg-primary-600 p-4 py-3 rounded-lg font-boldv"
+				>Confirm</button
+			>
+		</div>
+	</form>
 </div>
