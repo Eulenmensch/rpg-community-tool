@@ -19,33 +19,30 @@
 	}
 </script>
 
-<button
-	on:click={() => ($mapState.sidePanelOpen = !$mapState?.sidePanelOpen)}
-	class="absolute hover:bg-primary-800 right-4 bg-dark text-white top-24 size-10 items-center flex justify-center rounded cursor-pointer {$mapState?.sidePanelOpen &&
-		'hidden'}"
+<div
+	style="width: {$mapState.currentView == 'Edit' ? '33' : '25'}%; right: {$mapState.sidePanelOpen
+		? '0'
+		: '-23.5%'}"
+	class="fixed bottom-0 right-0 p-6 top-0 w-1/3 bg-black bg-opacity-85 text-white z-[9999999999] transition-all duration-700 ease-in-out"
 >
-	<Fa icon={faChevronLeft} class="text-white text-xl" />
-</button>
-{#if $mapState?.sidePanelOpen}
-	<div
-		style="width: {$mapState.currentView == 'Edit' ? '33' : '25'}%;"
-		class="absolute bottom-0 right-0 p-6 top-0 w-1/3 bg-black bg-opacity-85 text-white z-[9999999999]"
-		transition:slide={{ duration: 500, axis: 'x' }}
+	<button
+		on:click={() => ($mapState.sidePanelOpen = !$mapState?.sidePanelOpen)}
+		class="absolute -left-5 bg-dark text-white top-24 size-10 items-center flex justify-center rounded cursor-pointer z-[99999] hover:bg-primary-800"
 	>
-		<button
-			on:click={() => ($mapState.sidePanelOpen = !$mapState?.sidePanelOpen)}
-			class="absolute -left-5 bg-dark text-white top-24 size-10 items-center flex justify-center rounded cursor-pointer z-[99999] hover:bg-primary-800"
-		>
-			<Fa icon={faChevronRight} class="text-white text-xl" />
-		</button>
-		{#if $mapState.currentView == 'Details'}
-			<LocationDetails {handleBackToList} playable={$mapState.selectedPlayable} />
-		{/if}
-		{#if $mapState.currentView == 'List'}
-			<LocationList {handleSelectLocation} />
-		{/if}
-		{#if $mapState.currentView == 'Edit' && $mapState.selectedPlayable}
-			<LocationCreate {marker} {updateMarkerOnMap} {handleBackToList} />
-		{/if}
-	</div>
-{/if}
+		<Fa
+			icon={faChevronLeft}
+			class="text-white text-xl transition-all duration-500 ease-in-out {$mapState.sidePanelOpen
+				? '-rotate-180'
+				: 'rotate-0'}"
+		/>
+	</button>
+	{#if $mapState.currentView == 'Details'}
+		<LocationDetails {handleBackToList} playable={$mapState.selectedPlayable} />
+	{/if}
+	{#if $mapState.currentView == 'List'}
+		<LocationList {handleSelectLocation} />
+	{/if}
+	{#if $mapState.currentView == 'Edit' && $mapState.selectedPlayable}
+		<LocationCreate {marker} {updateMarkerOnMap} {handleBackToList} />
+	{/if}
+</div>
