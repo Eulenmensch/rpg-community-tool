@@ -1,8 +1,8 @@
 <script lang="ts">
+	import type { IPersona, ISession } from '$lib/Interfaces';
+	import Avatar from '$lib/components/Avatar.svelte';
 	import { authStore } from '$lib/store/authStore';
 	import { sessionHandlers, sessionStore } from '$lib/store/sessionStore';
-	import type { IPersona, ISession } from '../../../Interfaces';
-	import Avatar from '../Avatar.svelte';
 
 	export let session: ISession;
 	export let persona: IPersona;

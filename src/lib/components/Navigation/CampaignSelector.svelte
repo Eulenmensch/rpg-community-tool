@@ -1,9 +1,9 @@
 <script lang="ts">
+	import type { IUserData } from '$lib/Interfaces';
+	import { authHandlers, authStore } from '$lib/store/authStore';
 	import { campaignStore } from '$lib/store/campaignStore';
 	import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
-	import type { IUserData } from '../../../Interfaces';
-	import { authHandlers, authStore } from '$lib/store/authStore';
 
 	let open = false;
 

@@ -1,15 +1,15 @@
 <script lang="ts">
+	import Divider from '$lib/components/Divider.svelte';
+	import RichTextPreview from '$lib/components/RichText/RichTextPreview.svelte';
 	import { formatDateAsDisplayVersion, sessionStatusToIcon, userOwnsCampaign } from '$lib/helpers';
+	import type { ISession } from '$lib/Interfaces';
 	import { faEdit, faXmark } from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
-	import type { ISession } from '../../../../Interfaces';
 	import CustomDialog from '../../CustomDialog.svelte';
 	import EmptySlot from '../EmptySlot.svelte';
 	import FilledSlot from '../FilledSlot.svelte';
 	import CreateOrEditSessionDialog from './CreateOrEditSessionDialog.svelte';
 	import StartButton from './StartButton.svelte';
-	import Divider from '$lib/components/Divider.svelte';
-	import RichTextPreview from '$lib/components/RichText/RichTextPreview.svelte';
 
 	// --- Props ---
 	export let session: ISession;

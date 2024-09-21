@@ -11,7 +11,7 @@
 	import Navigation from '$lib/components/Navigation/Navigation.svelte';
 	import { campaignHandlers } from '$lib/store/campaignStore';
 	import { campaignStore } from '$lib/store/campaignStore';
-	import type { IUserData } from '../Interfaces';
+	import type { IUserData } from '../lib/Interfaces';
 
 	const nonAuthRoutes = ['/account/login', '/account/register'];
 

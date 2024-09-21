@@ -1,6 +1,6 @@
 <script lang="ts">
+	import type { IconType } from '$lib/Interfaces';
 	import { iconStore } from '$lib/store/iconStore';
-	import type { IconType } from '../../../../Interfaces';
 
 	export let selectedIconType: string | IconType;
 	export let currentColor = 'text-yellow-300';

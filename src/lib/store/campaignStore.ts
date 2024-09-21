@@ -1,22 +1,22 @@
-import { type Writable, writable } from 'svelte/store';
-import type { ICampaign, IPersona, IPlayable, ISession } from '../../Interfaces';
+import type { ICampaign, IPersona, IPlayable, ISession } from '$lib/Interfaces';
 import { db } from '$lib/firebase/firebase.client';
 import {
 	addDoc,
+	arrayUnion,
 	collection,
-	query,
-	where,
-	getDocs,
-	doc,
-	updateDoc,
-	getDoc,
-	or,
-	setDoc,
 	deleteDoc,
+	doc,
+	getDoc,
+	getDocs,
+	or,
+	query,
+	setDoc,
+	updateDoc,
+	where,
 } from 'firebase/firestore';
+import { type Writable, writable } from 'svelte/store';
 import { theUnknownPlayables, unePlayables } from '../../utils';
 import { authHandlers } from './authStore';
-import { arrayUnion } from 'firebase/firestore';
 
 export const campaignStore: Writable<{
 	campaigns: ICampaign[];

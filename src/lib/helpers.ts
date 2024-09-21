@@ -1,10 +1,10 @@
+import { authStore } from '$lib//store/authStore';
+import { campaignHandlers, campaignStore } from '$lib//store/campaignStore';
+import type { DateFormat, IPersona, IPlayable } from '$lib/Interfaces';
+import { personaHandlers } from '$lib/store/personaStore';
+import { sessionHandlers, sessionStore } from '$lib/store/sessionStore';
 import { faClock, faLock, faLockOpen } from '@fortawesome/free-solid-svg-icons';
-import type { DateFormat, IPersona, IPlayable } from '../Interfaces';
 import { get } from 'svelte/store';
-import { authStore } from './store/authStore';
-import { personaHandlers } from './store/personaStore';
-import { campaignHandlers, campaignStore } from './store/campaignStore';
-import { sessionHandlers, sessionStore } from './store/sessionStore';
 
 export const navHeight = '75px';
 

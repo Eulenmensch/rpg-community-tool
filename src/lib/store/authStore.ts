@@ -1,3 +1,5 @@
+import { auth, db } from '$lib/firebase/firebase.client';
+import type { IUserData } from '$lib/Interfaces';
 import {
 	createUserWithEmailAndPassword,
 	signInWithEmailAndPassword,
@@ -5,10 +7,8 @@ import {
 	type User,
 	type UserCredential,
 } from 'firebase/auth';
-import { writable, type Writable } from 'svelte/store';
-import { auth, db } from '$lib/firebase/firebase.client';
 import { collection, doc, getDocs, or, query, setDoc, where } from 'firebase/firestore';
-import type { IUserData } from '../../Interfaces';
+import { writable, type Writable } from 'svelte/store';
 
 export interface IAuthData {
 	user: User | null;

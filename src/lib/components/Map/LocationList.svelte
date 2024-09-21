@@ -1,7 +1,7 @@
 <script lang="ts">
+	import type { IPlayable } from '$lib/Interfaces';
 	import { iconStore } from '$lib/store/iconStore';
 	import { mapState } from '$lib/store/mapStore';
-	import type { IPlayable } from '../../../Interfaces';
 
 	export let handleSelectLocation: (playable: IPlayable) => void;
 </script>

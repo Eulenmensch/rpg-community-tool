@@ -1,14 +1,14 @@
 <script lang="ts">
+	import type { DateFormat, ISession } from '$lib/Interfaces';
+	import Button from '$lib/components/Button.svelte';
 	import CustomDialog from '$lib/components/CustomDialog.svelte';
 	import NumberInput from '$lib/components/NumberInput.svelte';
+	import RichTextEditor from '$lib/components/RichText/RichTextEditor.svelte';
+	import PlayablesList from '$lib/components/Session/PlayablesList.svelte';
 	import { authStore } from '$lib/store/authStore';
 	import { sessionHandlers, sessionStore } from '$lib/store/sessionStore';
 	import { faFileEdit, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
-	import type { DateFormat, ISession } from '../../../../Interfaces';
-	import Button from '$lib/components/Button.svelte';
-	import PlayablesList from '$lib/components/Session/PlayablesList.svelte';
-	import RichTextEditor from '$lib/components/RichText/RichTextEditor.svelte';
 
 	const today = new Date();
 	let todayAsString = today.toISOString().split('T')[0] as DateFormat;
@@ -25,6 +25,9 @@
 			campaignId: activeCampaignId ? activeCampaignId : '',
 			about: '',
 			userId: '',
+			level: 1,
+			characterClass: '',
+			imageUrl: null,
 		},
 		slots: 4,
 		status: 'available',

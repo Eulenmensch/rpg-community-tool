@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { faUser } from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
-	import type { IPersona } from '../../Interfaces';
+	import type { IPersona } from '$lib/Interfaces';
 
 	export let persona: IPersona;
 	export let size: 'xs' | 'sm' | 'md' | 'lg' = 'sm';

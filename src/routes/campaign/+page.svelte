@@ -3,7 +3,7 @@
 	import CampaignWithPersonas from '$lib/components/Campaign/CampaignWithPersonas.svelte';
 	import { faPlus } from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
-	import type { ICampaign, IPersona } from '../../Interfaces';
+	import type { ICampaign, IPersona } from '../../lib/Interfaces';
 	import { onMount } from 'svelte';
 	import { authStore } from '$lib/store/authStore';
 	import { campaignHandlers } from '$lib/store/campaignStore';

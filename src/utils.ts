@@ -1,4 +1,4 @@
-import type { IPlayable } from './Interfaces';
+import type { IPlayable } from '$lib/Interfaces';
 
 export const unePlayables: IPlayable[] = [
 	{

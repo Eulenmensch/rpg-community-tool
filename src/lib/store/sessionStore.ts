@@ -1,7 +1,7 @@
 import { db } from '$lib/firebase/firebase.client';
+import type { IPersona, ISession } from '$lib/Interfaces';
 import { addDoc, collection, deleteDoc, doc, getDocs, setDoc, updateDoc } from 'firebase/firestore';
 import { writable, type Writable } from 'svelte/store';
-import type { IPersona, ISession } from '../../Interfaces';
 
 export const sessionStore: Writable<ISession[]> = writable([]);
 

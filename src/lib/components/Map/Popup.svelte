@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { IPlayable } from '../../../Interfaces';
+	import type { IPlayable } from '$lib/Interfaces';
 	export let marker: IPlayable;
 </script>
 

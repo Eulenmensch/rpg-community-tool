@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { campaignStore } from '$lib/store/campaignStore';
-	import type { ISession } from '../../../Interfaces';
-	import Divider from '../Divider.svelte';
-	import PlayableListItem from './PlayableListItem.svelte';
+	import type { ISession } from '$lib/Interfaces';
+	import Divider from '$lib/components/Divider.svelte';
+	import PlayableListItem from '$lib/components/Session/PlayableListItem.svelte';
 
 	let selectedType = 'location';
 

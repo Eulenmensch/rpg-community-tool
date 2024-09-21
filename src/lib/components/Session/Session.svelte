@@ -1,17 +1,16 @@
 <script lang="ts">
 	import Debug from '$lib/components/Debug/Debug.svelte';
 	import { formatDateAsDisplayVersion, sessionStatusToIcon, userOwnsCampaign } from '$lib/helpers';
+	import type { IPersona, ISession } from '$lib/Interfaces';
 	import { authStore } from '$lib/store/authStore';
 	import { campaignStore } from '$lib/store/campaignStore';
+	import { personaHandlers } from '$lib/store/personaStore';
 	import { faEdit } from '@fortawesome/free-solid-svg-icons';
+	import { onMount } from 'svelte';
 	import Fa from 'svelte-fa';
-	import type { IPersona, ISession } from '../../../Interfaces';
 	import CreateOrEditSessionDialog from './Dialog/CreateOrEditSessionDialog.svelte';
 	import SessionPreviewDialog from './Dialog/SessionPreviewDialog.svelte';
 	import FilledSlot from './FilledSlot.svelte';
-	import { onMount } from 'svelte';
-	import { personaHandlers } from '$lib/store/personaStore';
-	import Avatar from '../Avatar.svelte';
 
 	export let session: ISession;
 	let DEBUG = false;

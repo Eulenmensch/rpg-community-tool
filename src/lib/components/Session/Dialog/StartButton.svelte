@@ -1,9 +1,9 @@
 <script lang="ts">
-	import { faPlay } from '@fortawesome/free-solid-svg-icons';
-	import Fa from 'svelte-fa';
-	import type { ISession } from '../../../../Interfaces';
+	import type { ISession } from '$lib/Interfaces';
 	import { authStore } from '$lib/store/authStore';
 	import { sessionHandlers } from '$lib/store/sessionStore';
+	import { faPlay } from '@fortawesome/free-solid-svg-icons';
+	import Fa from 'svelte-fa';
 
 	let activeCampaign = $authStore.data.active_campaign;
 

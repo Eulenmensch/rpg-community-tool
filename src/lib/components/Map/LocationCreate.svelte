@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { createDefaultPlayable } from '$lib/helpers';
+	import type { IPlayable } from '$lib/Interfaces';
 	import { authStore } from '$lib/store/authStore';
 	import { campaignHandlers, campaignStore } from '$lib/store/campaignStore';
 	import { mapState } from '$lib/store/mapStore';
-	import type { IPlayable } from '../../../Interfaces';
 	import RichTextEditor from '../RichText/RichTextEditor.svelte';
 	import IconRow from './MarkerEditor/IconRow.svelte';
 

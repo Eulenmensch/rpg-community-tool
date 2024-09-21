@@ -1,4 +1,4 @@
-import type { IconType, IPlayable, PlayableType } from '../../Interfaces';
+import type { IconType, IPlayable, PlayableType } from '$lib/Interfaces';
 
 export class Playable implements IPlayable {
 	name: string;

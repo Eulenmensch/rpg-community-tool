@@ -1,8 +1,8 @@
 <script lang="ts">
-	import type { Writable } from 'svelte/store';
-	import type { ICampaign } from '../../../Interfaces';
+	import type { ICampaign } from '$lib/Interfaces';
 	import type { IAuthData } from '$lib/store/authStore';
 	import { sessionStore } from '$lib/store/sessionStore';
+	import type { Writable } from 'svelte/store';
 
 	export let activeCampaignId: undefined | string = undefined;
 	export let campaignStore:

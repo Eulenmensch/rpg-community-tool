@@ -1,6 +1,6 @@
 <script lang="ts">
-	import type { IPlayable, ISession } from '../../../Interfaces';
-	import Button from '../Button.svelte';
+	import type { IPlayable, ISession } from '$lib/Interfaces';
+	import Button from '$lib/components/Button.svelte';
 
 	export let playable: IPlayable;
 	export let session: ISession;

@@ -12,7 +12,7 @@
 	import { faCopy } from '@fortawesome/free-solid-svg-icons';
 	import { onMount } from 'svelte';
 	import Fa from 'svelte-fa';
-	import type { IPersona, ISession } from '../Interfaces';
+	import type { IPersona, ISession } from '../lib/Interfaces';
 	import Fuse from 'fuse.js';
 
 	let personasInActiveCampaign: IPersona[] = [];

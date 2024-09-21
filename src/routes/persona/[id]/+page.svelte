@@ -9,7 +9,7 @@
 	import { faPen, faSave, faTrash, faUpload } from '@fortawesome/free-solid-svg-icons';
 	import { onMount } from 'svelte';
 	import Fa from 'svelte-fa';
-	import type { IPersona } from '../../../Interfaces';
+	import type { IPersona } from '../../../lib/Interfaces';
 	import { campaignStore } from '$lib/store/campaignStore';
 
 	let character: IPersona | null = null;

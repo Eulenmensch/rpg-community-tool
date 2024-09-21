@@ -1,16 +1,16 @@
 <script lang="ts">
 	import { createDefaultPlayable, navHeight } from '$lib/helpers';
 	import arrow from '$lib/images/Arrow.svg';
+	import type { IconType, IPlayable } from '$lib/Interfaces';
 	import { authStore } from '$lib/store/authStore';
 	import { campaignStore } from '$lib/store/campaignStore';
 	import { iconStore } from '$lib/store/iconStore';
+	import { mapState } from '$lib/store/mapStore';
 	import { faPlus } from '@fortawesome/free-solid-svg-icons';
 	import L, { type MarkerOptions } from 'leaflet';
 	import { afterUpdate, onDestroy, onMount } from 'svelte';
 	import Fa from 'svelte-fa';
-	import type { IconType, IPlayable, View } from '../../../Interfaces';
 	import SidePanel from './SidePanel.svelte';
-	import { mapState } from '$lib/store/mapStore';
 
 	// --- STATE ---
 	let map: L.Map;

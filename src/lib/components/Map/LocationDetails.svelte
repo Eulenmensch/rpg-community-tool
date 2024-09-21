@@ -1,7 +1,7 @@
 <script lang="ts">
-	import Fa from 'svelte-fa';
-	import type { IPlayable } from '../../../Interfaces';
+	import type { IPlayable } from '$lib/Interfaces';
 	import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
+	import Fa from 'svelte-fa';
 	import RichTextPreview from '../RichText/RichTextPreview.svelte';
 	export let playable: IPlayable | null;
 	export let handleBackToList: () => void;

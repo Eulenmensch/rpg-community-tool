@@ -3,7 +3,7 @@
 	import { faSearch } from '@fortawesome/free-solid-svg-icons';
 	import Fuse from 'fuse.js';
 	import Fa from 'svelte-fa';
-	import type { IPersona } from '../../Interfaces';
+	import type { IPersona } from '../../lib/Interfaces';
 	import Avatar from '$lib/components/Avatar.svelte';
 
 	//TODO: Add other types

@@ -1,8 +1,8 @@
 <script lang="ts">
+	import type { IPersona, ISession } from '$lib/Interfaces';
 	import { authStore } from '$lib/store/authStore';
 	import { sessionHandlers, sessionStore } from '$lib/store/sessionStore';
 	import { onMount } from 'svelte';
-	import type { IPersona, ISession, IUserData } from '../../../Interfaces';
 
 	export let session: ISession;
 	let { active_persona: activePersona } = $authStore.data;

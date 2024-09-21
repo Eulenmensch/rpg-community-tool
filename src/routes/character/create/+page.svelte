@@ -9,7 +9,7 @@
 	import { campaignHandlers, campaignStore } from '$lib/store/campaignStore';
 	import { personaHandlers } from '$lib/store/personaStore';
 	import { onMount } from 'svelte';
-	import type { ICampaign, IPersona } from '../../../Interfaces';
+	import type { ICampaign, IPersona } from '../../../lib/Interfaces';
 
 	let activeCampaignId = $authStore.data.active_campaign;
 

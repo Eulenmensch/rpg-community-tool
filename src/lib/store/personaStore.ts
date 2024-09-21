@@ -1,4 +1,6 @@
 import { db } from '$lib/firebase/firebase.client';
+import type { IPersona } from '$lib/Interfaces';
+import { campaignHandlers } from '$lib/store/campaignStore';
 import {
 	addDoc,
 	collection,
@@ -10,8 +12,6 @@ import {
 	updateDoc,
 	where,
 } from 'firebase/firestore';
-import type { IPersona } from '../../Interfaces';
-import { campaignHandlers } from './campaignStore';
 
 export const personaHandlers = {
 	createPersona: async (userId: string, persona: IPersona): Promise<string> => {
