@@ -2,9 +2,8 @@
 	import { createDefaultPlayable } from '$lib/helpers';
 	import type { IPlayable } from '$lib/Interfaces';
 	import { mapState } from '$lib/store/mapStore';
-	import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+	import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
-	import { slide } from 'svelte/transition';
 	import LocationCreate from './LocationCreate.svelte';
 	import LocationDetails from './LocationDetails.svelte';
 	import LocationList from './LocationList.svelte';

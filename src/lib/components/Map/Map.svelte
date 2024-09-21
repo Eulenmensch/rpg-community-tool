@@ -153,9 +153,33 @@
 		$mapState.sidePanelOpen = true;
 		$mapState.currentView = 'Details';
 		$mapState.selectedPlayable = playable;
-		map.flyTo([playable.coordinates.lat, playable.coordinates.long], Math.max(map.getZoom(), 3.5), {
-			duration: 0.5,
-		});
+
+		offsetFlyTo(
+			map,
+			playable.coordinates.lat,
+			playable.coordinates.long,
+			Math.max(map.getZoom(), 3.5),
+			0.25 / 2,
+		);
+	}
+
+	function offsetFlyTo(map: L.Map, lat: number, lng: number, zoom: number, offsetPercent: number) {
+		// Get the map container
+		const mapContainer = map.getContainer();
+
+		// Offset in pixels
+		const offsetX = mapContainer.clientWidth * offsetPercent;
+
+		// Target coordinates -> pixel coordinates
+		const point = map.project([lat, lng], zoom);
+
+		// Apply the offset in pixels
+		point.x += offsetX;
+		point.y -= 12; // This is just visually better to account for the icons height
+
+		// Convert back to geographical coordinates
+		const offsetLatLng = map.unproject(point, zoom);
+		map.flyTo(offsetLatLng, zoom);
 	}
 
 	function updateMarkerOnMap(playable: IPlayable) {
