@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { createDefaultPlayable, navHeight } from '$lib/helpers';
 	import arrow from '$lib/images/Arrow.svg';
-	import { Playable } from '$lib/Models/Playable';
 	import { authStore } from '$lib/store/authStore';
 	import { campaignStore } from '$lib/store/campaignStore';
 	import { iconStore } from '$lib/store/iconStore';
@@ -11,26 +10,20 @@
 	import Fa from 'svelte-fa';
 	import type { IconType, IPlayable, View } from '../../../Interfaces';
 	import SidePanel from './SidePanel.svelte';
+	import { mapState } from '$lib/store/mapStore';
 
 	// --- STATE ---
-	let addingNewMarkerOpen: boolean;
-	let editPanelOpen: boolean;
 	let map: L.Map;
 	let markerLayer = L.layerGroup();
 	let marker: L.Marker;
-	let selectedPlayable: IPlayable | null = null;
-	let currentView: View = 'List';
-	let sidePanelOpen: boolean = true;
 
-	$: playables =
+	$: $mapState.playables =
 		$campaignStore.campaigns.find((c) => c.id == $authStore.data.active_campaign)?.playables ?? [];
 
-	$: visiblePlayables =
-		playables?.filter((playable) =>
+	$: $mapState.visiblePlayables =
+		$mapState.playables?.filter((playable) =>
 			map?.getBounds().contains([playable.coordinates.lat, playable.coordinates.long]),
 		) ?? [];
-
-	let playable: IPlayable = createDefaultPlayable();
 
 	onMount(async () => {
 		initMap();
@@ -41,8 +34,7 @@
 	});
 
 	onDestroy(async () => {
-		if (!map) return;
-		map.remove();
+		if (map) map.remove();
 	});
 
 	async function initMap() {
@@ -68,7 +60,7 @@
 		});
 
 		map.on('click', createDefaultMarker);
-		map.on('moveend', updateVisiblePlayables);
+		map.on('moveend', handleMoveEnd);
 
 		L.tileLayer('/src/lib/images/map/theUnknown/{z}/{x}/{y}.png', {
 			minZoom: MIN_ZOOM_LEVEL,
@@ -80,11 +72,18 @@
 		addMarkers();
 	}
 
-	function updateVisiblePlayables() {
-		visiblePlayables =
-			playables?.filter((playable) =>
+	function handleMoveEnd() {
+		// Update visible playables
+		$mapState.visiblePlayables =
+			$mapState.playables?.filter((playable) =>
 				map?.getBounds().contains([playable.coordinates.lat, playable.coordinates.long]),
 			) ?? [];
+
+		// Make sure list is shown when moving the map
+		if (!$mapState.mapMoveIsProgrammaticMove) {
+			$mapState.currentView = 'List';
+		}
+		$mapState.mapMoveIsProgrammaticMove = false;
 	}
 
 	function createDivIcon(color: string, iconType: IconType) {
@@ -103,7 +102,9 @@
 
 	function createDefaultMarker(e: any) {
 		// This function only creates the default Marker. The Customization is done in <LocationCreate/>
-		if (!addingNewMarkerOpen) return;
+		if (!$mapState.addingNewMarkerOpen) {
+			return;
+		}
 
 		const divIcon = createDivIcon('#000000', 'default');
 		const markerOptions: MarkerOptions = {
@@ -112,25 +113,27 @@
 
 		//TODO: Use MarkerLayer which does not work due to unknown reasons
 		marker = L.marker(e.latlng, markerOptions).addTo(map);
-		playable.coordinates.lat = e.latlng.lat;
-		playable.coordinates.long = e.latlng.lng;
-		addingNewMarkerOpen = false;
-		editPanelOpen = true;
-		currentView = 'Edit';
-		sidePanelOpen = true;
+
+		let defaultPlayable = createDefaultPlayable();
+		defaultPlayable.coordinates.lat = e.latlng.lat;
+		defaultPlayable.coordinates.long = e.latlng.lng;
+		$mapState.sidePanelOpen = true;
+		$mapState.currentView = 'Edit';
+		$mapState.addingNewMarkerOpen = false;
+		$mapState.selectedPlayable = defaultPlayable;
 
 		marker.on('click', () => {
-			selectedPlayable = playable;
-			sidePanelOpen = true;
-			currentView = 'Details';
+			$mapState.selectedPlayable = defaultPlayable;
+			$mapState.sidePanelOpen = true;
+			$mapState.currentView = 'Details';
 		});
 	}
 
 	function addMarkers() {
 		markerLayer.clearLayers();
-		if (!playables) return;
+		if (!$mapState.playables) return;
 
-		playables.map((playable) => {
+		$mapState.playables.map((playable) => {
 			let divIcon = createDivIcon(playable?.color ?? '#000000', playable?.iconType ?? 'default');
 
 			let leafletMarker = L.marker([playable.coordinates.lat, playable.coordinates.long], {
@@ -140,23 +143,23 @@
 				draggable: false,
 			}).addTo(markerLayer);
 
-			leafletMarker.on('click', () => {
-				selectedPlayable = playable;
-				sidePanelOpen = true;
-				currentView = 'Details';
-				console.log(map.getZoom());
-				map.setView(
-					[playable.coordinates.lat, playable.coordinates.long],
-					Math.max(map.getZoom(), 3.5),
-				);
-			});
+			leafletMarker.on('click', () => handleSelectLocation(playable));
 		});
 		markerLayer.addTo(map);
 	}
 
-	function updateMarkerColor(playable: IPlayable) {
-		if (!marker) return;
+	function handleSelectLocation(playable: IPlayable) {
+		$mapState.mapMoveIsProgrammaticMove = true;
+		$mapState.sidePanelOpen = true;
+		$mapState.currentView = 'Details';
+		$mapState.selectedPlayable = playable;
+		map.flyTo([playable.coordinates.lat, playable.coordinates.long], Math.max(map.getZoom(), 3.5), {
+			duration: 0.5,
+		});
+	}
 
+	function updateMarkerOnMap(playable: IPlayable) {
+		if (!marker) return;
 		const newIcon = createDivIcon(playable?.color, playable.iconType);
 		marker.setIcon(newIcon);
 	}
@@ -168,35 +171,29 @@
 	<div
 		class="fixed bottom-1/2 left-5 z-[1000000] bg-white flex flex-col origin-center translate-y-1/2 image-border"
 	>
-		<button class=" p-2 flex justify-center" on:click={() => (addingNewMarkerOpen = false)}>
+		<button
+			class=" p-2 flex justify-center"
+			on:click={() => ($mapState.addingNewMarkerOpen = false)}
+		>
 			<img src={arrow} class="w-8" alt="Arrow Icon" />
 		</button>
 		{#if activePersonaIsGM}
 			<button
 				class=" p-2 items-center flex justify-center"
-				on:click={() => (addingNewMarkerOpen = !addingNewMarkerOpen)}
+				on:click={() => ($mapState.addingNewMarkerOpen = !$mapState?.addingNewMarkerOpen)}
 			>
 				<Fa icon={faPlus} class="text-4xl" />
 			</button>
 		{/if}
 	</div>
-	{#if addingNewMarkerOpen}
+	{#if $mapState?.addingNewMarkerOpen}
 		<div
 			class="fixed top-20 left-1/2 -translate-x-1/2 text-lg bg-dark text-white z-[10000] p-6 rounded shadow"
 		>
 			Click anywhere on the map to add the marker
 		</div>
 	{/if}
-	<SidePanel
-		bind:sidePanelOpen
-		bind:currentView
-		bind:selectedPlayable
-		bind:visiblePlayables
-		bind:newPlayable={playable}
-		bind:marker
-		bind:map
-		updateMarkerOnMap={updateMarkerColor}
-	/>
+	<SidePanel bind:marker {handleSelectLocation} {updateMarkerOnMap} />
 </div>
 
 <style>

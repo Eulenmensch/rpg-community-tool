@@ -66,3 +66,13 @@ export type SessionStatus = 'available' | 'ongoing' | 'closed';
 type Persona = 'master' | 'player';
 export type DateFormat = `${number}-${string}-${string}`;
 export type View = 'Details' | 'Edit' | 'Create' | 'List';
+
+export interface IMapStore {
+	addingNewMarkerOpen: boolean;
+	sidePanelOpen: boolean;
+	currentView: View;
+	selectedPlayable: IPlayable;
+	playables: IPlayable[];
+	visiblePlayables: IPlayable[];
+	mapMoveIsProgrammaticMove: boolean;
+}
