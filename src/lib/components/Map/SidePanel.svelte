@@ -1,27 +1,21 @@
 <script lang="ts">
-	import { createDefaultPlayable } from '$lib/helpers';
 	import type { IPlayable } from '$lib/Interfaces';
 	import { mapState } from '$lib/store/mapStore';
 	import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
-	import LocationCreate from './LocationCreate.svelte';
+	import LocationCreateOrEdit from './LocationCreateOrEdit.svelte';
 	import LocationDetails from './LocationDetails.svelte';
 	import LocationList from './LocationList.svelte';
 
 	export let updateMarkerOnMap;
 	export let marker;
 	export let handleSelectLocation: (playable: IPlayable) => void;
-
-	function handleBackToList() {
-		$mapState.currentView = 'List';
-		$mapState.selectedPlayable = createDefaultPlayable();
-	}
 </script>
 
 <div
-	style="width: {$mapState.currentView == 'Edit' ? '33' : '25'}%; right: {$mapState.sidePanelOpen
-		? '0'
-		: '-23.5%'}"
+	style="width: {$mapState.currentView == 'Create' || $mapState.currentView == 'Edit'
+		? '33'
+		: '25'}%; right: {$mapState.sidePanelOpen ? '0' : '-23.5%'}"
 	class="fixed bottom-0 right-0 p-6 top-0 w-1/3 bg-black bg-opacity-85 text-white z-[9999999999] transition-all duration-700 ease-in-out"
 >
 	<button
@@ -36,12 +30,12 @@
 		/>
 	</button>
 	{#if $mapState.currentView == 'Details'}
-		<LocationDetails {handleBackToList} playable={$mapState.selectedPlayable} />
+		<LocationDetails playable={$mapState.selectedPlayable} />
 	{/if}
 	{#if $mapState.currentView == 'List'}
 		<LocationList {handleSelectLocation} />
 	{/if}
-	{#if $mapState.currentView == 'Edit' && $mapState.selectedPlayable}
-		<LocationCreate {marker} {updateMarkerOnMap} {handleBackToList} />
+	{#if $mapState.currentView == 'Create' || ($mapState.currentView == 'Edit' && $mapState.selectedPlayable)}
+		<LocationCreateOrEdit {marker} {updateMarkerOnMap} />
 	{/if}
 </div>

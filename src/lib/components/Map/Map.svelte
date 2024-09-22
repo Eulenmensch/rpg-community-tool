@@ -17,11 +17,10 @@
 	let markerLayer = L.layerGroup();
 	let marker: L.Marker;
 
-	$: $mapState.playables =
-		$campaignStore.campaigns.find((c) => c.id == $authStore.data.active_campaign)?.playables ?? [];
+	$: $mapState.playables = $campaignStore?.campaign?.playables ?? [];
 
 	$: $mapState.visiblePlayables =
-		$mapState.playables?.filter((playable) =>
+		$mapState?.playables?.filter((playable) =>
 			map?.getBounds().contains([playable.coordinates.lat, playable.coordinates.long]),
 		) ?? [];
 
@@ -118,7 +117,7 @@
 		defaultPlayable.coordinates.lat = e.latlng.lat;
 		defaultPlayable.coordinates.long = e.latlng.lng;
 		$mapState.sidePanelOpen = true;
-		$mapState.currentView = 'Edit';
+		$mapState.currentView = 'Create';
 		$mapState.addingNewMarkerOpen = false;
 		$mapState.selectedPlayable = defaultPlayable;
 

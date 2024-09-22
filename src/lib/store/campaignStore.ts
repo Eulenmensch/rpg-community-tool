@@ -34,18 +34,25 @@ export const campaignHandlers = {
 		const docSnapshot = await getDoc(campaignDocRef);
 		const campaignData = docSnapshot.data() as ICampaign;
 
-		// Fetch personas subcollection
+		// Fetch personas sub-collection
 		const personasCollectionRef = collection(db, `campaign/${campaignId}/personas`);
 		const personasSnapshot = await getDocs(personasCollectionRef);
 		const personas = personasSnapshot.docs.map(
 			(doc) => ({ id: doc.id, ...doc.data() } as IPersona),
 		);
 
-		// Fetch sessions subcollection
+		// Fetch sessions sub-collection
 		const sessionsCollectionRef = collection(db, `campaign/${campaignId}/sessions`);
 		const sessionsSnapshot = await getDocs(sessionsCollectionRef);
 		const sessions = sessionsSnapshot.docs.map(
 			(doc) => ({ id: doc.id, ...doc.data() } as ISession),
+		);
+
+		// Fetch playables sub-collection
+		const playablesCollectionRef = collection(db, `campaign/${campaignId}/playables`);
+		const playablesSnapshot = await getDocs(playablesCollectionRef);
+		const playables = playablesSnapshot.docs.map(
+			(doc) => ({ id: doc.id, ...doc.data() } as IPlayable),
 		);
 
 		return {
@@ -53,6 +60,7 @@ export const campaignHandlers = {
 			id: campaignId,
 			personas: personas,
 			sessions: sessions,
+			playables: playables,
 		};
 	},
 	addPersonaToCampaign: async (campaignId: string, persona: IPersona) => {
@@ -83,8 +91,18 @@ export const campaignHandlers = {
 		return { ...campaignToCreate, id: campaignRef.id };
 	},
 	createPlayable: async (playable: IPlayable, campaignId: string) => {
-		const docRef = doc(db, `campaign/${campaignId}`);
-		updateDoc(docRef, { playables: arrayUnion(playable) });
+		const playablesCollectionRef = collection(db, `campaign/${campaignId}/playables`);
+		const docRef = await addDoc(playablesCollectionRef, playable);
+		playable.id = docRef.id;
+	},
+	updatePlayable: async (playable: IPlayable, campaignId: string) => {
+		if (!playable.id) {
+			throw new Error('Playable must have an id to be updated');
+		}
+		const playableDocRef = doc(db, `campaign/${campaignId}/playables/${playable.id}`);
+		await updateDoc(playableDocRef, {
+			...playable,
+		});
 	},
 	joinCampaignWithoutPersona: async (campaignId: string, userId: string) => {
 		const campaignDocRef = doc(db, `campaign/${campaignId}`);

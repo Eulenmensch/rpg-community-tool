@@ -2,8 +2,15 @@
 	import type { IPlayable } from '$lib/Interfaces';
 	import { iconStore } from '$lib/store/iconStore';
 	import { mapState } from '$lib/store/mapStore';
+	import { faEdit } from '@fortawesome/free-solid-svg-icons';
+	import Fa from 'svelte-fa';
 
 	export let handleSelectLocation: (playable: IPlayable) => void;
+
+	function handleEdit(playable: IPlayable) {
+		$mapState.currentView = 'Edit';
+		$mapState.selectedPlayable = playable;
+	}
 </script>
 
 <div class="flex flex-col gap-6">
@@ -19,6 +26,12 @@
 						{@html $iconStore[playable.iconType ?? 'default']}
 					</div>
 					<span class="">{playable.name}</span>
+					<button
+						on:click|preventDefault={() => handleEdit(playable)}
+						class="ml-auto p-2.5 flex items-center justify-center rounded hover:bg-primary"
+					>
+						<Fa class="text-base" icon={faEdit} />
+					</button>
 				</button>
 			{/each}
 			{#if $mapState.visiblePlayables.length == 0}

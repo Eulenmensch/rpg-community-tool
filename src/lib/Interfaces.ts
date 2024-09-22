@@ -18,6 +18,7 @@ export interface IUserData {
 }
 
 export interface IPlayable extends Marker {
+	id?: string;
 	name: string;
 	description: string;
 	type: PlayableType;

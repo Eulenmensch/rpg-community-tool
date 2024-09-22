@@ -9,9 +9,7 @@
 
 	// --- Props ---
 	export let marker: L.Marker;
-	//export let playable: IPlayable;
 	export let updateMarkerOnMap: (playable: IPlayable) => void;
-	export let handleBackToList: () => void;
 
 	// --- Local Variables ---
 	let colors = ['#FFF', '#000000', '#95DBD7', '#D46DB2', '#B4CE4C', '#CB9223'];
@@ -19,25 +17,39 @@
 	$: updateMarkerOnMap($mapState.selectedPlayable);
 
 	function handleSubmit() {
-		if (!$authStore.data.active_campaign) return;
-		if (!$mapState.selectedPlayable) return;
+		if ($mapState.currentView == 'Create') {
+			handleCreate();
+		}
+		if ($mapState.currentView == 'Edit') {
+			handleEdit();
+		}
 
-		campaignHandlers.createPlayable($mapState.selectedPlayable, $authStore.data.active_campaign);
-		campaignStore.update((store) => {
-			const campaign = store.campaigns.find((c) => c.id == $authStore.data.active_campaign);
-			if (campaign) {
-				campaign.playables = [...campaign.playables, $mapState.selectedPlayable];
-			}
-			return store;
-		});
 		$mapState.selectedPlayable = createDefaultPlayable(); // Reset state to default playable
-		handleBackToList();
+		$mapState.currentView = 'List';
+	}
+
+	function handleCreate() {
+		if (!$authStore.data.active_campaign) return;
+		if (!$campaignStore.campaign) return;
+		campaignHandlers.createPlayable($mapState.selectedPlayable, $authStore.data.active_campaign);
+
+		$campaignStore.campaign.playables = [
+			...$campaignStore.campaign?.playables,
+			$mapState.selectedPlayable,
+		];
+	}
+
+	function handleEdit() {
+		if (!$authStore.data.active_campaign) return;
+		campaignHandlers.updatePlayable($mapState.selectedPlayable, $authStore.data.active_campaign);
 	}
 
 	function handleCancel() {
-		marker.remove();
-		$mapState.selectedPlayable = createDefaultPlayable(); // Reset state to default playable;
-		handleBackToList();
+		if ($mapState.currentView == 'Create') {
+			marker.remove();
+			$mapState.selectedPlayable = createDefaultPlayable(); // Reset state to default playable;
+		}
+		$mapState.currentView = 'List';
 	}
 </script>
 
@@ -84,6 +96,17 @@
 				on:update={(e) => ($mapState.selectedPlayable.description = e.detail)}
 			/>
 		</div>
+
+		{#if $mapState.currentView == 'Edit'}
+			<div class="text-left flex flex-col gap-2 text-black">
+				<span class="font-black text-lg text-white">Danger Area</span>
+				<button
+					class="border-red-500 border text-red-500 px-3 py-1 mt-1 whitespace-nowrap rounded hover:bg-red-500 hover:text-white"
+					>Delete Location</button
+				>
+			</div>
+		{/if}
+
 		<div class="flex gap-4 absolute bottom-12 right-12">
 			<button
 				type="reset"
