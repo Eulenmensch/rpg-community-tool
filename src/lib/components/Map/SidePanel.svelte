@@ -9,7 +9,7 @@
 
 	export let updateMarkerOnMap;
 	export let marker;
-	export let handleSelectLocation: (playable: IPlayable) => void;
+	export let handleSelectLocation: (playable: IPlayable, view: 'Details' | 'Edit') => void;
 </script>
 
 <div

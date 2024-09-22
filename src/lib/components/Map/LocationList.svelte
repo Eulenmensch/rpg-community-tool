@@ -5,11 +5,12 @@
 	import { faEdit } from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
 
-	export let handleSelectLocation: (playable: IPlayable) => void;
+	export let handleSelectLocation: (playable: IPlayable, view: 'Details' | 'Edit') => void;
 
 	function handleEdit(playable: IPlayable) {
 		$mapState.currentView = 'Edit';
 		$mapState.selectedPlayable = playable;
+		handleSelectLocation(playable, 'Edit');
 	}
 </script>
 
@@ -19,7 +20,7 @@
 		<div class="flex flex-col gap-2 w-full overflow-y-auto list-container">
 			{#each $mapState.visiblePlayables as playable}
 				<button
-					on:click={() => handleSelectLocation(playable)}
+					on:click={() => handleSelectLocation(playable, 'Details')}
 					class="flex p-2 bg-dark rounded-lg items-center hover:bg-primary-900 gap-2"
 				>
 					<div class="icons-in-side" style="color:{playable.color ?? 'black'};">

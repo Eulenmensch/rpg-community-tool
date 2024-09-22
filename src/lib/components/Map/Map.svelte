@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { createDefaultPlayable, navHeight } from '$lib/helpers';
 	import arrow from '$lib/images/Arrow.svg';
-	import type { IconType, IPlayable } from '$lib/Interfaces';
+	import type { IconType, IPlayable, View } from '$lib/Interfaces';
 	import { authStore } from '$lib/store/authStore';
 	import { campaignStore } from '$lib/store/campaignStore';
 	import { iconStore } from '$lib/store/iconStore';
@@ -79,7 +79,11 @@
 			) ?? [];
 
 		// Make sure list is shown when moving the map
-		if (!$mapState.mapMoveIsProgrammaticMove) {
+		if (
+			!$mapState.mapMoveIsProgrammaticMove &&
+			$mapState.currentView != 'Create' &&
+			$mapState.currentView != 'Edit'
+		) {
 			$mapState.currentView = 'List';
 		}
 		$mapState.mapMoveIsProgrammaticMove = false;
@@ -142,15 +146,15 @@
 				draggable: false,
 			}).addTo(markerLayer);
 
-			leafletMarker.on('click', () => handleSelectLocation(playable));
+			leafletMarker.on('click', () => handleSelectLocation(playable, 'Details'));
 		});
 		markerLayer.addTo(map);
 	}
 
-	function handleSelectLocation(playable: IPlayable) {
+	function handleSelectLocation(playable: IPlayable, view: 'Details' | 'Edit') {
 		$mapState.mapMoveIsProgrammaticMove = true;
 		$mapState.sidePanelOpen = true;
-		$mapState.currentView = 'Details';
+		$mapState.currentView = view;
 		$mapState.selectedPlayable = playable;
 
 		offsetFlyTo(
