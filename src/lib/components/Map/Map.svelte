@@ -102,6 +102,12 @@
 			popupAnchor: [0, -55],
 		});
 	}
+	function handlePlusClick() {
+		if ($mapState.currentView == 'Create' || $mapState.currentView == 'Edit') {
+			return;
+		}
+		$mapState.addingNewMarkerOpen = !$mapState?.addingNewMarkerOpen;
+	}
 
 	function createDefaultMarker(e: any) {
 		// This function only creates the default Marker. The Customization is done in <LocationCreate/>
@@ -205,10 +211,7 @@
 			<img src={arrow} class="w-8" alt="Arrow Icon" />
 		</button>
 		{#if activePersonaIsGM}
-			<button
-				class=" p-2 items-center flex justify-center"
-				on:click={() => ($mapState.addingNewMarkerOpen = !$mapState?.addingNewMarkerOpen)}
-			>
+			<button class=" p-2 items-center flex justify-center" on:click={handlePlusClick}>
 				<Fa icon={faPlus} class="text-4xl" />
 			</button>
 		{/if}
