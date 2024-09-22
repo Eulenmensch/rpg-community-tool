@@ -24,8 +24,7 @@
 			handleEdit();
 		}
 
-		$mapState.selectedPlayable = createDefaultPlayable(); // Reset state to default playable
-		$mapState.currentView = 'List';
+		//$mapState.selectedPlayable = createDefaultPlayable(); // Reset state to default playable
 	}
 
 	function handleCreate() {
@@ -42,6 +41,7 @@
 	function handleEdit() {
 		if (!$authStore.data.active_campaign) return;
 		campaignHandlers.updatePlayable($mapState.selectedPlayable, $authStore.data.active_campaign);
+		$mapState.currentView = 'Details';
 	}
 
 	function handleCancel() {

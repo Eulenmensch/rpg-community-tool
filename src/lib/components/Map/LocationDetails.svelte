@@ -21,21 +21,31 @@
 	<div
 		class="text-center text-xl font-black p-4 bg-dark rounded-lg flex items-center gap-4 justify-center relative"
 	>
-		<button
+		<!-- <button
 			on:click={handleBackToList}
 			class="absolute left-4 hover:bg-primary-900 size-8 flex items-center justify-center rounded"
 		>
 			<Fa icon={faChevronLeft} />
-		</button>
+		</button> -->
 		<span class="flex-grow mx-8">{playable?.name}</span>
 	</div>
-	<button
-		on:click={handleEdit}
-		class="border border-primary text-primary py-2 rounded-lg mt-2 mb-6 flex items-center px-2 gap-4 justify-center hover:bg-primary hover:text-white"
-	>
-		<Fa icon={faEdit} />
-		<span>Edit Location</span>
-	</button>
+	<div class="flex flex-col gap-2 mt-1 mb-6">
+		<button
+			on:click={handleBackToList}
+			class="border border-white w-full whitespace-nowrap text-white py-1.5 rounded-lg flex items-center px-2 gap-4 justify-center hover:bg-white hover:text-primary"
+		>
+			<Fa icon={faChevronLeft} />
+			<span>Back to List</span>
+		</button>
+		<button
+			on:click={handleEdit}
+			class="border border-primary w-full whitespace-nowrap text-primary py-1.5 rounded-lg flex items-center px-2 gap-4 justify-center hover:bg-primary hover:text-white"
+		>
+			<Fa icon={faEdit} />
+			<span>Edit Location</span>
+		</button>
+	</div>
+
 	<div class="bg-dark p-4 rounded">
 		<RichTextPreview content={playable?.description} />
 	</div>

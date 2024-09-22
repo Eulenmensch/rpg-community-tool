@@ -20,7 +20,7 @@
 >
 	<button
 		on:click={() => ($mapState.sidePanelOpen = !$mapState?.sidePanelOpen)}
-		class="absolute -left-5 bg-dark text-white top-24 size-10 items-center flex justify-center rounded cursor-pointer z-[99999] hover:bg-primary-800"
+		class="absolute -left-6 bg-dark text-white top-8 size-10 items-center flex justify-center rounded cursor-pointer z-[99999] hover:bg-primary-800"
 	>
 		<Fa
 			icon={faChevronLeft}
