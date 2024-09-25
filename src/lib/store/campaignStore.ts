@@ -95,6 +95,10 @@ export const campaignHandlers = {
 		const docRef = await addDoc(playablesCollectionRef, playable);
 		playable.id = docRef.id;
 	},
+	removePlayable: async (playable: IPlayable, campaignId: string) => {
+		const docRef = doc(db, `campaign/${campaignId}/playables/${playable.id}`);
+		deleteDoc(docRef);
+	},
 	updatePlayable: async (playable: IPlayable, campaignId: string) => {
 		if (!playable.id) {
 			throw new Error('Playable must have an id to be updated');

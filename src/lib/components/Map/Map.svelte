@@ -123,6 +123,8 @@
 		//TODO: Use MarkerLayer which does not work due to unknown reasons
 		marker = L.marker(e.latlng, markerOptions).addTo(map);
 
+		offsetFlyTo(map, e.latlng.lat, e.latlng.lng, Math.max(map.getZoom(), 3.5), 0.25 / 2);
+
 		let defaultPlayable = createDefaultPlayable();
 		defaultPlayable.coordinates.lat = e.latlng.lat;
 		defaultPlayable.coordinates.long = e.latlng.lng;

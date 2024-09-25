@@ -4,6 +4,7 @@
 	import { authStore } from '$lib/store/authStore';
 	import { campaignHandlers, campaignStore } from '$lib/store/campaignStore';
 	import { mapState } from '$lib/store/mapStore';
+	import { cloneDeep } from 'lodash';
 	import RichTextEditor from '../RichText/RichTextEditor.svelte';
 	import IconRow from './MarkerEditor/IconRow.svelte';
 
@@ -13,6 +14,7 @@
 
 	// --- Local Variables ---
 	let colors = ['#FFF', '#000000', '#95DBD7', '#D46DB2', '#B4CE4C', '#CB9223'];
+	let initialState = cloneDeep($mapState.selectedPlayable); //TODO: DEEP COPY
 
 	$: updateMarkerOnMap($mapState.selectedPlayable);
 
@@ -23,8 +25,6 @@
 		if ($mapState.currentView == 'Edit') {
 			handleEdit();
 		}
-
-		//$mapState.selectedPlayable = createDefaultPlayable(); // Reset state to default playable
 	}
 
 	function handleCreate() {
@@ -36,6 +36,7 @@
 			...$campaignStore.campaign?.playables,
 			$mapState.selectedPlayable,
 		];
+		$mapState.currentView = 'List';
 	}
 
 	function handleEdit() {
@@ -49,7 +50,25 @@
 			marker.remove();
 			$mapState.selectedPlayable = createDefaultPlayable(); // Reset state to default playable;
 		}
+		if ($mapState.currentView == 'Edit') {
+			// Reset state to the initial state
+			$mapState.selectedPlayable = initialState;
+			$mapState.playables = $mapState.playables.map((p) => {
+				if (p.id == initialState.id) {
+					return initialState;
+				}
+				return p;
+			});
+		}
 		$mapState.currentView = 'List';
+	}
+
+	function handleDelete() {
+		if (!$authStore.data.active_campaign) return;
+		$mapState.currentView = 'List';
+		$mapState.playables = $mapState.playables.filter((p) => p.id !== $mapState.selectedPlayable.id);
+		campaignHandlers.removePlayable($mapState.selectedPlayable, $authStore.data.active_campaign);
+		$mapState.selectedPlayable = createDefaultPlayable();
 	}
 </script>
 
@@ -101,6 +120,8 @@
 			<div class="text-left flex flex-col gap-2 text-black">
 				<span class="font-black text-lg text-white">Danger Area</span>
 				<button
+					on:click={handleDelete}
+					type="button"
 					class="border-red-500 border text-red-500 px-3 py-1 mt-1 whitespace-nowrap rounded hover:bg-red-500 hover:text-white"
 					>Delete Location</button
 				>
@@ -109,7 +130,7 @@
 
 		<div class="flex gap-4 absolute bottom-12 right-12">
 			<button
-				type="reset"
+				type="button"
 				on:click={handleCancel}
 				class="bg-gray-400 hover:bg-gray-500 p-4 py-3 rounded-lg font-boldv">Cancel</button
 			>
